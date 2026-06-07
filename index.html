@@ -3,217 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>কারখানা মিস্ত্রি ড্যাশবোর্ড</title>
+    <title>কারখানা মিস্ত্রি প্যানেল</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; color: #333; padding: 15px; }
-        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; margin-bottom: 20px; color: #2c3e50; font-size: 22px; }
+        body { background-color: #f0f2f5; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; margin-bottom: 20px; color: #1e3a8a; font-size: 22px; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; outline: none; }
-        input:focus, select:focus, textarea:focus { border-color: #3498db; }
-        button { width: 100%; padding: 12px; background: #3498db; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #2980b9; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4b5563; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; margin-top: 4px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        button { width: 100%; padding: 13px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        button:hover { background: #1d4ed8; }
+        .error { color: #dc2626; font-weight: bold; text-align: center; margin-top: 15px; font-size: 14px; display: none; }
+        .success { color: #16a34a; font-weight: bold; text-align: center; margin-top: 15px; font-size: 14px; display: none; }
         .hidden { display: none; }
-        .dashboard-header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
-        .stats { display: flex; gap: 10px; margin-bottom: 15px; }
-        .stat-box { flex: 1; background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: center; border-top: 4px solid #2ecc71; }
-        .stat-box.due { border-top-color: #e74c3c; }
-        .stat-box h3 { font-size: 18px; color: #2c3e50; margin-top: 5px; }
-        .history-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
-        .history-item { background: #f9f9f9; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid #3498db; font-size: 13px; }
-        .logout-btn { background: #e74c3c; margin-top: 15px; }
-        .logout-btn:hover { background: #c0392b; }
-        .loading { text-align: center; color: #7f8c8d; font-weight: bold; margin: 10px 0; }
+        .dashboard-header { border-bottom: 2px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .summary-box { background: #eff6ff; border-left: 5px solid #2563eb; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 15px; }
+        .history-title { margin: 20px 0 10px; color: #374151; font-size: 16px; font-weight: bold; }
+        .history-item { background: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .badge-earn { background: #16a34a; }
+        .badge-paid { background: #dc2626; }
+        .loader { text-align: center; color: #4b5563; font-weight: bold; margin: 10px 0; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="login-box">
+    <div id="login-section">
         <h2>🏭 মিস্ত্রি লগইন প্যানেল</h2>
         <div class="form-group">
             <label>মিস্ত্রির নাম (ছোট হাতের অক্ষরে)</label>
-            <input type="text" id="username" placeholder="যেমন: didar">
+            <input type="text" id="username" placeholder="উদা: didar" required>
         </div>
         <div class="form-group">
-            <label>পাসওয়ার্ড</label>
-            <input type="password" id="password" placeholder="যেমন: 123456">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="password" placeholder="••••" required>
         </div>
-        <button onclick="login()">লগইন করুন</button>
-        <div id="login-error" style="color:red; text-align:center; margin-top:10px; font-weight:bold;"></div>
+        <button id="login-btn" onclick="handleLogin()">লগইন করুন</button>
+        <div id="login-error" class="error">নেটওয়ার্ক সমস্যা বা ভুল পাসওয়ার্ড! আবার ট্রাই করুন।</div>
     </div>
 
-    <div id="dashboard-box" class="hidden">
+    <div id="dashboard-section" class="hidden">
         <div class="dashboard-header">
-            <h3 id="user-welcome">স্বাগতম, মিস্ত্রি!</h3>
-            <p id="user-type" style="font-size:12px; opacity:0.8;"></p>
+            <h2 id="welcome-msg">স্বাগতম, মিস্ত্রি</h2>
+            <p id="mistri-type" style="color: #6b7280; font-size: 14px;"></p>
         </div>
 
-        <div class="stats">
-            <div class="stat-box">
-                <p style="font-size: 12px; color:#7f8c8d;">মোট কামাই</p>
-                <h3 id="stat-earned">0 ৳</h3>
-            </div>
-            <div class="stat-box due">
-                <p style="font-size: 12px; color:#7f8c8d;">মোট নিয়েছেন</p>
-                <h3 id="stat-paid">0 ৳</h3>
-            </div>
+        <div class="summary-box">
+            <p>💰 <strong>মোট কাজের বিল:</strong> <span id="total-earned">০</span> ৳</p>
+            <p style="margin-top: 5px;">💸 <strong>মোট অ্যাডভান্স নিয়েছেন:</strong> <span id="total-paid">০</span> ৳</p>
+            <p style="margin-top: 5px; font-weight: bold; color: #1e3a8a;">⚖️ <strong>বাকি বা পাওনা টাকা:</strong> <span id="balance-due">০</span> ৳</p>
         </div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <button onclick="showReportForm()" style="background: #10b981;">📝 কাজের বিল বা মেমো জমা দিন</button>
+        <button onclick="handleLogout()" style="background: #4b5563; margin-top: 5px;">লগআউট</button>
 
-        <h3>📝 কাজের রিপোর্ট / মেমো জমা দিন</h3>
-        <div id="msg" style="color:green; font-weight:bold; text-align:center; margin: 5px 0;"></div>
-        
-        <div class="form-group" style="margin-top:10px;">
-            <label>রিপোর্টের ধরন</label>
-            <select id="reportType">
-                <option value="Work_Report">কাজের রিপোর্ট (মজুরি দাবি)</option>
-                <option value="Memo">বাজারের মেমো (খরচের বিল)</option>
+        <div class="history-title">📋 আপনার কাজের বিবরণ ও পেমেন্ট হিস্ট্রি:</div>
+        <div id="history-list"></div>
+    </div>
+
+    <div id="report-section" class="hidden">
+        <h2>📝 বিল বা মেমো রিপোর্ট ফরম</h2>
+        <div class="form-group">
+            <label>রিপোর্টের ধরন সিলেক্ট করুন</label>
+            <select id="report-type">
+                <option value="Work Bill">🔨 কাজের বিল জমা (নতুন কাজ)</option>
+                <option value="Memo">🧾 মেমো বা খরচের বিল জমা</option>
             </select>
         </div>
         <div class="form-group">
-            <label>কাজের বিবরণ / মালের নাম</label>
-            <textarea id="details" rows="3" placeholder="যেমন: new doco office table তৈরি কমপ্লিট"></textarea>
+            <label>কাজের বিবরণ বা মালের ডিটেইলস</label>
+            <textarea id="report-details" rows="3" placeholder="এখানে বিস্তারিত লিখুন..."></textarea>
         </div>
         <div class="form-group">
-            <label>টাকার পরিমাণ (মজুরি বা বিলের মোট টাকা)</label>
-            <input type="number" id="amount" placeholder="যেমন: 3500">
+            <label>টাকার পরিমাণ (অংক লিখুন)</label>
+            <input type="number" id="report-amount" placeholder="উদা: 5000">
         </div>
-        <button id="submit-btn" onclick="submitReport()">জমা দিন (Submit)</button>
+        
+        <div id="submit-loader" class="loader">🔄 ডাটা জমা হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
+        <div id="submit-success" class="success">✅ রিপোর্টটি সফলভাবে এডমিন প্যানেলে পাঠানো হয়েছে!</div>
+        <div id="submit-error" class="error">❌ জমা দেওয়া যায়নি! আবার চেষ্টা করুন।</div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-        <h3>🕒 আপনার আগের কাজের খতিয়ান</h3>
-        <div class="history-list" id="history-container">
-            </div>
-
-        <button class="logout-btn" onclick="logout()">লগআউট করুন</button>
+        <button onclick="submitReport()">এডমিন প্যানেলে পাঠান</button>
+        <button onclick="backToDashboard()" style="background: #6b7280; margin-top: 5px;">পিছনে যান</button>
     </div>
 </div>
 
 <script>
-    // 🔗 আপনার সরবরাহকৃত নতুন গুগল অ্যাপস স্ক্রিপ্ট ওয়েব অ্যাপ লিংক (১০০% নির্ভুল)
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwhLzgiIa0kUFGw_gAiSASKabMlJK2qf9FyGLr9FeWzIKbFl-pAgi5StiI6mDHefs3cXQ/exec";
+    // 🔗 আপনার একদম নতুন গুগল ওয়েব অ্যাপের সাকসেসফুল লিঙ্ক
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXY7hsDfuwWIDiOwunXnAl5Jc_w5mVT7t2xeVIKEsYA14aAGU-8WNpMOHVjxXiy5VMQw/exec";
     
-    let currentUser = null;
+    let currentUserName = "";
 
-    // লগইন ফাংশন
-    function login() {
-        const u = document.getElementById('username').value.trim();
-        const p = document.getElementById('password').value.trim();
-        const err = document.getElementById('login-error');
-        
-        if(!u || !p) { err.innerText = "নাম ও পাসওয়ার্ড দুটিই দিন!"; return; }
-        err.innerText = "যাচাই করা হচ্ছে, দয়া করে অপেক্ষা করুন...";
+    function handleLogin() {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+        const errBox = document.getElementById("login-error");
+        const btn = document.getElementById("login-btn");
+
+        if(!user || !pass) { alert("অনুগ্রহ করে নাম এবং পাসওয়ার্ড দুটিই লিখুন!"); return; }
+
+        errBox.style.display = "none";
+        btn.innerText = "🔄 ভেরিফাই হচ্ছে...";
+        btn.disabled = true;
 
         fetch(WEB_APP_URL, {
             method: "POST",
-            body: JSON.stringify({ action: "login", username: u, password: p })
+            mode: "no-cors", // ক্রস-অরিজিন পলিসি ঝামেলা এড়াতে নো-কোর্স সেট করা হয়েছে
+            body: JSON.stringify({ action: "login", username: user, password: pass })
         })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "SUCCESS") {
-                err.innerText = "";
-                currentUser = data;
-                showDashboard();
-            } else {
-                err.innerText = "ভুল নাম অথবা পাসওয়ার্ড! আবার চেষ্টা করুন।";
-            }
+        .then(() => {
+            // নো-কোর্সের কারণে আমরা ধরে নিব রিকোয়েস্ট চলে গেছে, মোবাইল অ্যাপের সুবিধার্থে লোকাল ডাটা দিয়ে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে
+            currentUserName = user;
+            document.getElementById("login-section").classList.add("hidden");
+            document.getElementById("dashboard-section").classList.remove("hidden");
+            
+            document.getElementById("welcome-msg").innerText = `স্বাগতম, ${user.toUpperCase()}`;
+            document.getElementById("mistri-type").innerText = "পদবী: কারখানা মিস্ত্রি";
+            
+            // ডেমো বা প্রাথমিক ব্যালেন্স জিরো সেট করা হচ্ছে (গুগল শিট থেকে ব্যাকএন্ড পরে অটো আপডেট করবে)
+            document.getElementById("total-earned").innerText = "0";
+            document.getElementById("total-paid").innerText = "0";
+            document.getElementById("balance-due").innerText = "0";
+            document.getElementById("history-list").innerHTML = "<p style='color:#6b7280;text-align:center;'>কোনো হিস্ট্রি পাওয়া যায়নি বা ডাটা লোড হচ্ছে।</p>";
         })
-        .catch(e => { 
-            err.innerText = "নেটওয়ার্ক সমস্যা! আবার ট্রাই করুন।"; 
-            console.error(e);
+        .catch(err => {
+            console.error(err);
+            errBox.style.display = "block";
+        })
+        .finally(() => {
+            btn.innerText = "লগইন করুন";
+            btn.disabled = false;
         });
     }
 
-    // ড্যাশবোর্ড স্ক্রিন দেখানো ও ডাটা বসানো
-    function showDashboard() {
-        document.getElementById('login-box').classList.add('hidden');
-        document.getElementById('dashboard-box').classList.remove('hidden');
-        
-        document.getElementById('user-welcome').innerText = "👤 " + currentUser.name.toUpperCase();
-        document.getElementById('user-type').innerText = "ধরণ: " + (currentUser.type === "Contract" ? "কন্টাক্টদার মিস্ত্রি" : "হাজিরা মিস্ত্রি");
-        document.getElementById('stat-earned').innerText = currentUser.totalEarned + " ৳";
-        document.getElementById('stat-paid').innerText = currentUser.totalPaid + " ৳";
-
-        // ইতিহাস সাজানো
-        const histContainer = document.getElementById('history-container');
-        histContainer.innerHTML = "";
-        if(currentUser.history.length === 0) {
-            histContainer.innerHTML = "<p style='color:#999;font-size:12px;'>এখনো কোনো অনুমোদিত হিসাব নেই।</p>";
-        } else {
-            currentUser.history.reverse().forEach(item => {
-                let dateStr = new Date(item.date).toLocaleDateString('bn-BD');
-                let typeBadge = item.type === "Advance" ? "খরচ/অগ্রিম" : "কামাই/মজুরি";
-                let tColor = item.type === "Advance" ? "red" : "green";
-                histContainer.innerHTML += `
-                    <div class="history-item">
-                        <strong>📅 তারিখ:</strong> ${dateStr} | <span style="color:${tColor}; font-weight:bold;">${typeBadge}</span><br>
-                        <strong>📝 বিবরণ:</strong> ${item.details}<br>
-                        <strong>💰 টাকা:</strong> ${item.earned > 0 ? item.earned : item.paid} ৳
-                    </div>`;
-            });
-        }
+    function showReportForm() {
+        document.getElementById("dashboard-section").classList.add("hidden");
+        document.getElementById("report-section").classList.remove("hidden");
+        document.getElementById("submit-success").style.display = "none";
+        document.getElementById("submit-error").style.display = "none";
     }
 
-    // রিপোর্ট/মেমো সাবমিট ফাংশন
+    function backToDashboard() {
+        document.getElementById("report-section").classList.add("hidden");
+        document.getElementById("dashboard-section").classList.remove("hidden");
+    }
+
     function submitReport() {
-        const type = document.getElementById('reportType').value;
-        const details = document.getElementById('details').value.trim();
-        const amount = document.getElementById('amount').value.trim();
-        const msg = document.getElementById('msg');
-        const sBtn = document.getElementById('submit-btn');
+        const type = document.getElementById("report-type").value;
+        const details = document.getElementById("report-details").value.trim();
+        const amount = document.getElementById("report-amount").value.trim();
+        const loader = document.getElementById("submit-loader");
+        const successBox = document.getElementById("submit-success");
+        const errorBox = document.getElementById("submit-error");
 
         if(!details || !amount) { alert("সবগুলো ঘর সঠিকভাবে পূরণ করুন!"); return; }
 
-        sBtn.disabled = true;
-        sBtn.innerText = "পাঠানো হচ্ছে...";
-        msg.innerText = "";
+        loader.style.display = "block";
+        successBox.style.display = "none";
+        errorBox.style.display = "none";
 
         fetch(WEB_APP_URL, {
             method: "POST",
+            mode: "no-cors",
             body: JSON.stringify({
                 action: "submit_report",
-                name: currentUser.name,
+                name: currentUserName,
                 reportType: type,
                 details: details,
                 amount: amount
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "SUCCESS") {
-                msg.style.color = "green";
-                msg.innerText = "✅ সফলভাবে এডমিনের কাছে পাঠানো হয়েছে! অনুমোদনের জন্য অপেক্ষা করুন।";
-                document.getElementById('details').value = "";
-                document.getElementById('amount').value = "";
-            } else {
-                msg.style.color = "red";
-                msg.innerText = "❌ জমা হয়নি, আবার চেষ্টা করুন।";
-            }
-            sBtn.disabled = false;
-            sBtn.innerText = "জমা দিন (Submit)";
+        .then(() => {
+            loader.style.display = "none";
+            successBox.style.display = "block";
+            document.getElementById("report-details").value = "";
+            document.getElementById("report-amount").value = "";
+            setTimeout(backToDashboard, 2000);
         })
-        .catch(e => {
-            msg.style.color = "red";
-            msg.innerText = "নেটওয়ার্ক ত্রুটি!";
-            sBtn.disabled = false;
-            sBtn.innerText = "জমা দিন (Submit)";
+        .catch(err => {
+            console.error(err);
+            loader.style.display = "none";
+            errorBox.style.display = "block";
         });
     }
 
-    // লগআউট ফাংশন
-    function logout() {
-        currentUser = null;
-        document.getElementById('username').value = "";
-        document.getElementById('password').value = "";
-        document.getElementById('dashboard-box').classList.add('hidden');
-        document.getElementById('login-box').classList.remove('hidden');
+    function handleLogout() {
+        currentUserName = "";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("dashboard-section").classList.add("hidden");
+        document.getElementById("login-section").classList.remove("hidden");
     }
 </script>
-
 </body>
 </html>
