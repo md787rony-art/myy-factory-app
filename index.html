@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কারখানা ও মিস্ত্রি ক্লাউড সিস্টেম</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: #f1f5f9; padding: 15px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2, h3, h4 { text-align: center; color: #0f172a; }
+        .card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        label { display: block; margin-top: 12px; font-weight: bold; color: #334155; }
+        input, select, button, textarea { width: 100%; padding: 11px; margin-top: 6px; border-radius: 6px; border: 1px solid #cbd5e1; box-sizing: border-box; font-size: 14px; }
+        button { background-color: #0284c7; color: white; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        button:hover { background-color: #0369a1; }
+        .btn-logout { background-color: #ef4444; margin-top: 15px; }
+        .btn-logout:hover { background-color: #dc2626; }
+        .summary-box { display: flex; gap: 10px; margin-top: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .box { flex: 1; min-width: 140px; padding: 15px; border-radius: 8px; color: white; text-align: center; font-weight: bold; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
+        th { background-color: #f1f5f9; }
+        .hidden { display: none; }
+        .preview-img { max-width: 100%; max-height: 150px; margin-top: 10px; border-radius: 6px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🛋️ ফার্নিচার কারখানা লজিস্টিকস প্যানেল</h2>
+
+    <div id="login-section" class="card">
+        <h3>🔐 সিস্টেমে প্রবেশ করুন</h3>
+        <label>ইউজার নাম / মিস্ত্রির নাম:</label>
+        <input type="text" id="username" placeholder="গুগল শিটে থাকা সঠিক নাম দিন">
+        <label>পাসওয়ার্ড:</label>
+        <input type="password" id="password" placeholder="গোপন পাসওয়ার্ড লিখুন">
+        <button style="margin-top:15px;" onclick="handleLogin()">লগইন করুন</button>
+    </div>
+
+    <div id="mistri-dashboard" class="hidden">
+        <div class="card" style="background: #e0f2fe; border: 1px solid #bae6fd;">
+            <h3 style="margin:0; color:#0369a1;">স্বাগতম, <span id="display-mistri-name"></span> 👋</h3>
+            <p style="margin:5px 0 0 0; font-weight:bold; text-align:center;">
+                আপনার অ্যাকাউন্ট ধরন: <span id="display-mistri-type" style="color:#b91c1c;"></span>
+            </p>
+        </div>
+
+        <h4>📊 আপনার আর্থিক খতিয়ান ও হিসাব রেকর্ড</h4>
+        <div class="summary-box">
+            <div class="box" style="background:#2563eb;" id="label-earned">মোট কাজের বিল/কামাই:<br><span id="m-total-earned">0</span> ৳</div>
+            <div class="box" style="background:#db2777;">মোট অ্যাডভান্স নিয়েছেন:<br><span id="m-total-paid">0</span> ৳</div>
+            <div class="box" style="background:#9333ea;" id="box-due-status">আপনার নিট পাওনা:<br><span id="m-total-due">0</span> ৳</div>
+        </div>
+
+        <div class="card" style="border: 2px solid #0284c7;">
+            <h3>📝 নতুন হিসাব/মেমো ডিজিটাল জমা দিন</h3>
+            
+            <label>[অবশ্যই সিলেক্ট করুন] আপনি কি জমা দিচ্ছেন?</label>
+            <select id="report-type" onchange="toggleReportFields()">
+                <option value="Memo">🧾 দোকানের মেমো / খরচের ক্যাশ মেমো ফাইল আপলোড</option>
+                <option value="Work_Report">🔨 আজকের কাজের রিপোর্ট / হাজিরা / প্রোডাক্ট বিবরণ জমা</option>
+            </select>
+
+            <div id="memo-upload-block">
+                <label>মেমোর ছবি তুলুন বা আপলোড করুন:</label>
+                <input type="file" id="memo-file" accept="image/*" onchange="compressImage(event)">
+                <img id="image-preview" class="preview-img">
+            </div>
+
+            <div id="work-details-block" class="hidden" style="display:none;">
+                <div id="hazira-dropdown-block">
+                    <label>আজকে কত হাজিরা কাজ করেছেন?</label>
+                    <select id="report-hazira-count">
+                        <option value="1">১ হাজিরা (৮ ঘণ্টা ডিউটি)</option>
+                        <option value="1.5">১.৫ হাজিরা (১২ ঘণ্টা ওভারটাইম)</option>
+                        <option value="0.5">০.৫ হাজিরা (অর্ধেক বেলা)</option>
+                        <option value="2">২ হাজিরা (ডাবল ডিউটি)</option>
+                    </select>
+                </div>
+                <div id="contract-product-block" class="hidden" style="display:none;">
+                    <label>আজকে কয়টি প্রোডাক্ট কমপ্লিট করেছেন এবং প্রোডাক্টের নাম কী?</label>
+                    <input type="text" id="report-product-details" placeholder="যেমন: ২টি আলমারি তৈরি শেষ করলাম">
+                </div>
+            </div>
+
+            <label>টাকার পরিমাণ (মেমোর মোট টাকা অথবা কাজের কন্টাক্ট মূল্য):</label>
+            <input type="number" id="report-amount" value="0">
+
+            <label>অতিরিক্ত কোনো বিবরণ বা নোট (ঐচ্ছিক):</label>
+            <textarea id="report-notes" rows="2" placeholder="যেমন: ওস্তাদ আজকে ১০০০ টাকা ক্যাশ নিল বা আলমারির হ্যান্ডেল কেনা বাবদ"></textarea>
+
+            <button style="margin-top:15px; background-color:#16a34a;" onclick="submitReport()">মালিকের কাছে অনুমোদনের জন্য পাঠান</button>
+        </div>
+
+        <h4>📜 আপনার কাজের হিস্ট্রি (পূর্বের রেকর্ডসমূহ)</h4>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr><th>তারিখ</th><th>কাজের ধরন</th><th>বিবরণী</th><th>বিল (কামাই)</th><th>নগদ গ্রহণ</th></tr>
+                </thead>
+                <tbody id="mistri-history-tbody"></tbody>
+            </table>
+        </div>
+
+        <button class="btn-logout" onclick="logout()">লগআউট করুন</button>
+    </div>
+
+    <div id="admin-dashboard" class="hidden">
+        <div class="card" style="background:#0f172a; color:#38bdf8;">
+            <h3 style="margin:0;">⚙️ প্রধান এডমিন কন্ট্রোল রুম (মালিক প্যানেল)</h3>
+        </div>
+        
+        <div class="card" style="border:2px solid #ea580c;">
+            <h3 style="color:#ea580c; margin-top:0;">🔔 মিস্ত্রিদের পাঠানো পেন্ডিং মেমো ও কাজের রিপোর্ট</h3>
+            <div id="admin-pending-list">লোড হচ্ছে...</div>
+        </div>
+        
+        <button class="btn-logout" onclick="logout()">অ্যাডমিন প্যানেল লগআউট</button>
+    </div>
+</div>
+
+<script>
+    // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্ট ওয়েব অ্যাপ ইউআরএল এখানে বসান
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzVxRP15vnaFJbinvDKPX6oT3yyxLiY5GZlzyFQiIEy3LwOcWYjMMtuThpr95QwWzQZzA/exec"; 
+
+    let loggedInUser = null;
+    let loggedInUserType = null;
+    let base64ImageString = "";
+
+    function handleLogin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+
+        if(!u || !p) { alert("নাম ও পাসওয়ার্ড দুটিই দিন!"); return; }
+
+        // স্পেশাল এডমিন রুলস (মালিকের জন্য সরাসরি লগইন)
+        if(u === "admin" && p === "মালিক১২৩") {
+            showAdminDashboard();
+            return;
+        }
+
+        // মিস্ত্রিদের লগইন ভেরিফিকেশন গুগল শিট ডাটাবেজ থেকে
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "login", username: u, password: p })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "SUCCESS") {
+                loggedInUser = data.name;
+                loggedInUserType = data.type; // Hazira অথবা Contract
+                showMistriDashboard(data);
+            } else {
+                alert("দুঃখিত! ইউজারনেম বা পাসওয়ার্ড ভুল হয়েছে। শিটের সাথে মিলিয়ে চেক করুন।");
+            }
+        });
+    }
+
+    function showMistriDashboard(data) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('mistri-dashboard').classList.remove('hidden');
+        document.getElementById('display-mistri-name').innerText = data.name;
+        
+        let typeBangla = data.type === "Hazira" ? "হাজিরা মিস্ত্রি" : "কন্টাক্টদার (পিস চুক্তিতে)";
+        document.getElementById('display-mistri-type').innerText = typeBangla;
+
+        // ড্যাশবোর্ডের লেখা কাস্টমাইজেশন (চাহিদা অনুযায়ী কন্টাক্টদার টেক্সট)
+        if(data.type === "Contract") {
+            document.getElementById('label-earned').innerHTML = "প্রোডাক্টের মোট কাজের দাম:<br><span id='m-total-earned'>0</span> ৳";
+        }
+
+        // হিসাব নিরূপণ
+        document.getElementById('m-total-earned').innerText = data.totalEarned.toLocaleString('bn-BD');
+        document.getElementById('m-total-paid').innerText = data.totalPaid.toLocaleString('bn-BD');
+        
+        let netDue = data.totalEarned - data.totalPaid;
+        const boxStatus = document.getElementById('box-due-status');
+        if(netDue >= 0) {
+            boxStatus.style.background = "#16a34a";
+            boxStatus.innerHTML = "আপনার নিট পাওনা:<br><span>" + netDue.toLocaleString('bn-BD') + "</span> ৳";
+        } else {
+            boxStatus.style.background = "#dc2626"; // লাল রঙ
+            boxStatus.innerHTML = "কারখানা আপনার থেকে পাবে:<br><span>" + Math.abs(netDue).toLocaleString('bn-BD') + "</span> ৳";
+        }
+
+        // টেবিল হিস্ট্রি রেন্ডার
+        const tbody = document.getElementById('mistri-history-tbody');
+        tbody.innerHTML = '';
+        data.history.reverse().forEach(row => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.date.split('T')[0]}</td>
+                <td>${row.type}</td>
+                <td>${row.details}</td>
+                <td style="color:blue;">${row.earned} ৳</td>
+                <td style="color:red;">${row.paid} ৳</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // ফর্মের ইনপুট ফিল্ড ঠিক করা
+        toggleReportFields();
+    }
+
+    function toggleReportFields() {
+        const rType = document.getElementById('report-type').value;
+        const uploadBlock = document.getElementById('memo-upload-block');
+        const workBlock = document.getElementById('work-details-block');
+        const haziraBlock = document.getElementById('hazira-dropdown-block');
+        const contractBlock = document.getElementById('contract-product-block');
+
+        if(rType === "Memo") {
+            uploadBlock.style.display = "block";
+            workBlock.style.display = "none";
+        } else {
+            uploadBlock.style.display = "none";
+            workBlock.style.display = "block";
+            if(loggedInUserType === "Hazira") {
+                haziraBlock.style.display = "block";
+                contractBlock.style.display = "none";
+            } else {
+                haziraBlock.style.display = "none";
+                contractBlock.style.display = "block";
+            }
+        }
+    }
+
+    function compressImage(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function() {
+            const img = new Image();
+            img.src = reader.result;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 400; canvas.height = (img.height / img.width) * 400;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                base64ImageString = canvas.toDataURL('image/jpeg', 0.6);
+                const preview = document.getElementById('image-preview');
+                preview.src = base64ImageString;
+                preview.style.display = "block";
+            }
+        }
+        reader.readAsDataURL(file);
+    }
+
+    function submitReport() {
+        const rType = document.getElementById('report-type').value;
+        let detailsText = "";
+        
+        if(rType === "Memo") {
+            detailsText = "মেমো ও রসিদ জমা";
+            if(!base64ImageString) { alert("দয়া করে মেমোর ছবি আপলোড করুন!"); return; }
+        } else {
+            if(loggedInUserType === "Hazira") {
+                const hc = document.getElementById('report-hazira-count').value;
+                detailsText = "হাজিরা প্রদান সংখ্যা: " + hc;
+            } else {
+                detailsText = "প্রোডাক্ট কাজ সম্পন্ন: " + document.getElementById('report-product-details').value;
+                if(!document.getElementById('report-product-details').value) { alert("প্রোডাক্টের নাম ও বিবরণ লিখুন!"); return; }
+            }
+        }
+
+        const notes = document.getElementById('report-notes').value;
+        if(notes) { detailsText += " (" + notes + ")"; }
+
+        const payload = {
+            action: "submit_report",
+            name: loggedInUser,
+            reportType: rType,
+            details: detailsText,
+            amount: Number(document.getElementById('report-amount').value) || 0,
+            image: base64ImageString
+        };
+
+        fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
+        .then(() => {
+            alert("সফলভাবে মালিকের কাছে পাঠানো হয়েছে। মালিক অনুমোদন দিলে আপনার অ্যাকাউন্টে এটি যোগ হয়ে যাবে।");
+            location.reload();
+        });
+    }
+
+    // এডমিন ফাংশন সমূহ
+    function showAdminDashboard() {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        loadAdminPendingList();
+    }
+
+    function loadAdminPendingList() {
+        fetch(WEB_APP_URL + "?type=review")
+        .then(res => res.json())
+        .then(data => {
+            const div = document.getElementById('admin-pending-list');
+            div.innerHTML = '';
+            if(data.length === 0) { div.innerHTML = "<p style='text-align:center; font-weight:bold;'>কোনো রিকোয়েস্ট পেন্ডিং নেই।</p>"; return; }
+            
+            data.forEach(r => {
+                let card = document.createElement('div');
+                card.style = "background:white; border:1px solid #cbd5e1; padding:15px; border-radius:6px; margin-bottom:10px;";
+                
+                let imgHtml = r[6] ? `<br><img src="${r[6]}" style="max-width:100%; max-height:200px; margin-top:5px; border-radius:4px;"><br>` : '';
+                let typeTxt = r[3] === "Memo" ? "🧾 মেমো ফাইল" : "🔨 কাজের রিপোর্ট";
+                
+                card.innerHTML = `
+                    <p style="margin:0;">🆔 <b>ID: ${r[0]}</b> | 👤 মিস্ত্রি: <b style="color:blue;">${r[2]}</b> (${typeTxt})</p>
+                    <p style="margin:5px 0;">📝 <b>বিবরণ:</b> ${r[4]}</p>
+                    <p style="margin:5px 0;">💰 <b>টাকার পরিমাণ:</b> <b style="color:#16a34a;">${r[5]} ৳</b></p>
+                    ${imgHtml}
+                    <button onclick="approveRequest('${r[0]}')" style="background:#16a34a; width:auto; padding:5px 15px; margin-top:5px;">Approve (অনুমোদন করুন)</button>
+                `;
+                div.appendChild(card);
+            });
+        });
+    }
+
+    function approveRequest(id) {
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({ action: "approve_request", id: id })
+        }).then(() => {
+            alert("অনুমোদিত হয়েছে এবং মূল গুগল শিট ডাটাবেজে ডাটা ট্রান্সফার হয়েছে!");
+            loadAdminPendingList();
+        });
+    }
+
+    function logout() { location.reload(); }
+</script>
+</body>
+</html>
