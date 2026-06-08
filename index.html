@@ -3,200 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>কারখানা মিস্ত্রি প্যানেল</title>
+    <title>বিল বা মেমো রিপোর্ট ফরম</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-        h2 { text-align: center; margin-bottom: 20px; color: #1e3a8a; font-size: 22px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4b5563; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; margin-top: 4px; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-        button { width: 100%; padding: 13px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        button:hover { background: #1d4ed8; }
-        .error { color: #dc2626; font-weight: bold; text-align: center; margin-top: 15px; font-size: 14px; display: none; }
-        .success { color: #16a34a; font-weight: bold; text-align: center; margin-top: 15px; font-size: 14px; display: none; }
-        .hidden { display: none; }
-        .dashboard-header { border-bottom: 2px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
-        .summary-box { background: #eff6ff; border-left: 5px solid #2563eb; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 15px; }
-        .history-title { margin: 20px 0 10px; color: #374151; font-size: 16px; font-weight: bold; }
-        .history-item { background: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
-        .badge-earn { background: #16a34a; }
-        .badge-paid { background: #dc2626; }
-        .loader { text-align: center; color: #4b5563; font-weight: bold; margin: 10px 0; display: none; }
+        body { font-family: 'Arial', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+        .form-container { max-width: 450px; background: #fff; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #1a365d; margin-bottom: 25px; font-size: 22px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #4a5568; font-size: 14px; }
+        select, input[type="number"], input[type="file"] { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        select:disabled { background-color: #edf2f7; cursor: not-allowed; }
+        .btn-submit { width: 100%; padding: 14px; background-color: #00c292; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-back { width: 100%; padding: 12px; background-color: #5c677d; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="login-section">
-        <h2>🏭 মিস্ত্রি লগইন প্যানেল</h2>
+<div class="form-container">
+    <h2>📝 বিল বা মেমো রিপোর্ট ফরম</h2>
+    <form id="reportForm">
         <div class="form-group">
-            <label>মিস্ত্রির নাম (ছোট হাতের অক্ষরে)</label>
-            <input type="text" id="username" placeholder="উদা: didar" required>
-        </div>
-        <div class="form-group">
-            <label>পাসওয়ার্ড</label>
-            <input type="password" id="password" placeholder="••••" required>
-        </div>
-        <button id="login-btn" onclick="handleLogin()">লগইন করুন</button>
-        <div id="login-error" class="error">নেটওয়ার্ক সমস্যা বা ভুল পাসওয়ার্ড! আবার ট্রাই করুন।</div>
-    </div>
-
-    <div id="dashboard-section" class="hidden">
-        <div class="dashboard-header">
-            <h2 id="welcome-msg">স্বাগতম, মিস্ত্রি</h2>
-            <p id="mistri-type" style="color: #6b7280; font-size: 14px;"></p>
-        </div>
-
-        <div class="summary-box">
-            <p>💰 <strong>মোট কাজের বিল:</strong> <span id="total-earned">০</span> ৳</p>
-            <p style="margin-top: 5px;">💸 <strong>মোট অ্যাডভান্স নিয়েছেন:</strong> <span id="total-paid">০</span> ৳</p>
-            <p style="margin-top: 5px; font-weight: bold; color: #1e3a8a;">⚖️ <strong>বাকি বা পাওনা টাকা:</strong> <span id="balance-due">০</span> ৳</p>
-        </div>
-
-        <button onclick="showReportForm()" style="background: #10b981;">📝 কাজের বিল বা মেমো জমা দিন</button>
-        <button onclick="handleLogout()" style="background: #4b5563; margin-top: 5px;">লগআউট</button>
-
-        <div class="history-title">📋 আপনার কাজের বিবরণ ও পেমেন্ট হিস্ট্রি:</div>
-        <div id="history-list"></div>
-    </div>
-
-    <div id="report-section" class="hidden">
-        <h2>📝 বিল বা মেমো রিপোর্ট ফরম</h2>
-        <div class="form-group">
-            <label>রিপোর্টের ধরন সিলেক্ট করুন</label>
-            <select id="report-type">
-                <option value="Work Bill">🔨 কাজের বিল জমা (নতুন কাজ)</option>
-                <option value="Memo">🧾 মেমো বা খরচের বিল জমা</option>
+            <label>রিপোর্টের ধরণ সিলেক্ট করুন</label>
+            <select id="workType" required onchange="updateMistriOptions()">
+                <option value="">-- সিলেক্ট করুন --</option>
+                <option value="হাজিরা">হাজিরা</option>
+                <option value="কন্ট্রাক্ট">কন্ট্রাক্ট</option>
             </select>
         </div>
+
         <div class="form-group">
-            <label>কাজের বিবরণ বা মালের ডিটেইলস</label>
-            <textarea id="report-details" rows="3" placeholder="এখানে বিস্তারিত লিখুন..."></textarea>
+            <label>মিস্ত্রি বা দোকানের ধরণ</label>
+            <select id="mistriType" required disabled onchange="updateProductOptions()">
+                <option value="">-- আগে রিপোর্টের ধরণ সিলেক্ট করুন --</option>
+            </select>
         </div>
+
+        <div class="form-group">
+            <label>কাজের বিবরণ বা প্রোডাক্ট</label>
+            <select id="productDetail" required disabled>
+                <option value="">-- আগে মিস্ত্রি সিলেক্ট করুন --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>মেমো বা ফটো আপলোড করুন (ছবি বাধ্যতামূলক নয়)</label>
+            <input type="file" id="fileUpload" accept="image/*">
+        </div>
+
         <div class="form-group">
             <label>টাকার পরিমাণ (অংক লিখুন)</label>
-            <input type="number" id="report-amount" placeholder="উদা: 5000">
+            <input type="number" id="amount" placeholder="উদা: 5000" required>
         </div>
-        
-        <div id="submit-loader" class="loader">🔄 ডাটা জমা হচ্ছে, দয়া করে অপেক্ষা করুন...</div>
-        <div id="submit-success" class="success">✅ রিপোর্টটি সফলভাবে এডমিন প্যানেলে পাঠানো হয়েছে!</div>
-        <div id="submit-error" class="error">❌ জমা দেওয়া যায়নি! আবার চেষ্টা করুন।</div>
 
-        <button onclick="submitReport()">এডমিন প্যানেলে পাঠান</button>
-        <button onclick="backToDashboard()" style="background: #6b7280; margin-top: 5px;">পিছনে যান</button>
-    </div>
+        <button type="submit" class="btn-submit" id="submitBtn">এডমিন প্যানেলে পাঠান</button>
+        <button type="button" class="btn-back" onclick="history.back()">পিছনে যান</button>
+    </form>
 </div>
 
 <script>
-    // 🔗 আপনার একদম নতুন গুগল ওয়েব অ্যাপের সাকসেসফুল লিঙ্ক
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXY7hsDfuwWIDiOwunXnAl5Jc_w5mVT7t2xeVIKEsYA14aAGU-8WNpMOHVjxXiy5VMQw/exec";
+const mistriOptions = ["কালার মিস্ত্রি", "নকশা মিস্ত্রি", "কাঠমিস্ত্রি", "CNC দোকান"];
+const productOptions = ["অফিস টেবিল", "আলমিরা", "ড্রেসিং টেবিল", "জুতার বাক্স", "티브ির বক্স", "ওয়ারড্রব", "শোকেস", "খাট"];
+
+function updateMistriOptions() {
+    const workType = document.getElementById("workType").value;
+    const mistriType = document.getElementById("mistriType");
+    const productDetail = document.getElementById("productDetail");
+    mistriType.innerHTML = '<option value="">-- সিলেক্ট করুন --</option>';
+    productDetail.innerHTML = '<option value="">-- আগে মিস্ত্রি সিলেক্ট করুন --</option>';
+    productDetail.disabled = true;
+
+    if (workType) {
+        mistriType.disabled = false;
+        mistriOptions.forEach(opt => {
+            let o = document.createElement("option"); o.value = opt; o.textContent = opt; mistriType.appendChild(o);
+        });
+    } else { mistriType.disabled = true; }
+}
+
+function updateProductOptions() {
+    const mistriType = document.getElementById("mistriType").value;
+    const productDetail = document.getElementById("productDetail");
+    productDetail.innerHTML = '<option value="">-- সিলেক্ট করুন --</option>';
+
+    if (mistriType) {
+        productDetail.disabled = false;
+        productOptions.forEach(opt => {
+            let o = document.createElement("option"); o.value = opt; o.textContent = opt; productDetail.appendChild(o);
+        });
+    } else { productDetail.disabled = true; }
+}
+
+document.getElementById("reportForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const btn = document.getElementById("submitBtn");
+    btn.innerText = "পাঠানো হচ্ছে..."; btn.disabled = true;
+
+    const file = document.getElementById("fileUpload").files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            sendData(reader.result.split(',')[1], file.name, file.type);
+        };
+        reader.readAsDataURL(file);
+    } else { sendData("", "", ""); }
+});
+
+function sendData(base64, fileName, mimeType) {
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbx7Fym_Dt5Aq7jV2CzuiKlW4IEWo65sx19CAvBY2YVv4HRwIbkL_-d8EdSiBciGdNWHCQ/exec";
     
-    let currentUserName = "";
+    const formData = {
+        action: "submit",
+        workType: document.getElementById("workType").value,
+        mistriType: document.getElementById("mistriType").value,
+        productDetail: document.getElementById("productDetail").value,
+        amount: document.getElementById("amount").value,
+        fileData: base64, fileName: fileName, mimeType: mimeType,
+        user: "DIDAR" 
+    };
 
-    function handleLogin() {
-        const user = document.getElementById("username").value.trim();
-        const pass = document.getElementById("password").value.trim();
-        const errBox = document.getElementById("login-error");
-        const btn = document.getElementById("login-btn");
-
-        if(!user || !pass) { alert("অনুগ্রহ করে নাম এবং পাসওয়ার্ড দুটিই লিখুন!"); return; }
-
-        errBox.style.display = "none";
-        btn.innerText = "🔄 ভেরিফাই হচ্ছে...";
-        btn.disabled = true;
-
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors", // ক্রস-অরিজিন পলিসি ঝামেলা এড়াতে নো-কোর্স সেট করা হয়েছে
-            body: JSON.stringify({ action: "login", username: user, password: pass })
-        })
-        .then(() => {
-            // নো-কোর্সের কারণে আমরা ধরে নিব রিকোয়েস্ট চলে গেছে, মোবাইল অ্যাপের সুবিধার্থে লোকাল ডাটা দিয়ে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে
-            currentUserName = user;
-            document.getElementById("login-section").classList.add("hidden");
-            document.getElementById("dashboard-section").classList.remove("hidden");
-            
-            document.getElementById("welcome-msg").innerText = `স্বাগতম, ${user.toUpperCase()}`;
-            document.getElementById("mistri-type").innerText = "পদবী: কারখানা মিস্ত্রি";
-            
-            // ডেমো বা প্রাথমিক ব্যালেন্স জিরো সেট করা হচ্ছে (গুগল শিট থেকে ব্যাকএন্ড পরে অটো আপডেট করবে)
-            document.getElementById("total-earned").innerText = "0";
-            document.getElementById("total-paid").innerText = "0";
-            document.getElementById("balance-due").innerText = "0";
-            document.getElementById("history-list").innerHTML = "<p style='color:#6b7280;text-align:center;'>কোনো হিস্ট্রি পাওয়া যায়নি বা ডাটা লোড হচ্ছে।</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            errBox.style.display = "block";
-        })
-        .finally(() => {
-            btn.innerText = "লগইন করুন";
-            btn.disabled = false;
-        });
-    }
-
-    function showReportForm() {
-        document.getElementById("dashboard-section").classList.add("hidden");
-        document.getElementById("report-section").classList.remove("hidden");
-        document.getElementById("submit-success").style.display = "none";
-        document.getElementById("submit-error").style.display = "none";
-    }
-
-    function backToDashboard() {
-        document.getElementById("report-section").classList.add("hidden");
-        document.getElementById("dashboard-section").classList.remove("hidden");
-    }
-
-    function submitReport() {
-        const type = document.getElementById("report-type").value;
-        const details = document.getElementById("report-details").value.trim();
-        const amount = document.getElementById("report-amount").value.trim();
-        const loader = document.getElementById("submit-loader");
-        const successBox = document.getElementById("submit-success");
-        const errorBox = document.getElementById("submit-error");
-
-        if(!details || !amount) { alert("সবগুলো ঘর সঠিকভাবে পূরণ করুন!"); return; }
-
-        loader.style.display = "block";
-        successBox.style.display = "none";
-        errorBox.style.display = "none";
-
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({
-                action: "submit_report",
-                name: currentUserName,
-                reportType: type,
-                details: details,
-                amount: amount
-            })
-        })
-        .then(() => {
-            loader.style.display = "none";
-            successBox.style.display = "block";
-            document.getElementById("report-details").value = "";
-            document.getElementById("report-amount").value = "";
-            setTimeout(backToDashboard, 2000);
-        })
-        .catch(err => {
-            console.error(err);
-            loader.style.display = "none";
-            errorBox.style.display = "block";
-        });
-    }
-
-    function handleLogout() {
-        currentUserName = "";
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-        document.getElementById("dashboard-section").classList.add("hidden");
-        document.getElementById("login-section").classList.remove("hidden");
-    }
+    fetch(scriptUrl, { method: "POST", body: JSON.stringify(formData) })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if(data.status === "success") {
+            document.getElementById("reportForm").reset();
+            updateMistriOptions();
+        }
+    })
+    .catch(() => alert("নেটওয়ার্ক এরর! আবার চেষ্টা করুন।"))
+    .finally(() => {
+        document.getElementById("submitBtn").innerText = "এডমিন প্যানেলে পাঠান";
+        document.getElementById("submitBtn").disabled = false;
+    });
+}
 </script>
 </body>
 </html>
