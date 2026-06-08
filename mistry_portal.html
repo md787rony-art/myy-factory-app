@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কারখানা মিস্ত্রি পোর্টাল (All-in-One Base64)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); color: #000; padding: 15px; min-height: 100vh; }
+        .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 -4px 0 rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
+        h2, h3 { color: #000; margin-bottom: 15px; }
+        .login-screen { max-width: 400px; margin: 60px auto; text-align: center; }
+        .dashboard { display: none; max-width: 700px; margin: 0 auto; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0 18px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; color: #000; font-weight: 500; }
+        button { width: 100%; padding: 14px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 10px; }
+        button:active { transform: translateY(2px); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .stat-card { background: #000; padding: 15px; border-radius: 10px; text-align: center; color: #fff; }
+        .stat-card h4 { font-size: 14px; color: #ccc; }
+        .stat-card p { font-size: 22px; font-weight: bold; margin-top: 5px; }
+        .stat-card.balance-card { background: #fff; color: #000; border: 2px solid #000; }
+        
+        /* 👤 প্রোফাইল পিকচার স্টাইল */
+        .profile-pic-container { text-align: center; margin-bottom: 20px; }
+        .profile-pic { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid #000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: #eee; }
+        
+        .hidden { display: none; }
+        .history-item { padding: 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 15px; color: #000; }
+        .user-meta-info { margin-top: 8px; font-size: 15px; color: #000; background: #f1f5f9; padding: 15px; border-radius: 8px; border-left: 5px solid #000; line-height: 1.6; }
+        .info-title { font-weight: bold; color: #334155; }
+    </style>
+</head>
+<body>
+
+<div id="login-block" class="box-3d login-screen">
+    <h2>🏭 কারখানা মিস্ত্রি পোর্টাল</h2>
+    <p style="font-size: 13px; margin-bottom: 15px; color: #555;">সঠিক পাসওয়ার্ড দিলে কোডের ভেতর থেকে Base64 প্রোফাইল লোড হবে</p>
+    <input type="text" id="username" placeholder="মিস্ত্রি ইউজারনেম (rony, kamal)">
+    <input type="password" id="password" placeholder="গোপন পাসওয়ার্ড দিন">
+    <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
+</div>
+
+<div id="dashboard-block" class="dashboard">
+    <div class="box-3d">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="user-welcome">👤 স্বাগতম</h3>
+            <button onclick="handleLogout()" style="width: auto; padding: 6px 12px; background: #dc2626; font-size: 13px;">🚪 লগআউট</button>
+        </div>
+        
+        <div class="profile-pic-container">
+            <img id="user-avatar" class="profile-pic" src="" alt="Profile Picture">
+        </div>
+
+        <div id="user-details-box" class="user-meta-info"></div>
+        <br>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><h4>মোট হাজিরা</h4><p id="stat-hajira">0</p></div>
+            <div class="stat-card"><h4>মোট বিল (পাওনা)</h4><p id="stat-earned">0 ৳</p></div>
+            <div class="stat-card"><h4>টোটাল রিচার্জ (অগ্রিম গ্রহণ)</h4><p id="stat-paid">0 ৳</p></div>
+            <div class="stat-card balance-card"><h4>নিট বকেয়া পাওনা</h4><p id="stat-balance">0 ৳</p></div>
+        </div>
+    </div>
+
+    <div class="box-3d">
+        <h3>📝 নতুন কাজের বিবরণ ও মেমো জমা দিন</h3>
+        <form id="reportForm" onsubmit="submitReport(event)">
+            <label><b>কাজের ধরণ</b></label>
+            <select id="work-type" onchange="updateFormFlow()" required>
+                <option value="">--বাছাই করুন--</option>
+                <option value="হাজিরা">হাজিরা ভিত্তিক কাজ</option>
+                <option value="কন্ট্রাক্ট">কন্ট্রাক্ট ভিত্তিক কাজ</option>
+            </select>
+
+            <div id="hajira-fields" class="hidden">
+                <label><b>কয় ঘণ্টা কাজ করেছেন?</b></label>
+                <select id="work-hours" onchange="calculateHajiraAmount()">
+                    <option value="0">--ঘণ্টা সিলেক্ট করুন--</option>
+                    <option value="4">৪ ঘণ্টা (আধা হাজিরা)</option>
+                    <option value="8">৮ ঘণ্টা (এক হাজিরা)</option>
+                    <option value="12">১২ ঘণ্টা (দের হাজিরা)</option>
+                </select>
+            </div>
+
+            <div id="dynamic-flow" class="hidden">
+                <label><b>নির্দিষ্ট কাজের আইটেম</b></label>
+                <select id="furniture-item" required>
+                    <option value="অফিস টেবিল">অফিস টেবিল তৈরি</option>
+                    <option value="আলমিরা">আলমিরা ফিটিং</option>
+                    <option value="ড্রেসিং টেবিল">ড্রেসিং টেবিল নকশা</option>
+                    <option value="খাট">খাট তৈরি</option>
+                </select>
+
+                <label><b>টাকার পরিমাণ (৳)</b></label>
+                <input type="number" id="amount" placeholder="টাকার অংক" required>
+                
+                <button type="submit">📤 মালিকের কাছে পাঠান</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 🔐 এই ফাইলের ভেতরেই সম্পূর্ণ মেমোরি এবং Base64 ইমেজ ডাটাবেস রাখা হয়েছে।
+    // আপনার এডমিন প্যানেল থেকে যেকোনো নতুন ইউজারের ডাটা বা ছবির Base64 কোড এনে সরাসরি এখানে পেস্ট করে দিতে পারেন।
+    const CENTRAL_MISTRY_DATA = {
+        "rony": {
+            "password": "123",
+            "title": "প্রধান মিস্ত্রি",
+            "mobile": "01712345678",
+            "hajira_rate": 500,
+            "skills": "রাজকীয় খাট তৈরি, মেহগনি কাঠের আলমিরা পালিশ, নকশা কাটিং",
+            "total_earned": 15500,
+            "total_paid": 5000, // টোটাল রিচার্জ বা অগ্রিম নিয়েছে
+            "total_hajira": 22,
+            // নিচে ডেমো ছোট একটি Base64 ইমেজ কোড দেওয়া আছে। এখানে আপনি বড় আসল ছবির Base64 কোড বসাবেন।
+            "profile_pic_base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkBAMAAACCbghaAAAAMFBMVEUAAAD8/vwYGBgNDQ0GBgYICAgFBQUKCgoHBwcJCQkEBAMDAwMCAgIEBAQEBAQEBAMJCQmaZbyfAAAAVklEQVRIx2NgGAWjYBSMglEwCkbBSAcMYBwM5v//g0A8mE+A+YQZWBgE4v8gEM8H8wkwH8wHYpAAs8FsMAYLmI3GYgGz0VgsYDYaS8AoGAWjYBSMglEwYgEAhbID9996XzEAAAAASUVORK5CYII="
+        },
+        "kamal": {
+            "password": "456",
+            "title": "সহকারী মিস্ত্রি",
+            "mobile": "01822222222",
+            "hajira_rate": 400,
+            "skills": "কাঠ সাইজিং, বোর্ড ফিটিং, ল্যামিনেশন পেস্টিং",
+            "total_earned": 8400,
+            "total_paid": 2000, // টোটাল রিচার্জ বা অগ্রিম নিয়েছে
+            "total_hajira": 12,
+            "profile_pic_base64": "" // ছবি না থাকলে ডিফল্ট প্লেসহোল্ডার দেখাবে
+        }
+    };
+
+    let activeUser = {};
+    let activeUsername = "";
+
+    // ১. লগইন ভেরিফিকেশন এবং ডাটা কল করা
+    function handleLogin() {
+        const inputUser = document.getElementById("username").value.trim().toLowerCase();
+        const inputPass = document.getElementById("password").value;
+
+        // একই ফাইলে থাকা অবজেক্ট থেকে পাসওয়ার্ড ও ইউজার ম্যাচ করানো হচ্ছে
+        if (CENTRAL_MISTRY_DATA[inputUser] && CENTRAL_MISTRY_DATA[inputUser].password === inputPass) {
+            activeUsername = inputUser;
+            activeUser = CENTRAL_MISTRY_DATA[inputUser];
+            showDashboard();
+        } else {
+            alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
+        }
+    }
+
+    // ২. প্রোফাইল এবং Base64 ছবি স্ক্রিনে রেন্ডার করা
+    function showDashboard() {
+        document.getElementById("login-block").style.display = "none";
+        document.getElementById("dashboard-block").style.display = "block";
+        document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUsername.toUpperCase()}`;
+
+        // Base64 ছবি কল করা হচ্ছে
+        if (activeUser.profile_pic_base64 && activeUser.profile_pic_base64 !== "") {
+            document.getElementById("user-avatar").src = activeUser.profile_pic_base64;
+        } else {
+            document.getElementById("user-avatar").src = "https://via.placeholder.com/130"; // ছবি না থাকলে এটি দেখাবে
+        }
+
+        // সমস্ত তথ্য প্রোফাইলে পুশ
+        document.getElementById("user-details-box").innerHTML = `
+            <p><span class="info-title">পদবি:</span> ${activeUser.title}</p>
+            <p><span class="info-title">মোবাইল নম্বর:</span> ${activeUser.mobile}</p>
+            <p><span class="info-title">লগইন পাসওয়ার্ড:</span> ${activeUser.password}</p>
+            <p><span class="info-title">দৈনিক হাজিরা রেট:</span> ${activeUser.hajira_rate} ৳</p>
+            <p><span class="info-title">দক্ষতা ও বর্তমান কাজ:</span> ${activeUser.skills}</p>
+        `;
+
+        // রিচার্জ এবং হিসাব নিকাশ আপডেট
+        document.getElementById("stat-hajira").innerText = activeUser.total_hajira;
+        document.getElementById("stat-earned").innerText = activeUser.total_earned + " ৳";
+        document.getElementById("stat-paid").innerText = activeUser.total_paid + " ৳";
+        document.getElementById("stat-balance").innerText = (activeUser.total_earned - activeUser.total_paid) + " ৳";
+    }
+
+    function updateFormFlow() {
+        const type = document.getElementById("work-type").value;
+        document.getElementById("hajira-fields").className = (type === "হাজিরা") ? "" : "hidden";
+        document.getElementById("dynamic-flow").className = (type !== "") ? "" : "hidden";
+        document.getElementById("amount").readOnly = (type === "হাজিরা");
+        if(type !== "হাজিরা") document.getElementById("amount").value = "";
+    }
+
+    function calculateHajiraAmount() {
+        const hours = parseInt(document.getElementById("work-hours").value);
+        let mult = 0;
+        if(hours === 4) mult = 0.5; if(hours === 8) mult = 1.0; if(hours === 12) mult = 1.5;
+        document.getElementById("amount").value = mult * parseFloat(activeUser.hajira_rate || 0);
+    }
+
+    function submitReport(e) {
+        e.preventDefault();
+        alert("✅ কাজের বিবরণটি সাময়িকভাবে সাবমিট হয়েছে!");
+        location.reload();
+    }
+
+    function handleLogout() {
+        location.reload();
+    }
+</script>
+</body>
+</html>
