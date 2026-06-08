@@ -44,6 +44,7 @@
 </div>
 
 <script>
+// ⚠️ আপনার নতুন জেনারেট হওয়া New Deployment Web App URL টি নিচের লাইনে বসাবেন
 const scriptUrl = "https://script.google.com/macros/s/AKfycbx7Fym_Dt5Aq7jV2CzuiKlW4IEWo65sx19CAvBY2YVv4HRwIbkL_-d8EdSiBciGdNWHCQ/exec";
 
 window.onload = function() {
@@ -79,7 +80,7 @@ window.onload = function() {
         });
     })
     .catch(err => {
-        document.getElementById("loading").innerText = "ডেটা লোড করতে ব্যর্থ! অনুগ্রহ করে আবার চেষ্টা করুন বা ব্যাকএন্ড চেক করুন।";
+        document.getElementById("loading").innerText = "ডেটা লোড করতে ব্যর্থ! ব্যাকএন্ডে স্প্রেডশীট আইডি ঠিক করুন।";
     });
 };
 
