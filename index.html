@@ -6,158 +6,104 @@
     <title>কারখানা মিস্ত্রি পোর্টাল</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        
-        /* থ্রিডি পিঙ্ক ও সিলভার মিক্সড ব্যাকগ্রাউন্ড */
-        body { 
-            background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); 
-            color: #000; 
-            padding: 15px; 
-            min-height: 100vh;
-        }
-        
-        /* কার্ডগুলোতে থ্রিডি প্রভাব (3D Shadow इफेक्ट) */
-        .box-3d {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15), inset 0 -4px 0 rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.7);
-            margin-bottom: 20px;
-        }
-
-        h2, h3 { color: #000; margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        
+        body { background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); color: #000; padding: 15px; min-height: 100vh; }
+        .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 -4px 0 rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
+        h2, h3 { color: #000; margin-bottom: 15px; }
         .login-screen { max-width: 400px; margin: 60px auto; text-align: center; }
         .dashboard { display: none; max-width: 700px; margin: 0 auto; }
-        
-        input, select {
-            width: 100%; padding: 12px; margin: 10px 0 18px;
-            border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px;
-            background: #f8fafc; color: #000; font-weight: 500;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        /* ব্ল্যাক এবং হোয়াইট বাটন থিম */
-        button {
-            width: 100%; padding: 14px; background: #000; color: #fff;
-            border: none; border-radius: 8px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-        button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2); }
-        
-        /* তথ্য প্রদর্শনের জন্য ক্লিন গ্রিড */
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0 18px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; color: #000; font-weight: 500; }
+        button { width: 100%; padding: 14px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        button:active { transform: translateY(2px); }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .stat-card { 
-            background: #fff; padding: 15px; border-radius: 10px; text-align: center;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.08); border-bottom: 4px solid #000;
-        }
-        .stat-card.alert { border-bottom: 4px solid #dc2626; }
-        .stat-card h4 { font-size: 14px; color: #666; }
-        .stat-card p { font-size: 20px; font-weight: bold; margin-top: 5px; }
-
+        .stat-card { background: #000; padding: 15px; border-radius: 10px; text-align: center; color: #fff; }
+        .stat-card h4 { font-size: 14px; color: #ccc; }
+        .stat-card p { font-size: 22px; font-weight: bold; margin-top: 5px; }
+        .stat-card.balance-card { background: #fff; color: #000; border: 2px solid #000; }
+        .stat-card.balance-card h4 { color: #555; }
+        .stat-card.balance-card p { color: #000; }
         .hidden { display: none; }
-        .history-item { 
-            padding: 10px; border-bottom: 1px solid #e2e8f0; 
-            display: flex; justify-content: space-between; font-size: 14px;
-        }
+        .history-item { padding: 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 15px; color: #000; }
     </style>
 </head>
 <body>
 
 <div id="login-block" class="box-3d login-screen">
-    <h2>🏭 কারখানা লগইন</h2>
-    <input type="text" id="username" placeholder="ইউজারনেম দিন">
-    <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
-    <button onclick="handleLogin()">প্রবেশ করুন</button>
+    <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
+    <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
+    <input type="password" id="password" placeholder="আপনার পাসওয়ার্ড দিন">
+    <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
 </div>
 
 <div id="dashboard-block" class="dashboard">
-    
     <div class="box-3d">
-        <h3 id="user-welcome">স্বাগতম, মিস্ত্রি</h3>
+        <h3 id="user-welcome">স্বাগতম মিস্ত্রি</h3>
         <div class="stats-grid">
-            <div class="stat-card">
-                <h4>মোট হাজিরা</h4>
-                <p id="stat-hajira">0</p>
-            </div>
-            <div class="stat-card">
-                <h4>মোট পাওনা</h4>
-                <p id="stat-earned">0 ৳</p>
-            </div>
-            <div class="stat-card">
-                <h4>মোট উত্তোলন</h4>
-                <p id="stat-paid">0 ৳</p>
-            </div>
-            <div class="stat-card alert">
-                <h4>অবশিষ্ট জের</h4>
-                <p id="stat-balance">0 ৳</p>
-            </div>
+            <div class="stat-card"><h4>মোট হাজিরা</h4><p id="stat-hajira">0</p></div>
+            <div class="stat-card"><h4>মোট বিল (পাওনা)</h4><p id="stat-earned">0 ৳</p></div>
+            <div class="stat-card"><h4>মোট গ্রহণ (দেনা)</h4><p id="stat-paid">0 ৳</p></div>
+            <div class="stat-card balance-card"><h4>নিট বকেয়া</h4><p id="stat-balance">0 ৳</p></div>
         </div>
     </div>
 
     <div class="box-3d">
-        <h3>📝 নতুন কাজের রিপোর্ট</h3>
-        
-        <label>ধাপ ১: কাজের ধরণ সিলেক্ট করুন</label>
-        <select id="work-type" onchange="updateFormFlow()">
-            <option value="">--বাছাই করুন--</option>
-            <option value="হাজিরা">হাজিরা ভিত্তিক</option>
-            <option value="কন্ট্রাক্ট">কন্ট্রাক্ট ভিত্তিক</option>
-        </select>
-
-        <div id="hajira-fields" class="hidden">
-            <label>সময়সীমা নির্ধারণ করুন (ঘণ্টা)</label>
-            <select id="work-hours" onchange="calculateHajiraAmount()">
-                <option value="0">--ঘণ্টা সিলেক্ট করুন--</option>
-                <option value="4">৪ ঘণ্টা (আধা হাজিরা)</option>
-                <option value="8">৮ ঘণ্টা (এক হাজিরা)</option>
-                <option value="12">১২ ঘণ্টা (দের হাজিরা)</option>
-            </select>
-        </div>
-
-        <div id="dynamic-flow" class="hidden">
-            <label>ধাপ ২: মিস্ত্রি বা দোকানের ধরণ</label>
-            <select id="mistri-category" onchange="populateItems()">
+        <h3>📝 নতুন কাজের বিবরণ জমা দিন</h3>
+        <form id="reportForm" onsubmit="submitReport(event)">
+            <label><b>ধাপ ১: কাজের ধরণ</b></label>
+            <select id="work-type" onchange="updateFormFlow()" required>
                 <option value="">--বাছাই করুন--</option>
-                <option value="কালার মিস্ত্রি">কালার মিস্ত্রি</option>
-                <option value="নকশা মিস্ত্রি">নকশা মিস্ত্রি</option>
-                <option value="কাঠমিস্ত্রি">কাঠমিস্ত্রি</option>
-                <option value="CNC দোকান">CNC দোকান</option>
+                <option value="হাজিরা">হাজিরা ভিত্তিক কাজ</option>
+                <option value="কন্ট্রাক্ট">কন্ট্রাক্ট ভিত্তিক কাজ</option>
             </select>
 
-            <label>ধাপ ৩: আসবাবপত্র বা কাজের বিবরণ</label>
-            <select id="furniture-item">
-                <option value="">--আগে ক্যাটাগরি বাছুন--</option>
-            </select>
+            <div id="hajira-fields" class="hidden">
+                <label><b>কয় ঘণ্টা কাজ করেছেন?</b></label>
+                <select id="work-hours" onchange="calculateHajiraAmount()">
+                    <option value="0">--ঘণ্টা সিলেক্ট করুন--</option>
+                    <option value="4">৪ ঘণ্টা (আধা হাজিরা)</option>
+                    <option value="8">৮ ঘণ্টা (এক হাজিরা)</option>
+                    <option value="12">১২ ঘণ্টা (দের হাজিরা)</option>
+                </select>
+            </div>
 
-            <label>ধাপ ৪: টাকার পরিমাণ (৳)</label>
-            <input type="number" id="amount" placeholder="টাকার অংক লিখুন">
-            
-            <button id="submit-btn" onclick="submitReport()">📤 রিপোর্ট জমা দিন</button>
-        </div>
+            <div id="dynamic-flow" class="hidden">
+                <label><b>ধাপ ২: নির্দিষ্ট কাজের আইটেম</b></label>
+                <select id="furniture-item" required>
+                    <option value="অফিস টেবিল">অফিস টেবিল কাটিং/তৈরি</option>
+                    <option value="আলমিরা">আলমিরা ফিটিং/কালার</option>
+                    <option value="ড্রেসিং টেবিল">ড্রেসিং টেবিল নকশা</option>
+                    <option value="ওয়ারড্রব">ওয়ারড্রব কাজ</option>
+                    <option value="শোকেস">শোকেস নকশা কাটিং</option>
+                    <option value="খাট">খাট তৈরি</option>
+                </select>
+
+                <label><b>ধাপ ৩: টাকার পরিমাণ (৳)</b></label>
+                <input type="number" id="amount" placeholder="টাকার অংক" required>
+                
+                <label><b>📸 মেমো বা কাজের ছবির লিংক (যদি থাকে)</b></label>
+                <input type="text" id="photo-link" placeholder="ছবির ইউআরএল বা লিংক দিন">
+                
+                <button type="submit" id="submit-btn">📤 মালিকের কাছে পাঠান</button>
+            </div>
+        </form>
     </div>
 
     <div class="box-3d">
-        <h3>📊 আপনার কাজের পুরাতন ইতিহাস</h3>
+        <h3>📊 অনুমোদিত কাজের ইতিহাস</h3>
         <div id="history-list"></div>
     </div>
 </div>
 
 <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXY7hsDfuwWIDiOwunXnAl5Jc_w5mVT7t2xeVIKEsYA14aAGU-8WNpMOHVjxXiy5VMQw/exec";
+    // 🔗 নিচে আপনার তৈরি করা গুগল ওয়েব অ্যাপের লিংকটি বসাবেন
+    const GOOGLE_API_URL = "https://script.google.com/macros/s/XXXXX/exec"; 
     let userData = {};
 
-    const itemsList = ["অফিস টেবিল", "আলমিরা", "ড্রেসিং টেবিল", "জুতার বাক্স", "টিভির বক্স", "ওয়ারড্রব", "শোকেস", "খাট"];
-
     function handleLogin() {
-        const u = document.getElementById("username").value;
+        const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
-        if(!u || !p) return alert("সব ঘর পূরণ করুন!");
+        if(!u || !p) return alert("ইউজারনেম এবং পাসওয়ার্ড দিন!");
 
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "login", username: u, password: p })
-        })
+        fetch(`${GOOGLE_API_URL}?action=login&username=${u}&password=${p}`)
         .then(res => res.json())
         .then(res => {
             if(res.status === "SUCCESS") {
@@ -165,110 +111,60 @@
                 document.getElementById("login-block").style.display = "none";
                 document.getElementById("dashboard-block").style.display = "block";
                 setupDashboard();
-            } else {
-                alert("ভুল ইউজারনেম বা পাসওয়ার্ড!");
-            }
-        });
+            } else { alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!"); }
+        }).catch(() => alert("সার্ভার কানেকশন এরর!"));
     }
 
     function setupDashboard() {
-        document.getElementById("user-welcome").innerText = `👤 নাম: ${userData.name.toUpperCase()} (${userData.type})`;
+        document.getElementById("user-welcome").innerText = `👤 ইউজার: ${userData.name.toUpperCase()} (${userData.title})`;
         document.getElementById("stat-hajira").innerText = userData.totalHajira;
         document.getElementById("stat-earned").innerText = userData.totalEarned + " ৳";
         document.getElementById("stat-paid").innerText = userData.totalPaid + " ৳";
         document.getElementById("stat-balance").innerText = (userData.totalEarned - userData.totalPaid) + " ৳";
 
         const histContainer = document.getElementById("history-list");
-        histContainer.innerHTML = userData.history.length ? "" : "<p>কোনো পূর্ববর্তী রেকর্ড নেই।</p>";
+        histContainer.innerHTML = userData.history.length ? "" : "<p>কোনো ইতিহাস পাওয়া যায়নি।</p>";
         userData.history.forEach(h => {
-            histContainer.innerHTML += `
-                <div class="history-item">
-                    <span>📅 ${h.date.split('T')[0]} - ${h.details}</span>
-                    <strong>${h.earned || h.paid} ৳ (${h.hajira} হাজিরা)</strong>
-                </div>`;
+            histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.earned} ৳</strong></div>`;
         });
     }
 
     function updateFormFlow() {
         const type = document.getElementById("work-type").value;
-        const hajiraFields = document.getElementById("hajira-fields");
-        const dynamicFlow = document.getElementById("dynamic-flow");
-        const amountField = document.getElementById("amount");
-
-        if(type === "হাজিরা") {
-            hajiraFields.classList.remove("hidden");
-            dynamicFlow.classList.remove("hidden");
-            amountField.readOnly = true; // হাজিরার টাকা অটো বসবে
-        } else if(type === "কন্ট্রাক্ট") {
-            hajiraFields.classList.add("hidden");
-            dynamicFlow.classList.remove("hidden");
-            amountField.readOnly = false; // নিজের হাত দিয়ে বসাবে
-            amountField.value = "";
-        } else {
-            hajiraFields.classList.add("hidden");
-            dynamicFlow.classList.add("hidden");
-        }
+        document.getElementById("hajira-fields").className = (type === "হাজিরা") ? "" : "hidden";
+        document.getElementById("dynamic-flow").className = (type !== "") ? "" : "hidden";
+        document.getElementById("amount").readOnly = (type === "হাজিরা");
+        if(type !== "হাজিরা") document.getElementById("amount").value = "";
     }
 
     function calculateHajiraAmount() {
         const hours = parseInt(document.getElementById("work-hours").value);
-        let hajiraMultiplier = 0;
-        
-        if(hours === 4) hajiraMultiplier = 0.5;
-        if(hours === 8) hajiraMultiplier = 1.0;
-        if(hours === 12) hajiraMultiplier = 1.5;
-
-        // ইউজার প্রোফাইলে থাকা পার-হাজিরা মজুরির সাথে গুণ হয়ে অটোমেটিক বসে যাবে
-        const autoAmount = hajiraMultiplier * userData.rate;
-        document.getElementById("amount").value = autoAmount;
+        let mult = 0;
+        if(hours === 4) mult = 0.5; if(hours === 8) mult = 1.0; if(hours === 12) mult = 1.5;
+        document.getElementById("amount").value = mult * parseFloat(userData.rate || 0);
     }
 
-    function populateItems() {
-        const select = document.getElementById("furniture-item");
-        select.innerHTML = '<option value="">--আইটেম সিলেক্ট করুন--</option>';
-        itemsList.forEach(item => {
-            select.innerHTML += `<option value="${item}">${item}</option>`;
-        });
-    }
+    function submitReport(e) {
+        e.preventDefault();
+        const btn = document.getElementById("submit-btn");
+        btn.innerText = "🔄 পাঠানো হচ্ছে..."; btn.disabled = true;
 
-    function submitReport() {
         const wType = document.getElementById("work-type").value;
-        const cat = document.getElementById("mistri-category").value;
         const item = document.getElementById("furniture-item").value;
         const amt = document.getElementById("amount").value;
-        const hours = parseInt(document.getElementById("work-hours").value || 0);
+        const img = document.getElementById("photo-link").value || "No Image";
         
-        if(!wType || !cat || !item || !amt) return alert("অনুগ্রহ করে সব অপশন সিলেক্ট করুন!");
+        let hc = 0; const hours = parseInt(document.getElementById("work-hours").value || 0);
+        if(hours === 4) hc = 0.5; if(hours === 8) hc = 1; if(hours === 12) hc = 1.5;
 
-        let hajiraCount = 0;
-        if(wType === "হাজিরা") {
-            if(hours === 4) hajiraCount = 0.5;
-            if(hours === 8) hajiraCount = 1;
-            if(hours === 12) hajiraCount = 1.5;
-        }
+        const details = `${userData.title} -> ${item} (${wType})`;
 
-        const btn = document.getElementById("submit-btn");
-        btn.innerText = "🔄 পাঠানো হচ্ছে...";
-        btn.disabled = true;
-
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                action: "submit_report",
-                name: userData.name,
-                reportType: wType,
-                details: `${cat} - ${item} (${hours ? hours+' ঘণ্টা' : 'কন্ট্রাক্ট'})`,
-                amount: amt,
-                hajiraCount: hajiraCount
-            })
-        })
+        fetch(`${GOOGLE_API_URL}?action=submit_report&username=${userData.name}&report_type=${wType}&details=${details}&amount=${amt}&hajira_count=${hc}&image_path=${encodeURIComponent(img)}`, { method: "POST" })
         .then(res => res.json())
         .then(res => {
-            if(res.status === "SUCCESS") {
-                alert("✅ কোনো ফটো ছাড়াই রিপোর্টটি সফলভাবে অ্যাডমিন প্যানেলে পাঠানো হয়েছে!");
-                location.reload();
-            }
-        });
+            if(res.status === "SUCCESS") { alert("✅ হিসাবটি মালিকের কাছে পেন্ডিং হিসেবে পাঠানো হয়েছে!"); location.reload(); }
+            else { alert("ভুল হয়েছে!"); btn.disabled = false; }
+        }).catch(() => { alert("এরর!"); btn.disabled = false; });
     }
 </script>
 </body>
