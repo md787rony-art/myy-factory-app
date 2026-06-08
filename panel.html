@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FB Member Panel</title>
+    <style>
+        /* সম্পূর্ণ প্যানেলের ডিজাইন (CSS) এখানে যুক্ত করা হয়েছে */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #F0F2F5;
+            color: #1c1e21;
+        }
+
+        /* লগইন স্ক্রিন */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #F0F2F5;
+        }
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+        .login-box h2 { color: #1877F2; margin-bottom: 5px; }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1877F2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .login-box button:hover { background-color: #166FE5; }
+        .error { color: red; font-size: 14px; margin-top: 10px; }
+
+        /* ফেসবুক স্টাইল নেভবার */
+        .navbar {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar .logo {
+            color: #1877F2;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+        .logout-btn {
+            background-color: #E4E6EB;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .logout-btn:hover { background-color: #D8DADF; }
+
+        /* প্রোফাইল প্যানেল */
+        .profile-card {
+            background: white;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .profile-pic-container {
+            position: relative;
+            display: inline-block;
+        }
+        #profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* ইমেজ আপলোড বাটন */
+        .upload-btn-wrapper {
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .btn {
+            border: none;
+            color: #1877F2;
+            background-color: #E7F3FF;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Base64 কোড রাখার বক্স */
+        .content-section {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            background-color: #F0F2F5;
+            font-family: monospace;
+            font-size: 11px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ১. পাসওয়ার্ড লগইন সেকশন -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <h2>প্রবেশাধিকার সংরক্ষিত</h2>
+            <p>প্যানেল দেখতে আপনার সিক্রেট পাসওয়ার্ড দিন</p>
+            <input type="password" id="password-input" placeholder="পাসওয়ার্ড লিখুন...">
+            <button onclick="checkPassword()">প্রবেশ করুন</button>
+            <p id="error-msg" class="error"></p>
+        </div>
+    </div>
+
+    <!-- ২. মূল ফেসবুক প্যানেল (লগইন করার পর দেখাবে) -->
+    <div id="main-panel" class="panel-container" style="display: none;">
+        <div class="navbar">
+            <span class="logo">facebook</span>
+            <button class="logout-btn" onclick="logout()">লগআউট</button>
+        </div>
+
+        <!-- প্রোফাইল ভিউ -->
+        <div class="profile-card">
+            <div class="profile-pic-container">
+                <!-- আপলোড করা ছবি এখানে দেখাবে -->
+                <img id="profile-pic" src="https://via.placeholder.com/150" alt="Profile Picture">
+                <br>
+                <div class="upload-btn-wrapper">
+                    <button class="btn">নতুন ছবি আপলোড করুন</button>
+                    <input type="file" id="image-loader" accept="image/*" onchange="handleImageUpload(event)">
+                </div>
+            </div>
+            <h1 class="user-name">বন্ধুর প্রোফাইল প্যানেল</h1>
+            <p class="bio">এই প্যানেলটি সফলভাবে পাসওয়ার্ড দিয়ে সুরক্ষিত করা হয়েছে।</p>
+        </div>
+
+        <!-- Base64 ডাটা স্টোরেজ এরিয়া -->
+        <div class="content-section">
+            <h3>ছবির Base64 কোড (এখানে জমা থাকবে):</h3>
+            <textarea id="base64-output" readonly placeholder="কোনো ছবি আপলোড করা হলে তার সম্পূর্ণ Base64 ডাটা কোড এখানে দেখা যাবে..."></textarea>
+            <p style="font-size: 12px; color: #65676B; margin-top: 5px;">*ছবি সিলেক্ট করলেই সেটি স্বয়ংক্রিয়ভাবে Base64 কোডে রূপান্তরিত হয়ে ব্রাউজারের LocalStorage-এ চিরস্থায়ীভাবে সেভ হয়ে থাকবে (যতক্ষণ না আপনি ব্রাউজার ক্যাশ ক্লিয়ার করছেন)।</p>
+        </div>
+    </div>
+
+    <!-- ৩. সমস্ত ফাংশন ও লজিক (JavaScript) -->
+    <script>
+        // এখানে আপনার মনের মতো পাসওয়ার্ডটি বসিয়ে দিন
+        const SECRET_PASSWORD = "admin"; 
+
+        // পেজ লোড হবার সাথে সাথে আগের ডেটা ও লগইন স্ট্যাটাস চেক হবে
+        window.onload = function() {
+            if (sessionStorage.getItem("panelLoggedIn") === "true") {
+                showPanel();
+            }
+            // লোকাল স্টোরেজ থেকে আগের ছবি লোড করা
+            const savedImageBase64 = localStorage.getItem("storedProfilePic");
+            if (savedImageBase64) {
+                document.getElementById('profile-pic').src = savedImageBase64;
+                document.getElementById('base64-output').value = savedImageBase64;
+            }
+        }
+
+        // পাসওয়ার্ড যাচাই করার ফাংশন
+        function checkPassword() {
+            const userInput = document.getElementById("password-input").value;
+            const errorElement = document.getElementById("error-msg");
+
+            if (userInput === SECRET_PASSWORD) {
+                sessionStorage.setItem("panelLoggedIn", "true");
+                showPanel();
+            } else {
+                errorElement.innerText = "ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।";
+            }
+        }
+
+        // প্যানেল দেখানোর ফাংশন
+        function showPanel() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("main-panel").style.display = "block";
+        }
+
+        // লগআউট ফাংশন
+        function logout() {
+            sessionStorage.removeItem("panelLoggedIn");
+            window.location.reload();
+        }
+
+        // ছবি আপলোড করে Base64 এ রূপান্তর ও সংরক্ষণের মেইন ফাংশন
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const base64Result = e.target.result;
+                    
+                    // প্রোফাইল ছবি আপডেট
+                    document.getElementById('profile-pic').src = base64Result;
+                    
+                    // নিচের বক্সে Base64 টেক্সট শো করা
+                    document.getElementById('base64-output').value = base64Result;
+                    
+                    // লোকাল স্টোরেজে ডাটা পার্মানেন্ট সেভ করা
+                    localStorage.setItem("storedProfilePic", base64Result);
+                }
+                
+                // ফাইলকে ডাটা ইউআরএল (Base64) হিসেবে রিড করা
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
