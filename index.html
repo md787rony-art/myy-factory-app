@@ -108,6 +108,7 @@ document.getElementById("reportForm").addEventListener("submit", function(e) {
 });
 
 function sendData(base64, fileName, mimeType) {
+    // ⚠️ আপনার নতুন জেনারেট হওয়া New Deployment Web App URL টি নিচের লাইনে বসাবেন
     const scriptUrl = "https://script.google.com/macros/s/AKfycbx7Fym_Dt5Aq7jV2CzuiKlW4IEWo65sx19CAvBY2YVv4HRwIbkL_-d8EdSiBciGdNWHCQ/exec";
     
     const formData = {
@@ -129,7 +130,7 @@ function sendData(base64, fileName, mimeType) {
             updateMistriOptions();
         }
     })
-    .catch(() => alert("নেটওয়ার্ক এরর! আবার চেষ্টা করুন।"))
+    .catch(() => alert("নেটওয়ার্ক এরর বা আইডি সমস্যা! আবার চেষ্টা করুন।"))
     .finally(() => {
         document.getElementById("submitBtn").innerText = "এডমিন প্যানেলে পাঠান";
         document.getElementById("submitBtn").disabled = false;
