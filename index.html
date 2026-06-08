@@ -11,7 +11,7 @@
         h2, h3 { color: #000; margin-bottom: 15px; }
         .login-screen { max-width: 400px; margin: 60px auto; text-align: center; }
         .dashboard { display: none; max-width: 700px; margin: 0 auto; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0 18px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; color: #000; font-weight: 500; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0 18px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; color: #000; font-weight: 500; }
         button { width: 100%; padding: 14px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         button:active { transform: translateY(2px); }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
@@ -19,8 +19,6 @@
         .stat-card h4 { font-size: 14px; color: #ccc; }
         .stat-card p { font-size: 22px; font-weight: bold; margin-top: 5px; }
         .stat-card.balance-card { background: #fff; color: #000; border: 2px solid #000; }
-        .stat-card.balance-card h4 { color: #555; }
-        .stat-card.balance-card p { color: #000; }
         .hidden { display: none; }
         .history-item { padding: 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 15px; color: #000; }
     </style>
@@ -31,7 +29,7 @@
     <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
     <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
     <input type="password" id="password" placeholder="আপনার পাসওয়ার্ড দিন">
-    <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
+    <button onclick="handleLogin()">🔐 একاونটে প্রবেশ করুন</button>
 </div>
 
 <div id="dashboard-block" class="dashboard">
@@ -69,7 +67,7 @@
                 <label><b>ধাপ ২: নির্দিষ্ট কাজের আইটেম</b></label>
                 <select id="furniture-item" required>
                     <option value="অফিস টেবিল">অফিস টেবিল কাটিং/তৈরি</option>
-                    <option value="আলমিরা">আলমিরা ফিটিং/কালার</option>
+                    <option value="আলমিরা">আলমিরা ফিٹنگ/কালার</option>
                     <option value="ড্রেসিং টেবিল">ড্রেসিং টেবিল নকশা</option>
                     <option value="ওয়ারড্রব">ওয়ারড্রব কাজ</option>
                     <option value="শোকেস">শোকেস নকশা কাটিং</option>
@@ -94,39 +92,52 @@
 </div>
 
 <script>
-    // 🔗 নিচে আপনার তৈরি করা গুগল ওয়েব অ্যাপের লিংকটি বসাবেন
-    const GOOGLE_API_URL = "https://script.google.com/macros/s/XXXXX/exec"; 
-    let userData = {};
+    const JSON_URL = "https://md787rony-art.github.io/myy-factory-app/ssdd.json"; 
+    let dbData = {};
+    let activeUser = {};
 
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
-        if(!u || !p) return alert("ইউজারনেম এবং পাসওয়ার্ড দিন!");
 
-        fetch(`${GOOGLE_API_URL}?action=login&username=${u}&password=${p}`)
+        fetch(JSON_URL, { cache: "no-store" })
         .then(res => res.json())
-        .then(res => {
-            if(res.status === "SUCCESS") {
-                userData = res;
+        .then(db => {
+            dbData = db;
+            const localLedger = JSON.parse(localStorage.getItem('local_ledger') || '[]');
+            const combinedLedger = [...dbData.ledger, ...localLedger];
+
+            const user = dbData.users.find(user => user.username === u && user.password === p);
+            if (user) {
+                activeUser = user;
                 document.getElementById("login-block").style.display = "none";
                 document.getElementById("dashboard-block").style.display = "block";
-                setupDashboard();
+                setupDashboard(combinedLedger);
             } else { alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!"); }
-        }).catch(() => alert("সার্ভার কানেকশন এরর!"));
+        }).catch(() => alert("ডাটা ফাইল লোড করতে সমস্যা হচ্ছে! আপনার ssdd.json ফাইলটি চেক করুন।"));
     }
 
-    function setupDashboard() {
-        document.getElementById("user-welcome").innerText = `👤 ইউজার: ${userData.name.toUpperCase()} (${userData.title})`;
-        document.getElementById("stat-hajira").innerText = userData.totalHajira;
-        document.getElementById("stat-earned").innerText = userData.totalEarned + " ৳";
-        document.getElementById("stat-paid").innerText = userData.totalPaid + " ৳";
-        document.getElementById("stat-balance").innerText = (userData.totalEarned - userData.totalPaid) + " ৳";
-
+    function setupDashboard(ledger) {
+        document.getElementById("user-welcome").innerText = `👤 ইউজার: ${activeUser.username.toUpperCase()} (${activeUser.title})`;
+        
+        let totalEarned = 0, totalPaid = 0, totalHajira = 0;
         const histContainer = document.getElementById("history-list");
-        histContainer.innerHTML = userData.history.length ? "" : "<p>কোনো ইতিহাস পাওয়া যায়নি।</p>";
-        userData.history.forEach(h => {
-            histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.earned} ৳</strong></div>`;
+        histContainer.innerHTML = "";
+
+        ledger.forEach(h => {
+            if(h.username === activeUser.username && h.status === 'Approved') {
+                totalEarned += parseFloat(h.amount || 0);
+                totalPaid += parseFloat(h.paid_amount || 0);
+                totalHajira += parseFloat(h.hajira_count || 0);
+                histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.amount} ৳</strong></div>`;
+            }
         });
+
+        document.getElementById("stat-hajira").innerText = totalHajira;
+        document.getElementById("stat-earned").innerText = totalEarned + " ৳";
+        document.getElementById("stat-paid").innerText = totalPaid + " ৳";
+        document.getElementById("stat-balance").innerText = (totalEarned - totalPaid) + " ৳";
+        if(!histContainer.innerHTML) histContainer.innerHTML = "<p>কোনো ইতিহাস পাওয়া যায়নি।</p>";
     }
 
     function updateFormFlow() {
@@ -141,30 +152,37 @@
         const hours = parseInt(document.getElementById("work-hours").value);
         let mult = 0;
         if(hours === 4) mult = 0.5; if(hours === 8) mult = 1.0; if(hours === 12) mult = 1.5;
-        document.getElementById("amount").value = mult * parseFloat(userData.rate || 0);
+        document.getElementById("amount").value = mult * parseFloat(activeUser.hajira_rate || 0);
     }
 
     function submitReport(e) {
         e.preventDefault();
-        const btn = document.getElementById("submit-btn");
-        btn.innerText = "🔄 পাঠানো হচ্ছে..."; btn.disabled = true;
-
-        const wType = document.getElementById("work-type").value;
-        const item = document.getElementById("furniture-item").value;
-        const amt = document.getElementById("amount").value;
-        const img = document.getElementById("photo-link").value || "No Image";
+        const d = new Date();
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         
         let hc = 0; const hours = parseInt(document.getElementById("work-hours").value || 0);
         if(hours === 4) hc = 0.5; if(hours === 8) hc = 1; if(hours === 12) hc = 1.5;
 
-        const details = `${userData.title} -> ${item} (${wType})`;
+        const newReport = {
+          "id": "REP_" + d.getTime(),
+          "username": activeUser.username,
+          "date": d.getDate() + "-" + months[d.getMonth()] + "-" + d.getFullYear(),
+          "time": d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+          "report_type": document.getElementById("work-type").value,
+          "details": `${activeUser.title} -> ${document.getElementById("furniture-item").value}`,
+          "amount": parseFloat(document.getElementById("amount").value || 0),
+          "paid_amount": 0,
+          "hajira_count": hc,
+          "image_path": document.getElementById("photo-link").value || "No Image",
+          "status": "Pending"
+        };
 
-        fetch(`${GOOGLE_API_URL}?action=submit_report&username=${userData.name}&report_type=${wType}&details=${details}&amount=${amt}&hajira_count=${hc}&image_path=${encodeURIComponent(img)}`, { method: "POST" })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === "SUCCESS") { alert("✅ হিসাবটি মালিকের কাছে পেন্ডিং হিসেবে পাঠানো হয়েছে!"); location.reload(); }
-            else { alert("ভুল হয়েছে!"); btn.disabled = false; }
-        }).catch(() => { alert("এরর!"); btn.disabled = false; });
+        let localLedger = JSON.parse(localStorage.getItem('local_ledger') || '[]');
+        localLedger.push(newReport);
+        localStorage.setItem('local_ledger', JSON.stringify(localLedger));
+
+        alert("✅ হিসাবটি মালিকের অ্যাডমিন প্যানেলে পাঠানো হয়েছে! মালিক অ্যাপ্রুভ করার জন্য অপেক্ষা করুন।");
+        location.reload();
     }
 </script>
 </body>
