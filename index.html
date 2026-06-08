@@ -3,139 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বিল বা মেমো রিপোর্ট ফরম</title>
+    <title>কারখানা মিস্ত্রি পোর্টাল</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-        .form-container { max-width: 450px; background: #fff; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h2 { text-align: center; color: #1a365d; margin-bottom: 25px; font-size: 22px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #4a5568; font-size: 14px; }
-        select, input[type="number"], input[type="file"] { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        select:disabled { background-color: #edf2f7; cursor: not-allowed; }
-        .btn-submit { width: 100%; padding: 14px; background-color: #00c292; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-back { width: 100%; padding: 12px; background-color: #5c677d; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        /* থ্রিডি পিঙ্ক ও সিলভার মিক্সড ব্যাকগ্রাউন্ড */
+        body { 
+            background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); 
+            color: #000; 
+            padding: 15px; 
+            min-height: 100vh;
+        }
+        
+        /* কার্ডগুলোতে থ্রিডি প্রভাব (3D Shadow इफेक्ट) */
+        .box-3d {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15), inset 0 -4px 0 rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.7);
+            margin-bottom: 20px;
+        }
+
+        h2, h3 { color: #000; margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        .login-screen { max-width: 400px; margin: 60px auto; text-align: center; }
+        .dashboard { display: none; max-width: 700px; margin: 0 auto; }
+        
+        input, select {
+            width: 100%; padding: 12px; margin: 10px 0 18px;
+            border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px;
+            background: #f8fafc; color: #000; font-weight: 500;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* ব্ল্যাক এবং হোয়াইট বাটন থিম */
+        button {
+            width: 100%; padding: 14px; background: #000; color: #fff;
+            border: none; border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2); }
+        
+        /* তথ্য প্রদর্শনের জন্য ক্লিন গ্রিড */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .stat-card { 
+            background: #fff; padding: 15px; border-radius: 10px; text-align: center;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.08); border-bottom: 4px solid #000;
+        }
+        .stat-card.alert { border-bottom: 4px solid #dc2626; }
+        .stat-card h4 { font-size: 14px; color: #666; }
+        .stat-card p { font-size: 20px; font-weight: bold; margin-top: 5px; }
+
+        .hidden { display: none; }
+        .history-item { 
+            padding: 10px; border-bottom: 1px solid #e2e8f0; 
+            display: flex; justify-content: space-between; font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>📝 বিল বা মেমো রিপোর্ট ফরম</h2>
-    <form id="reportForm">
-        <div class="form-group">
-            <label>রিপোর্টের ধরণ সিলেক্ট করুন</label>
-            <select id="workType" required onchange="updateMistriOptions()">
-                <option value="">-- সিলেক্ট করুন --</option>
-                <option value="হাজিরা">হাজিরা</option>
-                <option value="কন্ট্রাক্ট">কন্ট্রাক্ট</option>
+<div id="login-block" class="box-3d login-screen">
+    <h2>🏭 কারখানা লগইন</h2>
+    <input type="text" id="username" placeholder="ইউজারনেম দিন">
+    <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
+    <button onclick="handleLogin()">প্রবেশ করুন</button>
+</div>
+
+<div id="dashboard-block" class="dashboard">
+    
+    <div class="box-3d">
+        <h3 id="user-welcome">স্বাগতম, মিস্ত্রি</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>মোট হাজিরা</h4>
+                <p id="stat-hajira">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>মোট পাওনা</h4>
+                <p id="stat-earned">0 ৳</p>
+            </div>
+            <div class="stat-card">
+                <h4>মোট উত্তোলন</h4>
+                <p id="stat-paid">0 ৳</p>
+            </div>
+            <div class="stat-card alert">
+                <h4>অবশিষ্ট জের</h4>
+                <p id="stat-balance">0 ৳</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-3d">
+        <h3>📝 নতুন কাজের রিপোর্ট</h3>
+        
+        <label>ধাপ ১: কাজের ধরণ সিলেক্ট করুন</label>
+        <select id="work-type" onchange="updateFormFlow()">
+            <option value="">--বাছাই করুন--</option>
+            <option value="হাজিরা">হাজিরা ভিত্তিক</option>
+            <option value="কন্ট্রাক্ট">কন্ট্রাক্ট ভিত্তিক</option>
+        </select>
+
+        <div id="hajira-fields" class="hidden">
+            <label>সময়সীমা নির্ধারণ করুন (ঘণ্টা)</label>
+            <select id="work-hours" onchange="calculateHajiraAmount()">
+                <option value="0">--ঘণ্টা সিলেক্ট করুন--</option>
+                <option value="4">৪ ঘণ্টা (আধা হাজিরা)</option>
+                <option value="8">৮ ঘণ্টা (এক হাজিরা)</option>
+                <option value="12">১২ ঘণ্টা (দের হাজিরা)</option>
             </select>
         </div>
 
-        <div class="form-group">
-            <label>মিস্ত্রি বা দোকানের ধরণ</label>
-            <select id="mistriType" required disabled onchange="updateProductOptions()">
-                <option value="">-- আগে রিপোর্টের ধরণ সিলেক্ট করুন --</option>
+        <div id="dynamic-flow" class="hidden">
+            <label>ধাপ ২: মিস্ত্রি বা দোকানের ধরণ</label>
+            <select id="mistri-category" onchange="populateItems()">
+                <option value="">--বাছাই করুন--</option>
+                <option value="কালার মিস্ত্রি">কালার মিস্ত্রি</option>
+                <option value="নকশা মিস্ত্রি">নকশা মিস্ত্রি</option>
+                <option value="কাঠমিস্ত্রি">কাঠমিস্ত্রি</option>
+                <option value="CNC দোকান">CNC দোকান</option>
             </select>
-        </div>
 
-        <div class="form-group">
-            <label>কাজের বিবরণ বা প্রোডাক্ট</label>
-            <select id="productDetail" required disabled>
-                <option value="">-- আগে মিস্ত্রি সিলেক্ট করুন --</option>
+            <label>ধাপ ৩: আসবাবপত্র বা কাজের বিবরণ</label>
+            <select id="furniture-item">
+                <option value="">--আগে ক্যাটাগরি বাছুন--</option>
             </select>
-        </div>
 
-        <div class="form-group">
-            <label>মেমো বা ফটো আপলোড করুন (ছবি বাধ্যতামূলক নয়)</label>
-            <input type="file" id="fileUpload" accept="image/*">
+            <label>ধাপ ৪: টাকার পরিমাণ (৳)</label>
+            <input type="number" id="amount" placeholder="টাকার অংক লিখুন">
+            
+            <button id="submit-btn" onclick="submitReport()">📤 রিপোর্ট জমা দিন</button>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label>টাকার পরিমাণ (অংক লিখুন)</label>
-            <input type="number" id="amount" placeholder="উদা: 5000" required>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">এডমিন প্যানেলে পাঠান</button>
-        <button type="button" class="btn-back" onclick="history.back()">পিছনে যান</button>
-    </form>
+    <div class="box-3d">
+        <h3>📊 আপনার কাজের পুরাতন ইতিহাস</h3>
+        <div id="history-list"></div>
+    </div>
 </div>
 
 <script>
-const mistriOptions = ["কালার মিস্ত্রি", "নকশা মিস্ত্রি", "কাঠমিস্ত্রি", "CNC দোকান"];
-const productOptions = ["অফিস টেবিল", "আলমিরা", "ড্রেসিং টেবিল", "জুতার বাক্স", "티브ির বক্স", "ওয়ারড্রব", "শোকেস", "খাট"];
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXY7hsDfuwWIDiOwunXnAl5Jc_w5mVT7t2xeVIKEsYA14aAGU-8WNpMOHVjxXiy5VMQw/exec";
+    let userData = {};
 
-function updateMistriOptions() {
-    const workType = document.getElementById("workType").value;
-    const mistriType = document.getElementById("mistriType");
-    const productDetail = document.getElementById("productDetail");
-    mistriType.innerHTML = '<option value="">-- সিলেক্ট করুন --</option>';
-    productDetail.innerHTML = '<option value="">-- আগে মিস্ত্রি সিলেক্ট করুন --</option>';
-    productDetail.disabled = true;
+    const itemsList = ["অফিস টেবিল", "আলমিরা", "ড্রেসিং টেবিল", "জুতার বাক্স", "টিভির বক্স", "ওয়ারড্রব", "শোকেস", "খাট"];
 
-    if (workType) {
-        mistriType.disabled = false;
-        mistriOptions.forEach(opt => {
-            let o = document.createElement("option"); o.value = opt; o.textContent = opt; mistriType.appendChild(o);
+    function handleLogin() {
+        const u = document.getElementById("username").value;
+        const p = document.getElementById("password").value;
+        if(!u || !p) return alert("সব ঘর পূরণ করুন!");
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "login", username: u, password: p })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === "SUCCESS") {
+                userData = res;
+                document.getElementById("login-block").style.display = "none";
+                document.getElementById("dashboard-block").style.display = "block";
+                setupDashboard();
+            } else {
+                alert("ভুল ইউজারনেম বা পাসওয়ার্ড!");
+            }
         });
-    } else { mistriType.disabled = true; }
-}
+    }
 
-function updateProductOptions() {
-    const mistriType = document.getElementById("mistriType").value;
-    const productDetail = document.getElementById("productDetail");
-    productDetail.innerHTML = '<option value="">-- সিলেক্ট করুন --</option>';
+    function setupDashboard() {
+        document.getElementById("user-welcome").innerText = `👤 নাম: ${userData.name.toUpperCase()} (${userData.type})`;
+        document.getElementById("stat-hajira").innerText = userData.totalHajira;
+        document.getElementById("stat-earned").innerText = userData.totalEarned + " ৳";
+        document.getElementById("stat-paid").innerText = userData.totalPaid + " ৳";
+        document.getElementById("stat-balance").innerText = (userData.totalEarned - userData.totalPaid) + " ৳";
 
-    if (mistriType) {
-        productDetail.disabled = false;
-        productOptions.forEach(opt => {
-            let o = document.createElement("option"); o.value = opt; o.textContent = opt; productDetail.appendChild(o);
+        const histContainer = document.getElementById("history-list");
+        histContainer.innerHTML = userData.history.length ? "" : "<p>কোনো পূর্ববর্তী রেকর্ড নেই।</p>";
+        userData.history.forEach(h => {
+            histContainer.innerHTML += `
+                <div class="history-item">
+                    <span>📅 ${h.date.split('T')[0]} - ${h.details}</span>
+                    <strong>${h.earned || h.paid} ৳ (${h.hajira} হাজিরা)</strong>
+                </div>`;
         });
-    } else { productDetail.disabled = true; }
-}
+    }
 
-document.getElementById("reportForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const btn = document.getElementById("submitBtn");
-    btn.innerText = "পাঠানো হচ্ছে..."; btn.disabled = true;
+    function updateFormFlow() {
+        const type = document.getElementById("work-type").value;
+        const hajiraFields = document.getElementById("hajira-fields");
+        const dynamicFlow = document.getElementById("dynamic-flow");
+        const amountField = document.getElementById("amount");
 
-    const file = document.getElementById("fileUpload").files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            sendData(reader.result.split(',')[1], file.name, file.type);
-        };
-        reader.readAsDataURL(file);
-    } else { sendData("", "", ""); }
-});
-
-function sendData(base64, fileName, mimeType) {
-    // ⚠️ আপনার নতুন জেনারেট হওয়া New Deployment Web App URL টি নিচের লাইনে বসাবেন
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbx7Fym_Dt5Aq7jV2CzuiKlW4IEWo65sx19CAvBY2YVv4HRwIbkL_-d8EdSiBciGdNWHCQ/exec";
-    
-    const formData = {
-        action: "submit",
-        workType: document.getElementById("workType").value,
-        mistriType: document.getElementById("mistriType").value,
-        productDetail: document.getElementById("productDetail").value,
-        amount: document.getElementById("amount").value,
-        fileData: base64, fileName: fileName, mimeType: mimeType,
-        user: "DIDAR" 
-    };
-
-    fetch(scriptUrl, { method: "POST", body: JSON.stringify(formData) })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        if(data.status === "success") {
-            document.getElementById("reportForm").reset();
-            updateMistriOptions();
+        if(type === "হাজিরা") {
+            hajiraFields.classList.remove("hidden");
+            dynamicFlow.classList.remove("hidden");
+            amountField.readOnly = true; // হাজিরার টাকা অটো বসবে
+        } else if(type === "কন্ট্রাক্ট") {
+            hajiraFields.classList.add("hidden");
+            dynamicFlow.classList.remove("hidden");
+            amountField.readOnly = false; // নিজের হাত দিয়ে বসাবে
+            amountField.value = "";
+        } else {
+            hajiraFields.classList.add("hidden");
+            dynamicFlow.classList.add("hidden");
         }
-    })
-    .catch(() => alert("নেটওয়ার্ক এরর বা আইডি সমস্যা! আবার চেষ্টা করুন।"))
-    .finally(() => {
-        document.getElementById("submitBtn").innerText = "এডমিন প্যানেলে পাঠান";
-        document.getElementById("submitBtn").disabled = false;
-    });
-}
+    }
+
+    function calculateHajiraAmount() {
+        const hours = parseInt(document.getElementById("work-hours").value);
+        let hajiraMultiplier = 0;
+        
+        if(hours === 4) hajiraMultiplier = 0.5;
+        if(hours === 8) hajiraMultiplier = 1.0;
+        if(hours === 12) hajiraMultiplier = 1.5;
+
+        // ইউজার প্রোফাইলে থাকা পার-হাজিরা মজুরির সাথে গুণ হয়ে অটোমেটিক বসে যাবে
+        const autoAmount = hajiraMultiplier * userData.rate;
+        document.getElementById("amount").value = autoAmount;
+    }
+
+    function populateItems() {
+        const select = document.getElementById("furniture-item");
+        select.innerHTML = '<option value="">--আইটেম সিলেক্ট করুন--</option>';
+        itemsList.forEach(item => {
+            select.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
+
+    function submitReport() {
+        const wType = document.getElementById("work-type").value;
+        const cat = document.getElementById("mistri-category").value;
+        const item = document.getElementById("furniture-item").value;
+        const amt = document.getElementById("amount").value;
+        const hours = parseInt(document.getElementById("work-hours").value || 0);
+        
+        if(!wType || !cat || !item || !amt) return alert("অনুগ্রহ করে সব অপশন সিলেক্ট করুন!");
+
+        let hajiraCount = 0;
+        if(wType === "হাজিরা") {
+            if(hours === 4) hajiraCount = 0.5;
+            if(hours === 8) hajiraCount = 1;
+            if(hours === 12) hajiraCount = 1.5;
+        }
+
+        const btn = document.getElementById("submit-btn");
+        btn.innerText = "🔄 পাঠানো হচ্ছে...";
+        btn.disabled = true;
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "submit_report",
+                name: userData.name,
+                reportType: wType,
+                details: `${cat} - ${item} (${hours ? hours+' ঘণ্টা' : 'কন্ট্রাক্ট'})`,
+                amount: amt,
+                hajiraCount: hajiraCount
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === "SUCCESS") {
+                alert("✅ কোনো ফটো ছাড়াই রিপোর্টটি সফলভাবে অ্যাডমিন প্যানেলে পাঠানো হয়েছে!");
+                location.reload();
+            }
+        });
+    }
 </script>
 </body>
 </html>
