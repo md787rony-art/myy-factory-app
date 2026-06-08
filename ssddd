@@ -1,1 +1,16 @@
-আমার লগইন প্যানেলে লগইন করার জন্য যখন ইউজার নেম এবং পাসওয়ার্ড দিবে তখন পাসওয়ার্ডটি চেক করার জন্য এই লিঙ্কে ক্লিক করে পাসওয়ার্ড জেনে নেবে পাসওয়ার্ড মিলে গেলেই ইউজারকে লগইন করে ওর প্রোফাইল দেখানো হবে এবং লগইকরা পর বাজারের প্রোফাইল দেখাবে সেটি আর একটি ফাইল থেকে দেখাবে সেটিও লিংক দিয়ে দিব আলেদা আলেদা ইউজারের জন্য আলেদা আলেদা  প্রোফাইল এবং ওদের হিসাব থাকবে এখানে এবং ওরা মেমো বা কাজের ছবি জমা দিতে পারবে সেটি লিংকের মাধ্যমে আরেকটি ফাইলে যায় যোগ হবে 
+{
+  "users": [
+    {"username": "kamal", "password": "123", "title": "কালার মিস্ত্রি", "hajira_rate": 800},
+    {"username": "rahim", "password": "234", "title": "কাঠমিস্ত্রি", "hajira_rate": 900},
+    {"username": "babul", "password": "345", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "selim", "password": "456", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 750},
+    {"username": "alamin", "password": "567", "title": "CNC নকশা দোকান", "hajira_rate": 0},
+    {"username": "jasim", "password": "678", "title": "কালার মিস্ত্রি", "hajira_rate": 850},
+    {"username": "korim", "password": "789", "title": "কাঠমিস্ত্রি", "hajira_rate": 950},
+    {"username": "monir", "password": "012", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "biplob", "password": "321", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 700},
+    {"username": "sohel", "password": "432", "title": "CNC নকশা দোকান", "hajira_rate": 0}
+  ],
+  "ledger": []
+}
+
