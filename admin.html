@@ -10,18 +10,20 @@
         .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
         h2 { margin-bottom: 15px; }
         .login-screen { max-width: 400px; margin: 100px auto; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; color: #000; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; color: #000; }
         button { padding: 12px 20px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
-        .admin-dashboard { display: none; max-width: 1000px; margin: 0 auto; overflow-x: auto; }
+        .admin-dashboard { display: none; max-width: 1000px; margin: 0 auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #cbd5e1; color: #000; }
         th { background-color: #000; color: #fff; }
-        .btn-approve { background: #10b981; color: white; margin-right: 5px; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-approve { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
         .btn-reject { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .file-box { background: #f8fafc; border: 2px dashed #000; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
+<!-- লগইন স্ক্রিন -->
 <div id="admin-login" class="box-3d login-screen">
     <h2>👑 মালিক অ্যাডমিন লগইন</h2>
     <input type="text" id="admin-user" placeholder="অ্যাডমিন ইউজারনেম">
@@ -29,7 +31,13 @@
     <button onclick="loginAdmin()">প্রবেশ করুন</button>
 </div>
 
+<!-- মেইন ড্যাশবোর্ড -->
 <div id="admin-dash" class="admin-dashboard">
+    <div class="box-3d file-box">
+        <h3>📂 ধাপ ১: প্রথমে আপনার গিটহাবের ssdd.json ফাইলটি ডাউনলোড করে এখানে আপলোড করুন</h3>
+        <input type="file" id="json-file-input" accept=".json" onchange="loadJsonFile(event)">
+    </div>
+
     <div class="box-3d">
         <h2>📊 মিস্ত্রিদের পেন্ডিং রিকোয়েস্ট তালিকা</h2>
         <table>
@@ -44,60 +52,88 @@
                     <th>অ্যাকশন</th>
                 </tr>
             </thead>
-            <tbody id="pending-table-body"></tbody>
+            <tbody id="pending-table-body">
+                <tr><td colspan="7" style="text-align:center;">প্রথমে ওপরের বাটন থেকে ssdd.json ফাইলটি সিলেক্ট করুন।</td></tr>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // 🔗 নিচে আপনার তৈরি করা গুগল ওয়েব অ্যাপের লিংকটি বসাবেন
-    const GOOGLE_API_URL = "https://script.google.com/macros/s/XXXXX/exec"; 
+    let currentDb = null;
 
     function loginAdmin() {
         const u = document.getElementById("admin-user").value;
         const p = document.getElementById("admin-pass").value;
-
+        
+        // আপনার অ্যাডমিন লগইন ডিটেইলস
         if(u === 'admin' && p === 'owner2026') {
             document.getElementById("admin-login").style.display = "none";
             document.getElementById("admin-dash").style.display = "block";
-            loadPendingReports();
         } else { alert("❌ ভুল পাসওয়ার্ড!"); }
     }
 
-    function loadPendingReports() {
-        fetch(`${GOOGLE_API_URL}?action=get_pending`)
-        .then(res => res.json())
-        .then(data => {
-            const tbody = document.getElementById("pending-table-body");
-            tbody.innerHTML = data.length ? "" : "<tr><td colspan='7' style='text-align:center;'>কোনো পেন্ডিং ডাটা নেই।</td></tr>";
-            
-            data.forEach(row => {
-                let imgHtml = row.image_path !== "No Image" ? `<a href="${row.image_path}" target="_blank">লিংক দেখুন</a>` : "ছবি নেই";
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${row.date} (${row.time})</td>
-                        <td>${row.username.toUpperCase()}</td>
-                        <td>${row.details}</td>
-                        <td>${row.hajira_count}</td>
-                        <td>${row.amount} ৳</td>
-                        <td>${imgHtml}</td>
-                        <td>
-                            <button class="btn-approve" onclick="updateStatus('${row.id}', 'Approved')">✔ Approve</button>
-                            <button class="btn-reject" onclick="updateStatus('${row.id}', 'Rejected')">✖ Reject</button>
-                        </td>
-                    </tr>`;
-            });
+    function loadJsonFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentDb = JSON.parse(e.target.result);
+            renderPendingTable();
+        };
+        reader.readAsText(file);
+    }
+
+    function renderPendingTable() {
+        const tbody = document.getElementById("pending-table-body");
+        tbody.innerHTML = "";
+        
+        const pendingList = currentDb.ledger.filter(item => item.status === 'Pending');
+        
+        if(pendingList.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>কোনো পেন্ডিং ডাটা নেই।</td></tr>";
+            return;
+        }
+
+        pendingList.forEach(row => {
+            let imgHtml = row.image_path !== "No Image" ? `<a href="${row.image_path}" target="_blank">ছবি দেখুন</a>` : "ছবি নেই";
+            tbody.innerHTML += `
+                <tr>
+                    <td>${row.date} (${row.time})</td>
+                    <td>${row.username.toUpperCase()}</td>
+                    <td>${row.details}</td>
+                    <td>${row.hajira_count}</td>
+                    <td>${row.amount} ৳</td>
+                    <td>${imgHtml}</td>
+                    <td>
+                        <button class="btn-approve" onclick="updateStatus('${row.id}', 'Approved')">✔ Approve</button>
+                        <button class="btn-reject" onclick="updateStatus('${row.id}', 'Rejected')">✖ Reject</button>
+                    </td>
+                </tr>`;
         });
     }
 
     function updateStatus(id, status) {
-        fetch(`${GOOGLE_API_URL}?action=update_status&id=${id}&status=${status}`, { method: "POST" })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === "SUCCESS") { alert(`সফলভাবে ${status} করা হয়েছে!`); loadPendingReports(); }
-            else { alert("ব্যর্থ হয়েছে!"); }
+        currentDb.ledger.forEach(item => {
+            if (item.id === id) {
+                item.status = status;
+            }
         });
+
+        alert(`হিসাবটি ${status} করা হয়েছে! আপডেট হওয়া নতুন ফাইলটি এখন ডাউনলোড হবে। এটি গিটহাবে আপলোড (Replace) করে দিন।`);
+        downloadUpdatedJson();
+        renderPendingTable();
+    }
+
+    function downloadUpdatedJson() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentDb, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "ssdd.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
     }
 </script>
 </body>
