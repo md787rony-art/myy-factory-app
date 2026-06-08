@@ -29,7 +29,7 @@
     <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
     <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
     <input type="password" id="password" placeholder="আপনার পাসওয়ার্ড দিন">
-    <button onclick="handleLogin()">🔐 একاونটে প্রবেশ করুন</button>
+    <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
 </div>
 
 <div id="dashboard-block" class="dashboard">
@@ -92,6 +92,7 @@
 </div>
 
 <script>
+    // 🔗 আপনার দেওয়া আসল লিংকটি এখানে নিখুঁতভাবে বসিয়ে দেওয়া হয়েছে
     const JSON_URL = "https://md787rony-art.github.io/myy-factory-app/ssdd.json"; 
     let dbData = {};
     let activeUser = {};
@@ -114,7 +115,7 @@
                 document.getElementById("dashboard-block").style.display = "block";
                 setupDashboard(combinedLedger);
             } else { alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!"); }
-        }).catch(() => alert("ডাটা ফাইল লোড করতে সমস্যা হচ্ছে! আপনার ssdd.json ফাইলটি চেক করুন।"));
+        }).catch(() => alert("ডাটা ফাইল লোড করতে সমস্যা হচ্ছে! আপনার ssdd.json ফাইলটি গিটহাবে ঠিকমতো আছে কিনা চেক করুন।"));
     }
 
     function setupDashboard(ledger) {
