@@ -3,134 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মালিক অ্যাডমিন প্যানেল</title>
+    <title>👑 কারখানার মালিকের অ্যাডমিন প্যানেল</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); color: #000; padding: 20px; min-height: 100vh; }
-        .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
-        h2 { margin-bottom: 15px; }
-        .login-screen { max-width: 400px; margin: 100px auto; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; color: #000; }
-        button { padding: 12px 20px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
-        .admin-dashboard { display: none; max-width: 1000px; margin: 0 auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #cbd5e1; color: #000; }
-        th { background-color: #000; color: #fff; }
-        .btn-approve { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
-        .btn-reject { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        .file-box { background: #f8fafc; border: 2px dashed #000; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 8px; }
+        body { background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); color: #000; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .box-3d { background: #fff; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2), inset 0 -4px 0 rgba(0,0,0,0.1); margin-bottom: 25px; border-left: 6px solid #000; }
+        h2, h3 { color: #000; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Table Styling */
+        .table-responsive { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #cbd5e1; }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: #fff; }
+        th, td { padding: 14px; border-bottom: 1px solid #e2e8f0; font-size: 15px; }
+        th { background-color: #000; color: #fff; font-weight: 600; }
+        tr:hover { background-color: #f8fafc; }
+        
+        /* Input & Form Styling */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background: #f8fafc; font-weight: 500; }
+        
+        /* Button Styling */
+        button { padding: 12px 20px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #1e293b; }
+        .btn-success { background: #16a34a; }
+        .btn-success:hover { background: #15803d; }
+        .btn-danger { background: #dc2626; padding: 6px 12px; font-size: 13px; }
+        .btn-approve { background: #2563eb; padding: 6px 12px; font-size: 13px; margin-right: 5px; }
+        
+        /* Badge */
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #fff; }
+        .badge-powna { background: #16a34a; }
+        .badge-dena { background: #dc2626; }
+        
+        /* Notification Card */
+        .noti-item { background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2563eb; }
+        .noti-details p { margin-bottom: 4px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<!-- লগইন স্ক্রিন -->
-<div id="admin-login" class="box-3d login-screen">
-    <h2>👑 মালিক অ্যাডমিন লগইন</h2>
-    <input type="text" id="admin-user" placeholder="অ্যাডমিন ইউজারনেম">
-    <input type="password" id="admin-pass" placeholder="অ্যাডমিন পাসওয়ার্ড">
-    <button onclick="loginAdmin()">প্রবেশ করুন</button>
-</div>
-
-<!-- মেইন ড্যাশবোর্ড -->
-<div id="admin-dash" class="admin-dashboard">
-    <div class="box-3d file-box">
-        <h3>📂 ধাপ ১: প্রথমে আপনার গিটহাবের ssdd.json ফাইলটি ডাউনলোড করে এখানে আপলোড করুন</h3>
-        <input type="file" id="json-file-input" accept=".json" onchange="loadJsonFile(event)">
+<div class="container">
+    <div class="box-3d" style="border-left-color: #000; text-align: center; background: #000; color: #fff;">
+        <h1 style="font-size: 28px;">🏭 কারখানার মালিকের মাস্টার অ্যাডমিন প্যানেল 👑</h1>
+        <p style="color: #cbd5e1; margin-top: 5px;">মিস্ত্রিদের প্রোফাইল এডিট, নোটিফিকেশন এপ্রুভাল এবং সম্পূর্ণ হিসাব ব্যবস্থাপনা প্যানেল</p>
     </div>
 
-    <div class="box-3d">
-        <h2>📊 মিস্ত্রিদের পেন্ডিং রিকোয়েস্ট তালিকা</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>তারিখ ও সময়</th>
-                    <th>মিস্ত্রি নাম</th>
-                    <th>কাজের বিবরণ</th>
-                    <th>হাজিরা</th>
-                    <th>টাকার পরিমাণ</th>
-                    <th>মেমো/ছবি</th>
-                    <th>অ্যাকশন</th>
-                </tr>
-            </thead>
-            <tbody id="pending-table-body">
-                <tr><td colspan="7" style="text-align:center;">প্রথমে ওপরের বাটন থেকে ssdd.json ফাইলটি সিলেক্ট করুন।</td></tr>
-            </tbody>
-        </table>
+    <!-- 🔔 মিস্ত্রিদের পাঠানো নতুন কাজের নোটিফিকেশন বক্স -->
+    <div class="box-3d" style="border-left-color: #2563eb;">
+        <h3>🔔 মিস্ত্রিদের নতুন কাজের নোটিফিকেশন (<span id="noti-count">0</span>)</h3>
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">মিস্ত্রিরা ফোন থেকে কাজের মেমো পাঠালে তা এখানে শো করবে। ভেরিফাই করে এপ্রুভ করুন।</p>
+        <div id="notification-box">
+            <!-- নোটিফিকেশন জাভাস্ক্রিপ্ট দিয়ে আসবে -->
+        </div>
+    </div>
+
+    <!-- 📝 নতুন ম্যানুয়াল হিসাব বা লেনদেন এন্ট্রি ফর্ম -->
+    <div class="box-3d" style="border-left-color: #16a34a;">
+        <h3>📝 নতুন হিসাব / নগদ লেনদেন এন্ট্রি করুন</h3>
+        <div class="form-grid">
+            <div>
+                <label><b>মিস্ত্রি সিলেক্ট করুন:</b></label>
+                <select id="mistry-select"></select>
+            </div>
+            <div>
+                <label><b>লেনদেনের ধরণ:</b></label>
+                <select id="entry-type">
+                    <option value="earned">💰 কাজের বিল যোগ করুন (পাওনা)</option>
+                    <option value="paid">💸 অগ্রিম বা নগদ প্রদান (দেনা)</option>
+                </select>
+            </div>
+            <div>
+                <label><b>টাকার পরিমাণ (৳):</b></label>
+                <input type="number" id="entry-amount" placeholder="টাকার অংক লিখুন">
+            </div>
+            <div>
+                <label><b>কাজের বিবরণ / নোট:</b></label>
+                <input type="text" id="entry-details" placeholder="উদা: ড্রেসিং টেবিল তৈরি / অগ্রিম">
+            </div>
+        </div>
+        <button onclick="handleManualEntry()" class="btn-success">➕ হিসাব খাতায় যোগ করুন</button>
+    </div>
+
+    <!-- 📊 সকল মিস্ত্রিদের প্রোফাইল ও অল-ইন-ওয়ান হিসাব খাতা -->
+    <div class="box-3d" style="border-left-color: #ea580c;">
+        <h3>📊 কারখানার সকল মিস্ত্রিদের প্রোফাইল ডিটেইলস ও লেজার খাতা</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ইউজারনেম</th>
+                        <th>মিস্ত্রির নাম ও পদবি</th>
+                        <th>মোবাইল নম্বর</th>
+                        <th>মোট হাজিরা</th>
+                        <th>মোট বিল (পাওনা)</th>
+                        <th>মোট গ্রহণ (দেনা)</th>
+                        <th>নিট বকেয়া</th>
+                    </tr>
+                </thead>
+                <tbody id="mistry-table-body">
+                    <!-- ডাটা টেবিল ডায়নামিকালি লোড হবে -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 💾 ডাটা গিটহাবে আপডেট করার জন্য এক্সপোর্ট জোন -->
+    <div class="box-3d" style="border-left-color: #475569; background: #f8fafc; text-align: center;">
+        <h3>💾 গিটহাব ডাটা সিঙ্ক ও ব্যাকআপ জোন</h3>
+        <p style="font-size: 14px; color: #475569; margin-bottom: 15px;">যেকোনো পরিবর্তন করার পর নিচে ক্লিক করে নতুন ফাইলটি ডাউনলোড করে গিটহাবের sspp.json ফাইলে রিপ্লেস করে দিন।</p>
+        <button onclick="downloadJSON()" style="background: #475569;">📥 নতুন sspp.json ফাইলটি ডাউনলোড করুন</button>
     </div>
 </div>
 
 <script>
-    let currentDb = null;
+    // 🔐 ssdd.json ফাইলের সকল মিস্ত্রি প্রোফাইল ডিটেইলস ও কাজের দায়িত্ব এখানে ফিক্সড সেট করা
+    const MISTRY_DB = [
+        { username: "rony", name: "রনি রহমান", title: "প্রধান মিস্ত্রি", mobile: "01712345678", rate: 500 },
+        { username: "kamal", name: "কামাল হোসেন", title: "সহকারী মিস্ত্রি", mobile: "01822222222", rate: 400 },
+        { username: "alamin", name: "আলামিন শেখ", title: "ফিটিং মিস্ত্রি", mobile: "01933333333", rate: 450 },
+        { username: "babul", name: "বাবুল মিয়া", title: "কালার মিস্ত্রি", mobile: "01544444444", rate: 400 }
+    ];
 
-    function loginAdmin() {
-        const u = document.getElementById("admin-user").value;
-        const p = document.getElementById("admin-pass").value;
-        
-        // আপনার অ্যাডমিন লগইন ডিটেইলস
-        if(u === 'admin' && p === 'owner2026') {
-            document.getElementById("admin-login").style.display = "none";
-            document.getElementById("admin-dash").style.display = "block";
-        } else { alert("❌ ভুল পাসওয়ার্ড!"); }
+    const URL_SSPP = "https://md787rony-art.github.io/myy-factory-app/sspp.json";
+    let mainLedgerData = {};
+
+    // পেজ লোড হওয়ার সাথে সাথে সমস্ত ডাটা এবং নোটিফিকেশন রেন্ডার হবে
+    window.onload = function() {
+        populateMistryDropdown();
+        loadServerData();
+        loadLocalNotifications();
+    };
+
+    // ড্রপডাউন মেনু তৈরি
+    function populateMistryDropdown() {
+        const select = document.getElementById("mistry-select");
+        MISTRY_DB.forEach(m => {
+            select.innerHTML += `<option value="${m.username}">${m.name} (${m.title})</option>`;
+        });
     }
 
-    function loadJsonFile(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            currentDb = JSON.parse(e.target.result);
-            renderPendingTable();
-        };
-        reader.readAsText(file);
+    // আপনার দেওয়া লাইভ sspp.json থেকে কারেন্ট ব্যালেন্স ডাটা লোড করা
+    function loadServerData() {
+        fetch(URL_SSPP, { cache: "no-store" })
+        .then(res => res.json())
+        .then(data => {
+            mainLedgerData = data;
+            renderMistryTable();
+        })
+        .catch(() => {
+            alert("নোট: লাইভ sspp.json ফাইল পাওয়া যায়নি। নতুন খাতা তৈরি করা হচ্ছে।");
+            MISTRY_DB.forEach(m => {
+                if(!mainLedgerData[m.username]) {
+                    mainLedgerData[m.username] = { total_hajira: 0, total_earned: 0, total_paid: 0, ledger: [] };
+                }
+            });
+            renderMistryTable();
+        });
     }
 
-    function renderPendingTable() {
-        const tbody = document.getElementById("pending-table-body");
+    // মাস্টার টেবিল রেন্ডার করা (কে কত টাকা পায়, কার কি পদবি সব এক স্ক্রিনে)
+    function renderMistryTable() {
+        const tbody = document.getElementById("mistry-table-body");
         tbody.innerHTML = "";
+
+        MISTRY_DB.forEach(m => {
+            const data = mainLedgerData[m.username] || { total_hajira: 0, total_earned: 0, total_paid: 0 };
+            const balance = parseFloat(data.total_earned || 0) - parseFloat(data.total_paid || 0);
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${m.username.toUpperCase()}</strong></td>
+                    <td><b>${m.name}</b><br><span style="font-size:12px;color:#64748b;">🎯 দায়িত্ব: ${m.title}</span></td>
+                    <td>${m.mobile}</td>
+                    <td><span class="badge" style="background:#000;">${data.total_hajira || 0} দিন</span></td>
+                    <td><span class="badge badge-powna">${data.total_earned || 0} ৳</span></td>
+                    <td><span class="badge badge-dena">${data.total_paid || 0} ৳</span></td>
+                    <td><strong style="color: ${balance >= 0 ? '#16a34a' : '#dc2626'}">${balance} ৳</strong></td>
+                </tr>
+            `;
+        });
+    }
+
+    // মিস্ত্রিদের ফোন থেকে পাঠানো লোকাল নোটিফিকেশন লোড করা
+    function loadLocalNotifications() {
+        const notiBox = document.getElementById("notification-box");
+        let localRequests = JSON.parse(localStorage.getItem('ssjj_local') || '[]');
         
-        const pendingList = currentDb.ledger.filter(item => item.status === 'Pending');
-        
-        if(pendingList.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>কোনো পেন্ডিং ডাটা নেই।</td></tr>";
+        document.getElementById("noti-count").innerText = localRequests.length;
+        notiBox.innerHTML = "";
+
+        if(localRequests.length === 0) {
+            notiBox.innerHTML = "<p style='color:#64748b; text-align:center;'>এই মুহূর্তে কোনো মিস্ত্রির কাজের নোটিফিকেশন পেন্ডিং নেই।</p>";
             return;
         }
 
-        pendingList.forEach(row => {
-            let imgHtml = row.image_path !== "No Image" ? `<a href="${row.image_path}" target="_blank">ছবি দেখুন</a>` : "ছবি নেই";
-            tbody.innerHTML += `
-                <tr>
-                    <td>${row.date} (${row.time})</td>
-                    <td>${row.username.toUpperCase()}</td>
-                    <td>${row.details}</td>
-                    <td>${row.hajira_count}</td>
-                    <td>${row.amount} ৳</td>
-                    <td>${imgHtml}</td>
-                    <td>
-                        <button class="btn-approve" onclick="updateStatus('${row.id}', 'Approved')">✔ Approve</button>
-                        <button class="btn-reject" onclick="updateStatus('${row.id}', 'Rejected')">✖ Reject</button>
-                    </td>
-                </tr>`;
+        localRequests.forEach((req, index) => {
+            const mistryInfo = MISTRY_DB.find(m => m.username === req.username) || { name: req.username };
+            notiBox.innerHTML += `
+                <div class="noti-item">
+                    <div class="noti-details">
+                        <p>👤 <b>${mistryInfo.name} (${req.username.toUpperCase()})</b> - মেমো আইডি: ${req.id}</p>
+                        <p>🛠 <b>কাজের বিবরণ:</b> ${req.details} [${req.report_type}]</p>
+                        <p>📅 <b>তারিখ ও সময়:</b> ${req.date} (${req.time}) | 📸 <b>ছবি:</b> <a href="${req.image_path}" target="_blank">দেখুন</a></p>
+                        <p>💰 <b>দাবিকৃত অ্যামাউন্ট:</b> <strong style="color:#2563eb;">${req.amount} ৳</strong></p>
+                    </div>
+                    <div>
+                        <button class="btn-approve" onclick="approveNotification(${index})">✔ এপ্রুভ</button>
+                        <button class="btn-danger" onclick="rejectNotification(${index})">❌ বাতিল</button>
+                    </div>
+                </div>
+            `;
         });
     }
 
-    function updateStatus(id, status) {
-        currentDb.ledger.forEach(item => {
-            if (item.id === id) {
-                item.status = status;
-            }
+    // নোটিফিকেশন এপ্রুভ লজিক (হিসাব মেইন খাতায় যোগ হবে)
+    function approveNotification(index) {
+        let localRequests = JSON.parse(localStorage.getItem('ssjj_local') || '[]');
+        const req = localRequests[index];
+
+        if(!mainLedgerData[req.username]) {
+            mainLedgerData[req.username] = { total_hajira: 0, total_earned: 0, total_paid: 0, ledger: [] };
+        }
+
+        // এপ্রুভ হলে মেইন লেজারে ডাটা পুশ হচ্ছে
+        mainLedgerData[req.username].total_earned += parseFloat(req.amount);
+        if(req.report_type === "হাজিরা") {
+            mainLedgerData[req.username].total_hajira += 1;
+        }
+
+        mainLedgerData[req.username].ledger.push({
+            date: req.date,
+            time: req.time,
+            details: `এপ্রুভড মেমো: ${req.details}`,
+            amount: `+${req.amount}`
         });
 
-        alert(`হিসাবটি ${status} করা হয়েছে! আপডেট হওয়া নতুন ফাইলটি এখন ডাউনলোড হবে। এটি গিটহাবে আপলোড (Replace) করে দিন।`);
-        downloadUpdatedJson();
-        renderPendingTable();
+        // নোটিফিকেশন লিস্ট থেকে রিমুভ করা
+        localRequests.splice(index, 1);
+        localStorage.setItem('ssjj_local', JSON.stringify(localRequests));
+
+        renderMistryTable();
+        loadLocalNotifications();
+        alert("✅ মেমো এপ্রুভ করা হয়েছে এবং মিস্ত্রির মেইন খাতায় ব্যালেন্স যোগ হয়েছে!");
     }
 
-    function downloadUpdatedJson() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentDb, null, 2));
+    // নোটিফিকেশন রিজেক্ট লজিক
+    function rejectNotification(index) {
+        let localRequests = JSON.parse(localStorage.getItem('ssjj_local') || '[]');
+        localRequests.splice(index, 1);
+        localStorage.setItem('ssjj_local', JSON.stringify(localRequests));
+        loadLocalNotifications();
+        alert("❌ মেমোটি বাতিল করা হয়েছে!");
+    }
+
+    // মালিকের নিজস্ব ম্যানুয়াল ইনপুট এন্ট্রি লজিক
+    function handleManualEntry() {
+        const user = document.getElementById("mistry-select").value;
+        const type = document.getElementById("entry-type").value;
+        const amount = parseFloat(document.getElementById("entry-amount").value || 0);
+        const details = document.getElementById("entry-details").value.trim();
+
+        if(!amount || !details) return alert("অনুগ্রহ করে টাকার পরিমাণ এবং সঠিক বিবরণ দিন!");
+
+        if(!mainLedgerData[user]) {
+            mainLedgerData[user] = { total_hajira: 0, total_earned: 0, total_paid: 0, ledger: [] };
+        }
+
+        const d = new Date();
+        const dateStr = d.getDate() + "-" + d.toLocaleString('en-US', { month: 'short' }) + "-" + d.getFullYear();
+        const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if(type === "earned") {
+            mainLedgerData[user].total_earned += amount;
+            mainLedgerData[user].ledger.push({ date: dateStr, time: timeStr, details: details, amount: `+${amount}` });
+        } else {
+            mainLedgerData[user].total_paid += amount;
+            mainLedgerData[user].ledger.push({ date: dateStr, time: timeStr, details: `💸 ${details}`, amount: `-${amount}` });
+        }
+
+        renderMistryTable();
+        document.getElementById("entry-amount").value = "";
+        document.getElementById("entry-details").value = "";
+        alert("✅ ম্যানুয়াল হিসাব সফলভাবে খাতায় যোগ করা হয়েছে!");
+    }
+
+    // আপডেটেড ডাটা গিটহাবে পুশ করার জন্য ফাইল জেনারেট ও ডাউনলোড ট্রিক
+    function downloadJSON() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(mainLedgerData, null, 2));
         const downloadAnchor = document.createElement('a');
         downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", "ssdd.json");
+        downloadAnchor.setAttribute("download", "sspp.json");
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
