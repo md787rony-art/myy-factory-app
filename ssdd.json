@@ -1,0 +1,15 @@
+{
+  "users": [
+    {"username": "kamal", "password": "123", "title": "কালার মিস্ত্রি", "hajira_rate": 800},
+    {"username": "rahim", "password": "234", "title": "কাঠমিস্ত্রি", "hajira_rate": 900},
+    {"username": "babul", "password": "345", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "selim", "password": "456", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 750},
+    {"username": "alamin", "password": "567", "title": "CNC নকশা দোকান", "hajira_rate": 0},
+    {"username": "jasim", "password": "678", "title": "কালার মিস্ত্রি", "hajira_rate": 850},
+    {"username": "korim", "password": "789", "title": "কাঠমিস্ত্রি", "hajira_rate": 950},
+    {"username": "monir", "password": "012", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "biplob", "password": "321", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 700},
+    {"username": "sohel", "password": "432", "title": "CNC নকশা দোকান", "hajira_rate": 0}
+  ],
+  "ledger": []
+}
