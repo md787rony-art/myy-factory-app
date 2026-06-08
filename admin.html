@@ -3,245 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>কারখানা সুপার এডমিন প্যানেল</title>
+    <title>মালিক অ্যাডমিন প্যানেল</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        
-        body { 
-            background: linear-gradient(135deg, #e2e8f0 0%, #fbcfe8 100%); 
-            color: #000; 
-            padding: 15px; 
-        }
-
-        .header { 
-            background: #000; color: #fff; padding: 20px; text-align: center; 
-            border-radius: 12px; margin-bottom: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        
-        .container { max-width: 1100px; margin: 0 auto; }
-        
-        .tab-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; background: #fff; border: 1px solid #ccc; 
-            font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 8px; 
-            box-shadow: 0 4px 0 #ccc; color: #000;
-        }
-        .tab-btn.active { background: #000; color: #fff; box-shadow: 0 4px 0 #444; }
-
-        .filter-section { 
-            background: white; padding: 15px; border-radius: 10px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; 
-            display: flex; gap: 15px; align-items: center; flex-wrap: wrap; 
-        }
-        .filter-section select { padding: 10px; border-radius: 6px; min-width: 150px; }
-
-        .section { display: none; }
-        .section.active { display: block; }
-
-        /* থ্রিডি রিকোয়েস্ট কার্ড */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .card { 
-            background: white; padding: 15px; border-radius: 10px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1), inset 0 -4px 0 rgba(0,0,0,0.05); 
-            border-top: 5px solid #000; color: #000;
-        }
-        .card h3 { margin-bottom: 8px; }
-        .approve-btn { 
-            width: 100%; padding: 10px; background: #000; color: white; 
-            border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; 
-        }
-        
-        .table-wrapper { 
-            background: white; padding: 15px; border-radius: 10px; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1); overflow-x: auto; 
-        }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 15px; color: #000; }
-        th { background-color: #f1f5f9; font-weight: bold; }
-
-        .loader { text-align: center; padding: 30px; font-size: 18px; font-weight: bold; }
+        body { background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); color: #000; padding: 20px; min-height: 100vh; }
+        .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
+        h2 { margin-bottom: 15px; }
+        .login-screen { max-width: 400px; margin: 100px auto; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; color: #000; }
+        button { padding: 12px 20px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .admin-dashboard { display: none; max-width: 1000px; margin: 0 auto; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #cbd5e1; color: #000; }
+        th { background-color: #000; color: #fff; }
+        .btn-approve { background: #10b981; color: white; margin-right: 5px; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-reject { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🏭 কারখানা সুপার এডমিন প্যানেল</h1>
-        <p>সরাসরি ক্লিকের মাধ্যমে মিস্ত্রি হাজিরা ও কন্ট্রাক্ট বিল ব্যবস্থাপনালয়</p>
-    </div>
+<div id="admin-login" class="box-3d login-screen">
+    <h2>👑 মালিক অ্যাডমিন লগইন</h2>
+    <input type="text" id="admin-user" placeholder="অ্যাডমিন ইউজারনেম">
+    <input type="password" id="admin-pass" placeholder="অ্যাডমিন পাসওয়ার্ড">
+    <button onclick="loginAdmin()">প্রবেশ করুন</button>
+</div>
 
-    <div class="tab-box">
-        <button class="tab-btn active" onclick="switchTab('review')">📥 নতুন বিল রিকোয়েস্ট</button>
-        <button class="tab-btn" onclick="switchTab('ledger')">📊 মিস্ত্রি খতিয়ান</button>
-        <button class="tab-btn" onclick="switchTab('cash')">💰 ক্যাশ বুক</button>
-    </div>
-
-    <div class="filter-section">
-        <label>📅 <strong>মাসিক ফিল্টার:</strong></label>
-        <select id="month-filter" onchange="loadData()">
-            <option value="all">সব মাসের হিসাব</option>
-            <option value="-01-">জানুয়ারি</option>
-            <option value="-02-">ফেব্রুয়ারি</option>
-            <option value="-03-">মার্চ</option>
-            <option value="-04-">এপ্রিল</option>
-            <option value="-05-">মে</option>
-            <option value="-06-">জুন</option>
-            <option value="-07-">জুলাই</option>
-            <option value="-08-">আগস্ট</option>
-            <option value="-09-">সেপ্টেম্বর</option>
-            <option value="-10-">অক্টোবর</option>
-            <option value="-11-">নভেম্বর</option>
-            <option value="-12-">ডিসেম্বর</option>
-        </select>
-        <button onclick="loadData()" style="padding: 10px 15px; background: #000; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🔄 রিফ্রেশ ডাটা</button>
-    </div>
-
-    <div id="main-loader" class="loader">🔄 ডেটা লোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন...</div>
-
-    <div id="review-section" class="section active">
-        <div id="req-grid" class="grid"></div>
-    </div>
-
-    <div id="ledger-section" class="section">
-        <div class="table-wrapper">
-            <h3>📋 মিস্ত্রিদের কাজের পরিমাপ ও অগ্রিম খতিয়ান</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>তারিখ</th>
-                        <th>মিস্ত্রির নাম</th>
-                        <th>টাইপ</th>
-                        <th>বিবরণ</th>
-                        <th>হাজিরা সংখ্যা</th>
-                        <th>পাওনা বিল (৳)</th>
-                        <th>অগ্রিম পেমেন্ট (৳)</th>
-                    </tr>
-                </thead>
-                <tbody id="ledger-table-body"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="cash-section" class="section">
-        <div class="table-wrapper">
-            <h3>💰 ক্যাশ বুক / ফ্যাক্টরি খরচ খাতা</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>তারিখ</th>
-                        <th>খরচের বিবরণ</th>
-                        <th>জমা (৳)</th>
-                        <th>খরচ বিল (৳)</th>
-                    </tr>
-                </thead>
-                <tbody id="cash-table-body"></tbody>
-            </table>
-        </div>
+<div id="admin-dash" class="admin-dashboard">
+    <div class="box-3d">
+        <h2>📊 মিস্ত্রিদের পেন্ডিং রিকোয়েস্ট তালিকা</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>তারিখ ও সময়</th>
+                    <th>মিস্ত্রি নাম</th>
+                    <th>কাজের বিবরণ</th>
+                    <th>হাজিরা</th>
+                    <th>টাকার পরিমাণ</th>
+                    <th>মেমো/ছবি</th>
+                    <th>অ্যাকশন</th>
+                </tr>
+            </thead>
+            <tbody id="pending-table-body"></tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXY7hsDfuwWIDiOwunXnAl5Jc_w5mVT7t2xeVIKEsYA14aAGU-8WNpMOHVjxXiy5VMQw/exec";
-    let currentTab = "review";
+    // 🔗 নিচে আপনার তৈরি করা গুগল ওয়েব অ্যাপের লিংকটি বসাবেন
+    const GOOGLE_API_URL = "https://script.google.com/macros/s/XXXXX/exec"; 
 
-    function switchTab(tabName) {
-        currentTab = tabName;
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        
-        event.target.classList.add('active');
-        document.getElementById(`${tabName}-section`).classList.add('active');
-        loadData();
+    function loginAdmin() {
+        const u = document.getElementById("admin-user").value;
+        const p = document.getElementById("admin-pass").value;
+
+        if(u === 'admin' && p === 'owner2026') {
+            document.getElementById("admin-login").style.display = "none";
+            document.getElementById("admin-dash").style.display = "block";
+            loadPendingReports();
+        } else { alert("❌ ভুল পাসওয়ার্ড!"); }
     }
 
-    function loadData() {
-        const loader = document.getElementById("main-loader");
-        const month = document.getElementById("month-filter").value;
-        loader.style.display = "block";
-
-        fetch(`${WEB_APP_URL}?type=${currentTab}`)
+    function loadPendingReports() {
+        fetch(`${GOOGLE_API_URL}?action=get_pending`)
         .then(res => res.json())
         .then(data => {
-            loader.style.display = "none";
-            if (currentTab === "review") renderReviewQueue(data);
-            else if (currentTab === "ledger") renderLedger(data, month);
-            else if (currentTab === "cash") renderCashBook(data, month);
-        })
-        .catch(err => {
-            loader.innerText = "❌ ডাটা লোড করা যায়নি।";
-        });
-    }
-
-    function renderReviewQueue(data) {
-        const container = document.getElementById("req-grid");
-        container.innerHTML = data.length === 0 ? "<p>📥 কোনো নতুন পেন্ডিং রিপোর্ট নেই।</p>" : "";
-
-        data.forEach(row => {
-            container.innerHTML += `
-                <div class="card" id="card-${row[0]}">
-                    <h3>🆔 আইডি: ${row[0]}</h3>
-                    <p>📅 <strong>তারিখ:</strong> ${row[1].split('T')[0]}</p>
-                    <p>👤 <strong>মিস্ত্রি:</strong> <b>${row[2].toUpperCase()}</b></p>
-                    <p>📋 <strong>টাইপ:</strong> ${row[3]}</p>
-                    <p>📝 <strong>বিবরণ:</strong> ${row[4]}</p>
-                    <p>⏱️ <strong>হাজিরা:</strong> ${row[8] || 0}</p>
-                    <p>💰 <strong>টাকা:</strong> <b>${row[5]} ৳</b></p>
-                    <button class="approve-btn" onclick="approveRequest('${row[0]}')">✓ অনুমোদন করুন</button>
-                </div>`;
-        });
-    }
-
-    function renderLedger(data, monthFilter) {
-        const tbody = document.getElementById("ledger-table-body");
-        tbody.innerHTML = "";
-        data.forEach(row => {
-            let dateStr = row[0].toString();
-            if (monthFilter === "all" || dateStr.includes(monthFilter)) {
+            const tbody = document.getElementById("pending-table-body");
+            tbody.innerHTML = data.length ? "" : "<tr><td colspan='7' style='text-align:center;'>কোনো পেন্ডিং ডাটা নেই।</td></tr>";
+            
+            data.forEach(row => {
+                let imgHtml = row.image_path !== "No Image" ? `<a href="${row.image_path}" target="_blank">লিংক দেখুন</a>` : "ছবি নেই";
+                
                 tbody.innerHTML += `
                     <tr>
-                        <td>${dateStr.split('T')[0]}</td>
-                        <td><b>${row[1].toUpperCase()}</b></td>
-                        <td>${row[2]}</td>
-                        <td>${row[3]}</td>
-                        <td>${row[6] || 0}</td>
-                        <td style="color:green;">${row[4] || 0} ৳</td>
-                        <td style="color:red;">${row[5] || 0} ৳</td>
+                        <td>${row.date} (${row.time})</td>
+                        <td>${row.username.toUpperCase()}</td>
+                        <td>${row.details}</td>
+                        <td>${row.hajira_count}</td>
+                        <td>${row.amount} ৳</td>
+                        <td>${imgHtml}</td>
+                        <td>
+                            <button class="btn-approve" onclick="updateStatus('${row.id}', 'Approved')">✔ Approve</button>
+                            <button class="btn-reject" onclick="updateStatus('${row.id}', 'Rejected')">✖ Reject</button>
+                        </td>
                     </tr>`;
-            }
+            });
         });
     }
 
-    function renderCashBook(data, monthFilter) {
-        const tbody = document.getElementById("cash-table-body");
-        tbody.innerHTML = "";
-        data.forEach(row => {
-            let dateStr = row[0].toString();
-            if (monthFilter === "all" || dateStr.includes(monthFilter)) {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${dateStr.split('T')[0]}</td>
-                        <td>${row[1]}</td>
-                        <td style="color:green;">${row[2] || 0} ৳</td>
-                        <td style="color:red;">${row[3] || 0} ৳</td>
-                    </tr>`;
-            }
+    function updateStatus(id, status) {
+        fetch(`${GOOGLE_API_URL}?action=update_status&id=${id}&status=${status}`, { method: "POST" })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === "SUCCESS") { alert(`সফলভাবে ${status} করা হয়েছে!`); loadPendingReports(); }
+            else { alert("ব্যর্থ হয়েছে!"); }
         });
     }
-
-    function approveRequest(id) {
-        if (!confirm("অনুমোদন নিশ্চিত করুন?")) return;
-        const card = document.getElementById(`card-${id}`);
-        card.style.opacity = "0.4";
-
-        fetch(`${WEB_APP_URL}?action=approve&id=${id}`)
-        .then(() => {
-            card.remove();
-            loadData();
-        });
-    }
-
-    window.onload = loadData;
 </script>
 </body>
 </html>
