@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>কারখানা মিস্ত্রি ও মালিক পোর্টাল</title>
+    <title>কারখানা মিস্ত্রি পোর্টাল</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background: linear-gradient(135deg, #fbcfe8 0%, #e2e8f0 100%); color: #000; padding: 15px; min-height: 100vh; }
         .box-3d { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 -4px 0 rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
         h2, h3 { color: #000; margin-bottom: 15px; }
         .login-screen { max-width: 400px; margin: 60px auto; text-align: center; }
-        .dashboard, .admin-panel { display: none; max-width: 700px; margin: 0 auto; }
+        .dashboard { display: none; max-width: 700px; margin: 0 auto; }
         input, select { width: 100%; padding: 12px; margin: 10px 0 18px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; color: #000; font-weight: 500; }
         button { width: 100%; padding: 14px; background: #000; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         button:active { transform: translateY(2px); }
@@ -22,58 +22,23 @@
         .hidden { display: none; }
         .history-item { padding: 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 15px; color: #000; }
         .user-meta-info { margin-top: 8px; font-size: 14px; color: #555; background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid #000; }
-        .logout-btn { background: #dc2626; margin-top: 10px; padding: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<!-- 🔒 লগইন স্ক্রিন (মিস্ত্রি ও মালিক উভয়ের জন্য) -->
+<!-- 🔒 লগইন সেকশন -->
 <div id="login-block" class="box-3d login-screen">
-    <h2>🏭 কারখানা পোর্টাল লগইন</h2>
-    <input type="text" id="username" placeholder="ইউজারনেম দিন">
-    <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
+    <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
+    <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
+    <input type="password" id="password" placeholder="আপনার পাসওয়ার্ড দিন">
     <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
 </div>
 
-<!-- ================= 👑 মালিকের অ্যাডমিন প্যানেল ================= -->
-<div id="admin-block" class="admin-panel">
-    <div class="box-3d" style="border-left: 6px solid #ef4444;">
-        <h2>👑 মালিকের অ্যাডমিন কন্ট্রোল প্যানেল</h2>
-        <p>এখান থেকে মিস্ত্রিদের কাজ, হাজিরা এবং টাকা লেনদেনের হিসাব ইনপুট দিন।</p>
-        <hr style="margin: 15px 0;">
-        
-        <label><b>১. মিস্ত্রি বাছাই করুন:</b></label>
-        <select id="admin-select-mistry">
-            <option value="rony">রনি (প্রধান মিস্ত্রি)</option>
-            <option value="kamal">কামাল (সহকারী মিস্ত্রি)</option>
-            <option value="alamin">আলামিন (ফিটিং মিস্ত্রি)</option>
-            <option value="babul">বাবুল (কালার মিস্ত্রি)</option>
-        </select>
-
-        <label><b>২. এন্ট্রি টাইপ:</b></label>
-        <select id="admin-entry-type" onchange="toggleAdminFields()">
-            <option value="काम">কাজের বিল যোগ করুন (পাওনা)</option>
-            <option value="টাকা">টাকা প্রদান বা অগ্রিম (দেনা)</option>
-            <option value="হাজিরা">শুধু হাজিরা কাউন্ট যোগ করুন</option>
-        </select>
-
-        <div id="admin-amount-section">
-            <label><b>৩. টাকার পরিমাণ (৳):</b></label>
-            <input type="number" id="admin-amount" placeholder="টাকার অংক লিখুন">
-        </div>
-
-        <label><b>৪. কাজের বিবরণ / নোট:</b></label>
-        <input type="text" id="admin-details" placeholder="উদা: ২টা খাট তৈরি / বা অগ্রিম দেয়া হলো">
-
-        <button onclick="saveDataByAdmin()" style="background: #16a34a;">💾 হিসাব সেভ করুন</button>
-        <button onclick="location.reload()" class="logout-btn">📴 লগআউট করুন</button>
-    </div>
-</div>
-
-<!-- ================= 👤 মিস্ত্রি ড্যাশবোর্ড প্রোফাইল ================= -->
+<!-- 👤 মিস্ত্রি নিজস্ব ড্যাশবোর্ড প্রোফাইল -->
 <div id="dashboard-block" class="dashboard">
     <div class="box-3d">
         <h3 id="user-welcome">👤 স্বাগতম মিস্ত্রি</h3>
+        <!-- এখানে লগইন করা নির্দিষ্ট মিস্ত্রির প্রোফাইল ও মোবাইল অটোমেটিক শো করবে -->
         <div id="user-details-box" class="user-meta-info"></div>
         <br>
         <div class="stats-grid">
@@ -82,14 +47,13 @@
             <div class="stat-card"><h4>মোট গ্রহণ (দেনা)</h4><p id="stat-paid">0 ৳</p></div>
             <div class="stat-card balance-card"><h4>নিট বকেয়া</h4><p id="stat-balance">0 ৳</p></div>
         </div>
-        <button onclick="location.reload()" class="logout-btn">📴 লগআউট করুন</button>
     </div>
 
-    <!-- কাজের বিবরণ ও মেমো জমা দেওয়ার ফর্ম -->
+    <!-- 📝 নতুন কাজের বিবরণ ও মেমো জমা দেওয়ার ফর্ম -->
     <div class="box-3d">
         <h3>📝 নতুন কাজের বিবরণ ও মেমো জমা দিন</h3>
         <form id="reportForm" onsubmit="submitReport(event)">
-            <label><b>কাজের ধরণ</b></label>
+            <label><b>ধাপ ১: কাজের ধরণ</b></label>
             <select id="work-type" onchange="updateFormFlow()" required>
                 <option value="">--বাছাই করুন--</option>
                 <option value="হাজিরা">হাজিরা ভিত্তিক কাজ</option>
@@ -107,176 +71,166 @@
             </div>
 
             <div id="dynamic-flow" class="hidden">
-                <label><b>নির্দিষ্ট কাজের আইটেম</b></label>
+                <label><b>ধাপ ২: নির্দিষ্ট কাজের আইটেম</b></label>
                 <select id="furniture-item" required>
                     <option value="অফিস টেবিল">অফিস টেবিল কাটিং/তৈরি</option>
                     <option value="আলমিরা">আলমিরা ফিটিং/কালার</option>
                     <option value="ড্রেসিং টেবিল">ড্রেসিং টেবিল নকশা</option>
+                    <option value="ওয়ারড্রব">ওয়ারড্রব কাজ</option>
+                    <option value="শোকেস">শোকেস নকশা কাটিং</option>
                     <option value="খাট">খাট তৈরি</option>
                 </select>
 
-                <label><b>টাকার পরিমাণ (৳)</b></label>
-                <input type="number" id="amount" placeholder="টাকার অংক">
+                <label><b>ধাপ ৩: টাকার পরিমাণ (৳)</b></label>
+                <input type="number" id="amount" placeholder="টাকার অংক" required>
                 
-                <label><b>📸 মেমো বা ছবির লিংক</b></label>
-                <input type="text" id="photo-link" placeholder="লিংক দিন">
+                <label><b>📸 মেমো বা কাজের ছবির লিংক (যদি থাকে)</b></label>
+                <input type="text" id="photo-link" placeholder="ছবির ইউআরএল বা লিংক দিন">
                 
-                <button type="submit" style="background: #000;">📤 মালিকের কাছে পাঠান</button>
+                <button type="submit" id="submit-btn">📤 মালিকের কাছে পাঠান</button>
             </div>
         </form>
     </div>
 
-    <!-- মিস্ত্রির কাজের নিজস্ব ইতিহাস খাতা -->
+    <!-- 📊 লগইন করা মিস্ত্রির নিজস্ব কাজের খাতা বা ইতিহাস -->
     <div class="box-3d">
-        <h3>📊 আপনার নিজস্ব কাজের খাতা ও ইতিহাস</h3>
+        <h3>📊 আপনার নিজস্ব কাজের ইতিহাস (sspp.json থেকে)</h3>
         <div id="history-list"></div>
     </div>
 </div>
 
 <script>
-    // 🔐 মিস্ত্রিদের স্থায়ী প্রোফাইল ডাটাবেস
+    // 🔐 কারখানার সকল মিস্ত্রিদের প্রোফাইল ডাটাবেস (এখানে সব রেডি করে দেওয়া হলো)
+    // আপনি চাইলে এখান থেকে যেকোনো মিস্ত্রির নাম, পাসওয়ার্ড বা মোবাইল এডিট করতে পারবেন।
     const MISTRY_DB = [
         { username: "rony", password: "123", title: "প্রধান মিস্ত্রি", mobile: "01712345678", hajira_rate: 500 },
         { username: "kamal", password: "123", title: "সহকারী মিস্ত্রি", mobile: "01822222222", hajira_rate: 400 },
         { username: "alamin", password: "456", title: "ফিটিং মিস্ত্রি", mobile: "01933333333", hajira_rate: 450 },
-        { username: "babul", password: "789", title: "কালার মিস্ত্রি", mobile: "01544444444", hajira_rate: 400 }
+        { username: "babul", password: "789", title: "কালার মিস্ত্রি", mobile: "01544444444", hajira_rate: 400 },
+        { username: "saiful", password: "555", title: "ডিজাইন মিস্ত্রি", mobile: "01655555555", hajira_rate: 480 },
+        { username: "hasan", password: "777", title: "সহকারী ফিটার", mobile: "01377777777", hajira_rate: 350 }
     ];
 
+    // ক্যাশ ক্লিয়ারিং ট্রিকসহ sspp.json লিংক (যেখান থেকে মিস্ত্রির নিজস্ব খাতা বা হিসাব লোড হবে)
+    const URL_PROFILE = "https://md787rony-art.github.io/myy-factory-app/sspp.json?t=" + new Date().getTime();
     let activeUser = {};
 
-    // ১. লগইন কন্ট্রোল লজিক (মালিক ও মিস্ত্রি আলাদা করার উপায়)
+    // ১. মিস্ত্রির পাসওয়ার্ড চেক করে নিজস্ব ড্যাশবোর্ডে প্রবেশ করানোর ফাংশন
     function handleLogin() {
         const inputUser = document.getElementById("username").value.trim().toLowerCase();
         const inputPass = document.getElementById("password").value;
 
         if (!inputUser || !inputPass) {
-            return alert("ইউজারনেম এবং পাসওয়ার্ড দিন!");
+            return alert("অনুগ্রহ করে ইউজারনেম এবং পাসওয়ার্ড দুটোই দিন!");
         }
 
-        // 👑 মালিকের জন্য ফিক্সড লগইন চেক
-        if (inputUser === "admin" && inputPass === "admin123") {
-            document.getElementById("login-block").style.display = "none";
-            document.getElementById("admin-block").style.display = "block";
-            return;
-        }
-
-        // 👤 মিস্ত্রিদের জন্য লগইন চেক
+        // মেইন ডেটাবেস থেকে মিস্ত্রি খুঁজে বের করা হচ্ছে
         const user = MISTRY_DB.find(u => u.username === inputUser && u.password === inputPass);
+        
         if (user) {
             activeUser = user;
-            loadMistryDashboard();
+            loadUserProfile(); // সঠিক হলে তার নিজস্ব প্রোফাইল ও হিসাবের খাতা অন হবে
         } else {
-            alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!");
+            alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
         }
     }
 
-    // ২. অ্যাডমিন প্যানেলের ইনপুট কন্ট্রোল
-    function toggleAdminFields() {
-        const type = document.getElementById("admin-entry-type").value;
-        document.getElementById("admin-amount-section").style.display = (type === "হাজিরা") ? "none" : "block";
+    // ২. sspp.json থেকে শুধুমাত্র লগইন করা নির্দিষ্ট মিস্ত্রির হিসাবের খাতা লোড করার ফাংশন
+    function loadUserProfile() {
+        fetch(URL_PROFILE, { cache: "no-store" })
+        .then(res => {
+            if(!res.ok) throw new Error();
+            return res.json();
+        })
+        .then(profileData => {
+            showDashboardView();
+
+            let totalEarned = 0, totalPaid = 0, totalHajira = 0;
+            const histContainer = document.getElementById("history-list");
+            histContainer.innerHTML = "";
+
+            // sspp.json ফাইলের ভেতর শুধুমাত্র এই লগইন করা মিস্ত্রির (username) ডাটা চেক হচ্ছে
+            if (profileData[activeUser.username]) {
+                const userLedger = profileData[activeUser.username].ledger || [];
+                totalEarned = parseFloat(profileData[activeUser.username].total_earned || 0);
+                totalPaid = parseFloat(profileData[activeUser.username].total_paid || 0);
+                totalHajira = parseFloat(profileData[activeUser.username].total_hajira || 0);
+
+                userLedger.forEach(h => {
+                    histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.amount} ৳</strong></div>`;
+                });
+            }
+
+            updateStatsUI(totalHajira, totalEarned, totalPaid);
+            if(!histContainer.innerHTML) histContainer.innerHTML = "<p>আপনার নিজস্ব কোনো পূর্ববর্তী কাজের ইতিহাস পাওয়া যায়নি।</p>";
+        })
+        .catch(() => {
+            // sspp.json ফাইল খালি থাকলেও মিস্ত্রি তার প্রোফাইল দেখতে পাবে এবং হিসাব পাঠাতে পারবে
+            showDashboardView();
+            updateStatsUI(0, 0, 0);
+        });
     }
 
-    // 👑 ৩. মালিকের দেওয়া ডাটা লোকাল ডেটাবেজে সেভ করার ফাংশন
-    function saveDataByAdmin() {
-        const targetMistry = document.getElementById("admin-select-mistry").value;
-        const entryType = document.getElementById("admin-entry-type").value;
-        const amount = parseFloat(document.getElementById("admin-amount").value || 0);
-        const details = document.getElementById("admin-details").value.trim();
-
-        if (entryType !== "হাজিরা" && !amount) {
-            return alert("টাকার পরিমাণ লিখুন!");
-        }
-        if (!details) return alert("কাজের একটি বিবরণ বা নোট লিখুন!");
-
-        // লোকাল স্টোরেজ থেকে আগের জমানো হিসাবের খাতা তুলে আনা
-        let factoryDB = JSON.parse(localStorage.getItem('factory_main_db') || '{}');
-        
-        if (!factoryDB[targetMistry]) {
-            factoryDB[targetMistry] = { total_hajira: 0, total_earned: 0, total_paid: 0, ledger: [] };
-        }
-
-        const d = new Date();
-        const dateStr = d.getDate() + "-" + d.toLocaleString('en-US', { month: 'short' }) + "-" + d.getFullYear();
-        const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        // হিসাব ক্যালকুলেশন লজিক
-        if (entryType === "काम") {
-            factoryDB[targetMistry].total_earned += amount;
-            factoryDB[targetMistry].ledger.push({ date: dateStr, time: timeStr, details: details, amount: `+${amount}` });
-        } else if (entryType === "টাকা") {
-            factoryDB[targetMistry].total_paid += amount;
-            factoryDB[targetMistry].ledger.push({ date: dateStr, time: timeStr, details: `💸 ${details}`, amount: `-${amount}` });
-        } else if (entryType === "হাজিরা") {
-            factoryDB[targetMistry].total_hajira += 1;
-            // হাজিরার টাকা অটোমেটিক রেট অনুযায়ী যোগ হবে
-            const rate = MISTRY_DB.find(m => m.username === targetMistry).hajira_rate;
-            factoryDB[targetMistry].total_earned += rate;
-            factoryDB[targetMistry].ledger.push({ date: dateStr, time: timeStr, details: `🪵 হাজিরা কাউন্ট: ${details}`, amount: `+${rate}` });
-        }
-
-        // ডেটা পার্মানেন্টলি ব্রাউজার মেমোরিতে সেভ
-        localStorage.setItem('factory_main_db', JSON.stringify(factoryDB));
-        alert("✅ হিসাব সফলভাবে সেভ হয়েছে!");
-        
-        // ইনপুট রিসেট
-        document.getElementById("admin-amount").value = "";
-        document.getElementById("admin-details").value = "";
-    }
-
-    // ৪. মিস্ত্রিদের নিজস্ব ড্যাশবোর্ড ও হিসাব খাতা রেন্ডার করার ফাংশন
-    function loadMistryDashboard() {
+    // ৩. স্ক্রিনে মিস্ত্রির নিজস্ব প্রোফাইল ডিটেইলস দেখানোর লজিক
+    function showDashboardView() {
         document.getElementById("login-block").style.display = "none";
         document.getElementById("dashboard-block").style.display = "block";
-
         document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
         document.getElementById("user-details-box").innerHTML = `
             <strong>আপনার পদবি:</strong> ${activeUser.title} <br>
             <strong>নিবন্ধিত মোবাইল:</strong> ${activeUser.mobile} <br>
-            <strong>ডেইলি হাজিরা রেট:</strong> ${activeUser.hajira_rate} ৳
+            <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
         `;
-
-        // লোকাল ডেটাবেজ থেকে এই মিস্ত্রির হিসাব ফিল্টার করা
-        let factoryDB = JSON.parse(localStorage.getItem('factory_main_db') || '{}');
-        let myData = factoryDB[activeUser.username] || { total_hajira: 0, total_earned: 0, total_paid: 0, ledger: [] };
-
-        // ড্যাশবোর্ডে মানগুলো বসানো
-        document.getElementById("stat-hajira").innerText = myData.total_hajira;
-        document.getElementById("stat-earned").innerText = myData.total_earned + " ৳";
-        document.getElementById("stat-paid").innerText = myData.total_paid + " ৳";
-        document.getElementById("stat-balance").innerText = (myData.total_earned - myData.total_paid) + " ৳";
-
-        // কাজের হিস্ট্রি লিস্ট তৈরি
-        const histContainer = document.getElementById("history-list");
-        histContainer.innerHTML = "";
-        
-        if(myData.ledger.length > 0) {
-            myData.ledger.forEach(h => {
-                histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.amount} ৳</strong></div>`;
-            });
-        } else {
-            histContainer.innerHTML = "<p>আপনার নিজস্ব কোনো পূর্ববর্তী কাজের ইতিহাস পাওয়া যায়নি।</p>";
-        }
     }
 
-    // ফরমের অন্যান্য সাধারণ ফাংশনাবলি
+    function updateStatsUI(hajira, earned, paid) {
+        document.getElementById("stat-hajira").innerText = hajira;
+        document.getElementById("stat-earned").innerText = earned + " ৳";
+        document.getElementById("stat-paid").innerText = paid + " ৳";
+        document.getElementById("stat-balance").innerText = (earned - paid) + " ৳";
+    }
+
     function updateFormFlow() {
         const type = document.getElementById("work-type").value;
         document.getElementById("hajira-fields").className = (type === "হাজিরা") ? "" : "hidden";
         document.getElementById("dynamic-flow").className = (type !== "") ? "" : "hidden";
         document.getElementById("amount").readOnly = (type === "হাজিরা");
-        if(type === "হাজিরা") calculateHajiraAmount();
+        if(type !== "হাজিরা") document.getElementById("amount").value = "";
     }
 
     function calculateHajiraAmount() {
-        const hours = parseInt(document.getElementById("work-hours").value || 8);
-        let mult = 1.0;
-        if(hours === 4) mult = 0.5; if(hours === 12) mult = 1.5;
+        const hours = parseInt(document.getElementById("work-hours").value);
+        let mult = 0;
+        if(hours === 4) mult = 0.5; if(hours === 8) mult = 1.0; if(hours === 12) mult = 1.5;
         document.getElementById("amount").value = mult * parseFloat(activeUser.hajira_rate || 0);
     }
 
     function submitReport(e) {
         e.preventDefault();
-        alert("✅ আপনার কাজের বিবরণ সফলভাবে পাঠানো হয়েছে! মালিকের এপ্রুভালের পর এটি আপনার খাতায় যোগ হবে।");
+        const d = new Date();
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        let hc = 0; const hours = parseInt(document.getElementById("work-hours").value || 0);
+        if(hours === 4) hc = 0.5; if(hours === 8) hc = 1; if(hours === 12) hc = 1.5;
+
+        const newReport = {
+          "id": "REP_" + d.getTime(),
+          "username": activeUser.username,
+          "mobile": activeUser.mobile,
+          "date": d.getDate() + "-" + months[d.getMonth()] + "-" + d.getFullYear(),
+          "time": d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+          "report_type": document.getElementById("work-type").value,
+          "details": `${activeUser.title} -> ${document.getElementById("furniture-item").value}`,
+          "amount": parseFloat(document.getElementById("amount").value || 0),
+          "image_path": document.getElementById("photo-link").value || "No Image",
+          "status": "Pending"
+        };
+
+        let localRequests = JSON.parse(localStorage.getItem('ssjj_local') || '[]');
+        localRequests.push(newReport);
+        localStorage.setItem('ssjj_local', JSON.stringify(localRequests));
+
+        alert("✅ আপনার কাজের বিবরণ ও মেমো সফলভাবে মালিকের কাছে পাঠানো হয়েছে!");
         location.reload();
     }
 </script>
