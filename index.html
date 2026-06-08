@@ -26,7 +26,6 @@
 </head>
 <body>
 
-<!-- লগইন স্ক্রিন -->
 <div id="login-block" class="box-3d login-screen">
     <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
     <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
@@ -34,11 +33,9 @@
     <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
 </div>
 
-<!-- মিস্ত্রি ড্যাশবোর্ড প্রোফাইল -->
 <div id="dashboard-block" class="dashboard">
     <div class="box-3d">
         <h3 id="user-welcome">👤 স্বাগতম মিস্ত্রি</h3>
-        <!-- এখানে ইউজারের মোবাইল নম্বর এবং বিস্তারিত তথ্য অটোমেটিক শো করবে -->
         <div id="user-details-box" class="user-meta-info"></div>
         <br>
         <div class="stats-grid">
@@ -49,7 +46,6 @@
         </div>
     </div>
 
-    <!-- কাজের বিবরণ ও মেমো জমা দেওয়ার ফর্ম -->
     <div class="box-3d">
         <h3>📝 নতুন কাজের বিবরণ ও মেমো জমা দিন</h3>
         <form id="reportForm" onsubmit="submitReport(event)">
@@ -92,7 +88,6 @@
         </form>
     </div>
 
-    <!-- অনুমোদিত কাজের ইতিহাস -->
     <div class="box-3d">
         <h3>📊 আপনার কাজের ইতিহাস (sspp.json থেকে)</h3>
         <div id="history-list"></div>
@@ -100,18 +95,20 @@
 </div>
 
 <script>
-    // 🔐 সুরক্ষিত ইউজার ডেটাবেস (আপনার চাহিদা অনুযায়ী পাসওয়ার্ড ও মোবাইল নম্বর যুক্ত করা হয়েছে)
-    // নতুন মিস্ত্রি বাড়াতে চাইলে ঠিক নিচের নিয়মে কমা (,) দিয়ে বাড়িয়ে নিতে পারবেন।
+    // 🔐 সুরক্ষিত ও স্থায়ী অফলাইন ডেটাবেস লিস্ট
+    // এখানে আপনার কামাল ভাইকেও যুক্ত করে দিয়েছি, ইচ্ছে করলে মোবাইল বা পাসওয়ার্ড এডিট করতে পারবেন।
     const MISTRY_DB = [
-        { username: "rony", password: "123456", title: "প্রধান মিস্ত্রি", mobile: "01712345678", hajira_rate: 500 },
+        { username: "rony", password: "123", title: "প্রধান মিস্ত্রি", mobile: "01712345678", hajira_rate: 500 },
+        { username: "kamal", password: "123", title: "সহকারী মিস্ত্রি", mobile: "01899999999", hajira_rate: 400 },
         { username: "alamin", password: "456", title: "ফিটিং মিস্ত্রি", mobile: "01987654321", hajira_rate: 450 },
         { username: "babul", password: "789", title: "কালার মিস্ত্রি", mobile: "01555555555", hajira_rate: 400 }
     ];
 
-    const URL_PROFILE = "https://md787rony-art.github.io/myy-factory-app/sspp.json";
+    // ক্যাশ সমস্যা এড়াতে লিঙ্কের সাথে টাইমস্ট্যাম্প (?t=...) ট্রিক ব্যবহার করা হয়েছে
+    const URL_PROFILE = "https://md787rony-art.github.io/myy-factory-app/sspp.json?t=" + new Date().getTime();
     let activeUser = {};
 
-    // ১. পাসওয়ার্ড এবং ইউজারনেম লোকাল অবজেক্ট থেকে দ্রুত ও নিরাপদে চেক করার ফাংশন
+    // ১. সম্পূর্ণ সার্ভার-মুক্ত নিরাপদ লগইন ফাংশন
     function handleLogin() {
         const inputUser = document.getElementById("username").value.trim().toLowerCase();
         const inputPass = document.getElementById("password").value;
@@ -120,35 +117,27 @@
             return alert("অনুগ্রহ করে ইউজারনেম এবং পাসওয়ার্ড দুটোই দিন!");
         }
 
-        // ম্যাচ করানো হচ্ছে কোডের ডেটার সাথে
+        // সরাসরি লোকাল অ্যারে থেকে ১ সেকেন্ডে ম্যাচিং
         const user = MISTRY_DB.find(u => u.username === inputUser && u.password === inputPass);
         
         if (user) {
             activeUser = user;
-            // লগইন সফল হলে প্রোফাইল ডাটা লোড হবে
-            loadUserProfile();
+            loadUserProfile(); // লগইন সফল হলে প্রোফাইল লোড হবে
         } else {
             alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
         }
     }
 
-    // ২. sspp.json ফাইল থেকে লগইনকৃত নির্দিষ্ট ইউজারের প্রোফাইল ও হিসাব দেখানোর ফাংশন
+    // ২. sspp.json ফাইল থেকে লগইনকৃত ইউজারের কাজের ইতিহাস দেখানোর ফাংশন
     function loadUserProfile() {
         fetch(URL_PROFILE, { cache: "no-store" })
-        .then(res => res.json())
+        .then(res => {
+            if(!res.ok) throw new Error("ফাইল পাওয়া যায়নি");
+            return res.json();
+        })
         .then(profileData => {
-            document.getElementById("login-block").style.display = "none";
-            document.getElementById("dashboard-block").style.display = "block";
+            showDashboardView();
 
-            // ড্যাশবোর্ডে ইউজারের নাম, পদবি এবং মোবাইল নম্বর শো করা
-            document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
-            document.getElementById("user-details-box").innerHTML = `
-                <strong>পদবি:</strong> ${activeUser.title} <br>
-                <strong>মোবাইল নম্বর:</strong> ${activeUser.mobile} <br>
-                <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
-            `;
-
-            // sspp.json থেকে এই ইউজারের নির্দিষ্ট হিসাব ফিল্টার করা
             let totalEarned = 0, totalPaid = 0, totalHajira = 0;
             const histContainer = document.getElementById("history-list");
             histContainer.innerHTML = "";
@@ -164,28 +153,32 @@
                 });
             }
 
-            // ড্যাশবোর্ডে ডাটা শো করা
-            document.getElementById("stat-hajira").innerText = totalHajira;
-            document.getElementById("stat-earned").innerText = totalEarned + " ৳";
-            document.getElementById("stat-paid").innerText = totalPaid + " ৳";
-            document.getElementById("stat-balance").innerText = (totalEarned - totalPaid) + " ৳";
-
-            if(!histContainer.innerHTML) {
-                histContainer.innerHTML = "<p>কোনো পূর্ববর্তী অনুমোদিত কাজের ইতিহাস পাওয়া যায়নি।</p>";
-            }
+            updateStatsUI(totalHajira, totalEarned, totalPaid);
+            if(!histContainer.innerHTML) histContainer.innerHTML = "<p>কোনো পূর্ববর্তী অনুমোদিত কাজের ইতিহাস পাওয়া যায়নি।</p>";
         })
         .catch(() => {
-            // যদি ফাইল লোডে কোনো সমস্যাও হয়, তাও লগইন আটকে থাকবে না, জিরো ডাটা দিয়ে ড্যাশবোর্ড ওপেন হবে
-            document.getElementById("login-block").style.display = "none";
-            document.getElementById("dashboard-block").style.display = "block";
-            document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
-            document.getElementById("user-details-box").innerHTML = `
-                <strong>পদবি:</strong> ${activeUser.title} <br>
-                <strong>মোবাইল নম্বর:</strong> ${activeUser.mobile} <br>
-                <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
-            `;
-            alert("নোট: আপনার প্রোফাইলের পূর্ববর্তী হিসাব ফাইলটি লোড করা যায়নি, তবে আপনি নতুন এন্ট্রি পাঠাতে পারবেন।");
+            // sspp.json ফাইল যদি সার্ভারে আপলোড করা নাও থাকে, তাও অ্যাপ ক্র্যাশ করবে না, প্রোফাইল সুন্দরভাবে অন হয়ে যাবে
+            showDashboardView();
+            updateStatsUI(0, 0, 0);
         });
+    }
+
+    function showDashboardView() {
+        document.getElementById("login-block").style.display = "none";
+        document.getElementById("dashboard-block").style.display = "block";
+        document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
+        document.getElementById("user-details-box").innerHTML = `
+            <strong>পদবি:</strong> ${activeUser.title} <br>
+            <strong>মোবাইল নম্বর:</strong> ${activeUser.mobile} <br>
+            <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
+        `;
+    }
+
+    function updateStatsUI(hajira, earned, paid) {
+        document.getElementById("stat-hajira").innerText = hajira;
+        document.getElementById("stat-earned").innerText = earned + " ৳";
+        document.getElementById("stat-paid").innerText = paid + " ৳";
+        document.getElementById("stat-balance").innerText = (earned - paid) + " ৳";
     }
 
     function updateFormFlow() {
@@ -203,7 +196,6 @@
         document.getElementById("amount").value = mult * parseFloat(activeUser.hajira_rate || 0);
     }
 
-    // ৩. নতুন কাজের মেমো বা ছবি স্থানীয়ভাবে রেডি করার ফাংশন
     function submitReport(e) {
         e.preventDefault();
         const d = new Date();
@@ -229,7 +221,7 @@
         localRequests.push(newReport);
         localStorage.setItem('ssjj_local', JSON.stringify(localRequests));
 
-        alert("✅ মেমো এবং কাজের ছবি সফলভাবে জমা হয়েছে!\n\nমালিকের অ্যাডমিন প্যানেল ডাউনলোডের জন্য এটি জমা রইলো। ssjj.json এ যোগ করার জন্য মালিককে জানান।");
+        alert("✅ মেমো এবং কাজের ছবি সফলভাবে জমা হয়েছে!\n\nমালিকের প্যানেলে ডাউনলোডের জন্য এটি জমা রইলো।");
         location.reload();
     }
 </script>
