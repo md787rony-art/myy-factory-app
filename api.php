@@ -1,126 +1,105 @@
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, GET");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+const FILE_NAME = "kalam.json";
 
-// ডাটাবেস কনফিগারেশন (আপনার তথ্য দিন)
-$DB_HOST = "localhost";
-$DB_USER = "YOUR_DATABASE_USERNAME"; 
-$DB_PASS = "YOUR_DATABASE_PASSWORD"; 
-$DB_NAME = "YOUR_DATABASE_NAME"; 
+// ১০-১২ জন মিস্ত্রির ইউজারনেম, পাসওয়ার্ড, নির্দিষ্ট টাইটেল এবং হাজিরার ফিক্সড রেট ডাটাবেস
+const INITIAL_DATA = {
+  "users": [
+    {"username": "kamal", "password": "123", "title": "কালার মিস্ত্রি", "hajira_rate": 800},
+    {"username": "rahim", "password": "234", "title": "কাঠমিস্ত্রি", "hajira_rate": 900},
+    {"username": "babul", "password": "345", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "selim", "password": "456", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 750},
+    {"username": "alamin", "password": "567", "title": "CNC নকশা দোকান", "hajira_rate": 0},
+    {"username": "jasim", "password": "678", "title": "কালার মিস্ত্রি", "hajira_rate": 850},
+    {"username": "korim", "password": "789", "title": "কাঠমিস্ত্রি", "hajira_rate": 950},
+    {"username": "monir", "password": "012", "title": "কন্ট্রাক্টদার", "hajira_rate": 0},
+    {"username": "biplob", "password": "321", "title": "হাজিরা মিস্ত্রি", "hajira_rate": 700},
+    {"username": "sohel", "password": "432", "title": "CNC নকশা দোকান", "hajira_rate": 0}
+  ],
+  "ledger": []
+};
 
-$conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
-if ($conn->connect_error) {
-    echo json_encode(["status" => "FAILED", "message" => "Database Connection Failed"]);
-    exit();
+function getDatabaseFile() {
+  const files = DriveApp.getFilesByName(FILE_NAME);
+  if (files.hasNext()) {
+    return files.next();
+  } else {
+    return DriveApp.createFile(FILE_NAME, JSON.stringify(INITIAL_DATA), MimeType.PLAIN_TEXT);
+  }
 }
-$conn->set_charset("utf8mb4");
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+function doGet(e) {
+  const action = e.parameter.action;
+  const file = getDatabaseFile();
+  const db = JSON.parse(file.getBlob().getDataAsString());
 
-// ১. মিস্ত্রি লগইন ও লাইভ হিসাব দেখা
-if ($action === 'login') {
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
+  if (action === 'login') {
+    const u = e.parameter.username;
+    const p = e.parameter.password;
+    const user = db.users.find(user => user.username === u && user.password === p);
 
-    if (empty($username) || empty($password)) {
-        echo json_encode(["status" => "FAILED", "message" => "Username/Password Required"]);
-        exit();
-    }
-
-    $stmt = $conn->prepare("SELECT username, password, role_type, hajira_rate FROM users WHERE username = ? LIMIT 1");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $user_res = $stmt->get_result();
-
-    if ($user_res->num_rows === 1) {
-        $user = $user_res->fetch_assoc();
-        
-        if ($password === $user['password'] || password_verify($password, $user['password'])) {
-            $history = [];
-            $totalEarned = 0; $totalPaid = 0; $totalHajira = 0;
-
-            // শুধুমাত্র Approved হওয়া ডাটার হিসাব মিস্ত্রি দেখতে পারবে
-            $ledger_stmt = $conn->prepare("SELECT work_date, report_type, details, amount, paid_amount, hajira_count FROM mistri_ledger WHERE username = ? AND status = 'Approved' ORDER BY id DESC");
-            $ledger_stmt->bind_param("s", $username);
-            $ledger_stmt->execute();
-            $ledger_res = $ledger_stmt->get_result();
-
-            while ($row = $ledger_res->fetch_assoc()) {
-                $totalEarned += floatval($row['amount']);
-                $totalPaid += floatval($row['paid_amount']);
-                $totalHajira += floatval($row['hajira_count']);
-                $history[] = [
-                    "date" => $row['work_date'],
-                    "type" => $row['report_type'],
-                    "details" => $row['details'],
-                    "earned" => $row['amount'],
-                    "paid" => $row['paid_amount'],
-                    "hajira" => $row['hajira_count']
-                ];
-            }
-
-            echo json_encode([
-                "status" => "SUCCESS",
-                "name" => $user['username'],
-                "type" => $user['role_type'],
-                "rate" => $user['hajira_rate'],
-                "totalEarned" => $totalEarned,
-                "totalPaid" => $totalPaid,
-                "totalHajira" => $totalHajira,
-                "history" => $history
-            ]);
-        } else {
-            echo json_encode(["status" => "FAILED", "message" => "Wrong Password"]);
+    if (user) {
+      let totalEarned = 0, totalPaid = 0, totalHajira = 0, history = [];
+      db.ledger.forEach(item => {
+        if (item.username === u && item.status === 'Approved') {
+          totalEarned += parseFloat(item.amount || 0);
+          totalPaid += parseFloat(item.paid_amount || 0);
+          totalHajira += parseFloat(item.hajira_count || 0);
+          history.push(item);
         }
-    } else {
-        echo json_encode(["status" => "FAILED", "message" => "User Not Found"]);
+      });
+
+      return ContentService.createTextOutput(JSON.stringify({
+        "status": "SUCCESS", "name": user.username, "title": user.title, "rate": user.hajira_rate,
+        "totalEarned": totalEarned, "totalPaid": totalPaid, "totalHajira": totalHajira, "history": history
+      })).setMimeType(ContentService.MimeType.JSON);
     }
-    exit();
+    return ContentService.createTextOutput(JSON.stringify({"status": "FAILED"})).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === 'get_pending') {
+    const pending = db.ledger.filter(item => item.status === 'Pending');
+    return ContentService.createTextOutput(JSON.stringify(pending)).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
-// ২. নতুন কাজের রিপোর্ট পেন্ডিং অবস্থায় জমা নেওয়া
-if ($action === 'submit_report') {
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    $report_type = isset($_POST['report_type']) ? trim($_POST['report_type']) : '';
-    $details = isset($_POST['details']) ? trim($_POST['details']) : '';
-    $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
-    $hajira_count = isset($_POST['hajira_count']) ? floatval($_POST['hajira_count']) : 0;
+function doPost(e) {
+  const action = e.parameter.action;
+  const file = getDatabaseFile();
+  const db = JSON.parse(file.getBlob().getDataAsString());
+
+  if (action === 'submit_report') {
+    const d = new Date();
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    $image_path = "No Image";
+    const newReport = {
+      "id": "REP_" + d.getTime(),
+      "username": e.parameter.username,
+      "date": d.getDate() + "-" + months[d.getMonth()] + "-" + d.getFullYear(),
+      "time": d.toLocaleTimeString(),
+      "report_type": e.parameter.report_type,
+      "details": e.parameter.details,
+      "amount": parseFloat(e.parameter.amount || 0),
+      "paid_amount": 0,
+      "hajira_count": parseFloat(e.parameter.hajira_count || 0),
+      "image_path": e.parameter.image_path,
+      "status": "Pending"
+    };
 
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = "uploads/";
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true); // অটো ফোল্ডার তৈরি হবে
-        }
+    db.ledger.push(newReport);
+    file.setContent(JSON.stringify(db));
+    return ContentService.createTextOutput(JSON.stringify({"status": "SUCCESS"})).setMimeType(ContentService.MimeType.JSON);
+  }
 
-        $file_ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
-        $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
+  if (action === 'update_status') {
+    const id = e.parameter.id;
+    const status = e.parameter.status;
 
-        if (in_array($file_ext, $allowed)) {
-            $new_file_name = "IMG_" . time() . "_" . rand(1000, 9999) . "." . $file_ext;
-            $target = $upload_dir . $new_file_name;
+    db.ledger.forEach(item => {
+      if (item.id === id) {
+        item.status = status;
+      }
+    });
 
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $target)) {
-                $image_path = $target;
-            }
-        }
-    }
-
-    $today = date("Y-m-d");
-    $insert = $conn->prepare("INSERT INTO mistri_ledger (username, work_date, report_type, details, amount, paid_amount, hajira_count, image_path, status) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'Pending')");
-    $insert->bind_param("ssssdds", $username, $today, $report_type, $details, $amount, $hajira_count, $image_path);
-
-    if ($insert->execute()) {
-        echo json_encode(["status" => "SUCCESS", "message" => "Report saved as pending"]);
-    } else {
-        echo json_encode(["status" => "FAILED", "message" => "Failed to save record"]);
-    }
-    exit();
+    file.setContent(JSON.stringify(db));
+    return ContentService.createTextOutput(JSON.stringify({"status": "SUCCESS"})).setMimeType(ContentService.MimeType.JSON);
+  }
 }
-
-echo json_encode(["status" => "INVALID_ACTION"]);
-$conn->close();
-?>
