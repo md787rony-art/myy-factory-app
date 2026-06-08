@@ -1,0 +1,19 @@
+{
+  "rony": {
+    "total_hajira": 25,
+    "total_earned": 12500,
+    "total_paid": 5000,
+    "ledger": [
+      { "date": "01-Jun-2026", "time": "10:00 AM", "details": "প্রধান মিস্ত্রি -> খাট তৈরি", "amount": 500 },
+      { "date": "02-Jun-2026", "time": "06:30 PM", "details": "মালিকের কাছ থেকে অগ্রিম গ্রহণ", "amount": -2000 }
+    ]
+  },
+  "kamal": {
+    "total_hajira": 12,
+    "total_earned": 4800,
+    "total_paid": 1500,
+    "ledger": [
+      { "date": "01-Jun-2026", "time": "11:15 AM", "details": "সহকারী মিস্ত্রি -> আলমিরা ফিটিং", "amount": 400 }
+    ]
+  }
+}
