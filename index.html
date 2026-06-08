@@ -21,10 +21,12 @@
         .stat-card.balance-card { background: #fff; color: #000; border: 2px solid #000; }
         .hidden { display: none; }
         .history-item { padding: 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 15px; color: #000; }
+        .user-meta-info { margin-top: 8px; font-size: 14px; color: #555; background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid #000; }
     </style>
 </head>
 <body>
 
+<!-- লগইন স্ক্রিন -->
 <div id="login-block" class="box-3d login-screen">
     <h2>🏭 কারখানা মিস্ত্রি লগইন</h2>
     <input type="text" id="username" placeholder="আপনার ইউজারনেম দিন">
@@ -32,9 +34,13 @@
     <button onclick="handleLogin()">🔐 একাউন্টে প্রবেশ করুন</button>
 </div>
 
+<!-- মিস্ত্রি ড্যাশবোর্ড প্রোফাইল -->
 <div id="dashboard-block" class="dashboard">
     <div class="box-3d">
-        <h3 id="user-welcome">স্বাগতম মিস্ত্রি</h3>
+        <h3 id="user-welcome">👤 স্বাগতম মিস্ত্রি</h3>
+        <!-- এখানে ইউজারের মোবাইল নম্বর এবং বিস্তারিত তথ্য অটোমেটিক শো করবে -->
+        <div id="user-details-box" class="user-meta-info"></div>
+        <br>
         <div class="stats-grid">
             <div class="stat-card"><h4>মোট হাজিরা</h4><p id="stat-hajira">0</p></div>
             <div class="stat-card"><h4>মোট বিল (পাওনা)</h4><p id="stat-earned">0 ৳</p></div>
@@ -43,8 +49,9 @@
         </div>
     </div>
 
+    <!-- কাজের বিবরণ ও মেমো জমা দেওয়ার ফর্ম -->
     <div class="box-3d">
-        <h3>📝 নতুন কাজের বিবরণ জমা দিন</h3>
+        <h3>📝 নতুন কাজের বিবরণ ও মেমো জমা দিন</h3>
         <form id="reportForm" onsubmit="submitReport(event)">
             <label><b>ধাপ ১: কাজের ধরণ</b></label>
             <select id="work-type" onchange="updateFormFlow()" required>
@@ -67,7 +74,7 @@
                 <label><b>ধাপ ২: নির্দিষ্ট কাজের আইটেম</b></label>
                 <select id="furniture-item" required>
                     <option value="অফিস টেবিল">অফিস টেবিল কাটিং/তৈরি</option>
-                    <option value="আলমিরা">আলমিরা ফিٹنگ/কালার</option>
+                    <option value="আলমিরা">আলমিরা ফিটিং/কালার</option>
                     <option value="ড্রেসিং টেবিল">ড্রেসিং টেবিল নকশা</option>
                     <option value="ওয়ারড্রব">ওয়ারড্রব কাজ</option>
                     <option value="শোকেস">শোকেস নকশা কাটিং</option>
@@ -85,60 +92,100 @@
         </form>
     </div>
 
+    <!-- অনুমোদিত কাজের ইতিহাস -->
     <div class="box-3d">
-        <h3>📊 অনুমোদিত কাজের ইতিহাস</h3>
+        <h3>📊 আপনার কাজের ইতিহাস (sspp.json থেকে)</h3>
         <div id="history-list"></div>
     </div>
 </div>
 
 <script>
-    // 🔗 আপনার দেওয়া আসল লিংকটি এখানে নিখুঁতভাবে বসিয়ে দেওয়া হয়েছে
-    const JSON_URL = "https://md787rony-art.github.io/myy-factory-app/ssdd.json"; 
-    let dbData = {};
+    // 🔐 সুরক্ষিত ইউজার ডেটাবেস (আপনার চাহিদা অনুযায়ী পাসওয়ার্ড ও মোবাইল নম্বর যুক্ত করা হয়েছে)
+    // নতুন মিস্ত্রি বাড়াতে চাইলে ঠিক নিচের নিয়মে কমা (,) দিয়ে বাড়িয়ে নিতে পারবেন।
+    const MISTRY_DB = [
+        { username: "rony", password: "123", title: "প্রধান মিস্ত্রি", mobile: "01712345678", hajira_rate: 500 },
+        { username: "alamin", password: "456", title: "ফিটিং মিস্ত্রি", mobile: "01987654321", hajira_rate: 450 },
+        { username: "babul", password: "789", title: "কালার মিস্ত্রি", mobile: "01555555555", hajira_rate: 400 }
+    ];
+
+    const URL_PROFILE = "https://md787rony-art.github.io/myy-factory-app/sspp.json";
     let activeUser = {};
 
+    // ১. পাসওয়ার্ড এবং ইউজারনেম লোকাল অবজেক্ট থেকে দ্রুত ও নিরাপদে চেক করার ফাংশন
     function handleLogin() {
-        const u = document.getElementById("username").value.trim().toLowerCase();
-        const p = document.getElementById("password").value;
+        const inputUser = document.getElementById("username").value.trim().toLowerCase();
+        const inputPass = document.getElementById("password").value;
 
-        fetch(JSON_URL, { cache: "no-store" })
-        .then(res => res.json())
-        .then(db => {
-            dbData = db;
-            const localLedger = JSON.parse(localStorage.getItem('local_ledger') || '[]');
-            const combinedLedger = [...dbData.ledger, ...localLedger];
+        if (!inputUser || !inputPass) {
+            return alert("অনুগ্রহ করে ইউজারনেম এবং পাসওয়ার্ড দুটোই দিন!");
+        }
 
-            const user = dbData.users.find(user => user.username === u && user.password === p);
-            if (user) {
-                activeUser = user;
-                document.getElementById("login-block").style.display = "none";
-                document.getElementById("dashboard-block").style.display = "block";
-                setupDashboard(combinedLedger);
-            } else { alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!"); }
-        }).catch(() => alert("ডাটা ফাইল লোড করতে সমস্যা হচ্ছে! আপনার ssdd.json ফাইলটি গিটহাবে ঠিকমতো আছে কিনা চেক করুন।"));
+        // ম্যাচ করানো হচ্ছে কোডের ডেটার সাথে
+        const user = MISTRY_DB.find(u => u.username === inputUser && u.password === inputPass);
+        
+        if (user) {
+            activeUser = user;
+            // লগইন সফল হলে প্রোফাইল ডাটা লোড হবে
+            loadUserProfile();
+        } else {
+            alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
+        }
     }
 
-    function setupDashboard(ledger) {
-        document.getElementById("user-welcome").innerText = `👤 ইউজার: ${activeUser.username.toUpperCase()} (${activeUser.title})`;
-        
-        let totalEarned = 0, totalPaid = 0, totalHajira = 0;
-        const histContainer = document.getElementById("history-list");
-        histContainer.innerHTML = "";
+    // ২. sspp.json ফাইল থেকে লগইনকৃত নির্দিষ্ট ইউজারের প্রোফাইল ও হিসাব দেখানোর ফাংশন
+    function loadUserProfile() {
+        fetch(URL_PROFILE, { cache: "no-store" })
+        .then(res => res.json())
+        .then(profileData => {
+            document.getElementById("login-block").style.display = "none";
+            document.getElementById("dashboard-block").style.display = "block";
 
-        ledger.forEach(h => {
-            if(h.username === activeUser.username && h.status === 'Approved') {
-                totalEarned += parseFloat(h.amount || 0);
-                totalPaid += parseFloat(h.paid_amount || 0);
-                totalHajira += parseFloat(h.hajira_count || 0);
-                histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.amount} ৳</strong></div>`;
+            // ড্যাশবোর্ডে ইউজারের নাম, পদবি এবং মোবাইল নম্বর শো করা
+            document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
+            document.getElementById("user-details-box").innerHTML = `
+                <strong>পদবি:</strong> ${activeUser.title} <br>
+                <strong>মোবাইল নম্বর:</strong> ${activeUser.mobile} <br>
+                <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
+            `;
+
+            // sspp.json থেকে এই ইউজারের নির্দিষ্ট হিসাব ফিল্টার করা
+            let totalEarned = 0, totalPaid = 0, totalHajira = 0;
+            const histContainer = document.getElementById("history-list");
+            histContainer.innerHTML = "";
+
+            if (profileData[activeUser.username]) {
+                const userLedger = profileData[activeUser.username].ledger || [];
+                totalEarned = parseFloat(profileData[activeUser.username].total_earned || 0);
+                totalPaid = parseFloat(profileData[activeUser.username].total_paid || 0);
+                totalHajira = parseFloat(profileData[activeUser.username].total_hajira || 0);
+
+                userLedger.forEach(h => {
+                    histContainer.innerHTML += `<div class="history-item"><span>📅 ${h.date} - ${h.details} (${h.time})</span><strong>${h.amount} ৳</strong></div>`;
+                });
             }
-        });
 
-        document.getElementById("stat-hajira").innerText = totalHajira;
-        document.getElementById("stat-earned").innerText = totalEarned + " ৳";
-        document.getElementById("stat-paid").innerText = totalPaid + " ৳";
-        document.getElementById("stat-balance").innerText = (totalEarned - totalPaid) + " ৳";
-        if(!histContainer.innerHTML) histContainer.innerHTML = "<p>কোনো ইতিহাস পাওয়া যায়নি।</p>";
+            // ড্যাশবোর্ডে ডাটা শো করা
+            document.getElementById("stat-hajira").innerText = totalHajira;
+            document.getElementById("stat-earned").innerText = totalEarned + " ৳";
+            document.getElementById("stat-paid").innerText = totalPaid + " ৳";
+            document.getElementById("stat-balance").innerText = (totalEarned - totalPaid) + " ৳";
+
+            if(!histContainer.innerHTML) {
+                histContainer.innerHTML = "<p>কোনো পূর্ববর্তী অনুমোদিত কাজের ইতিহাস পাওয়া যায়নি।</p>";
+            }
+        })
+        .catch(() => {
+            // যদি ফাইল লোডে কোনো সমস্যাও হয়, তাও লগইন আটকে থাকবে না, জিরো ডাটা দিয়ে ড্যাশবোর্ড ওপেন হবে
+            document.getElementById("login-block").style.display = "none";
+            document.getElementById("dashboard-block").style.display = "block";
+            document.getElementById("user-welcome").innerText = `👤 স্বাগতম, ${activeUser.username.toUpperCase()}`;
+            document.getElementById("user-details-box").innerHTML = `
+                <strong>পদবি:</strong> ${activeUser.title} <br>
+                <strong>মোবাইল নম্বর:</strong> ${activeUser.mobile} <br>
+                <strong>হাজিরা রেট (ডেইলি):</strong> ${activeUser.hajira_rate} ৳
+            `;
+            alert("নোট: আপনার প্রোফাইলের পূর্ববর্তী হিসাব ফাইলটি লোড করা যায়নি, তবে আপনি নতুন এন্ট্রি পাঠাতে পারবেন।");
+        });
     }
 
     function updateFormFlow() {
@@ -156,6 +203,7 @@
         document.getElementById("amount").value = mult * parseFloat(activeUser.hajira_rate || 0);
     }
 
+    // ৩. নতুন কাজের মেমো বা ছবি স্থানীয়ভাবে রেডি করার ফাংশন
     function submitReport(e) {
         e.preventDefault();
         const d = new Date();
@@ -167,22 +215,21 @@
         const newReport = {
           "id": "REP_" + d.getTime(),
           "username": activeUser.username,
+          "mobile": activeUser.mobile,
           "date": d.getDate() + "-" + months[d.getMonth()] + "-" + d.getFullYear(),
           "time": d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
           "report_type": document.getElementById("work-type").value,
           "details": `${activeUser.title} -> ${document.getElementById("furniture-item").value}`,
           "amount": parseFloat(document.getElementById("amount").value || 0),
-          "paid_amount": 0,
-          "hajira_count": hc,
           "image_path": document.getElementById("photo-link").value || "No Image",
           "status": "Pending"
         };
 
-        let localLedger = JSON.parse(localStorage.getItem('local_ledger') || '[]');
-        localLedger.push(newReport);
-        localStorage.setItem('local_ledger', JSON.stringify(localLedger));
+        let localRequests = JSON.parse(localStorage.getItem('ssjj_local') || '[]');
+        localRequests.push(newReport);
+        localStorage.setItem('ssjj_local', JSON.stringify(localRequests));
 
-        alert("✅ হিসাবটি মালিকের অ্যাডমিন প্যানেলে পাঠানো হয়েছে! মালিক অ্যাপ্রুভ করার জন্য অপেক্ষা করুন।");
+        alert("✅ মেমো এবং কাজের ছবি সফলভাবে জমা হয়েছে!\n\nমালিকের অ্যাডমিন প্যানেল ডাউনলোডের জন্য এটি জমা রইলো। ssjj.json এ যোগ করার জন্য মালিককে জানান।");
         location.reload();
     }
 </script>
