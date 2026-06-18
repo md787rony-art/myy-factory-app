@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base67 - ডিজিটাল ফার্নিচার কারখানা খাতা</title>
+    <title>Base67 - ডিজিটাল কারখানা খাতা </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
@@ -64,7 +64,7 @@
 <body>
 
 <div class="header-area">
-    <h2>📁 Base67 - ডিজিটাল ফার্নিচার কারখানা খাতা</h2>
+    <h2>📁 Base67 - ডিজিটাল কারখানা খাতা</h2>
     <button class="btn-settings" onclick="openSettings()">⚙️ মালের রেট সেটিংস</button>
 </div>
 
@@ -72,11 +72,11 @@
     
     <div class="box">
         <form id="calcForm" onsubmit="calculateTotal(event)">
-            <h3>📌 ১. ফার্নিচার ও ধরন</h3>
+            <h3>📌 ১. ফার্নিচার</h3>
             <div class="grid-2">
                 <div class="form-group">
                     <label>মডেল নাম্বার (Model No.)</label>
-                    <input type="text" id="model_no" placeholder="যেমন: Base67" required>
+                    <input type="text" id="model_no" placeholder="যেমন: " required>
                 </div>
                 <div class="form-group">
                     <label>প্রোডাক্টের নাম (আইটেম)</label>
@@ -84,8 +84,8 @@
                         <option value="almirah_4">আলমিরা (৪ দরজা)</option>
                         <option value="almirah_3">আলমিরা (৩ দরজা)</option>
                         <option value="almirah_2">আলমিরা (২ দরজা)</option>
-                        <option value="dressing_table">ড্রেসিং টেবিল (মিররসহ)</option>
-                        <option value="wardrobe_4d2dr">ওয়ারড্রব (৪ ড্রয়ার + ২ দরজা)</option>
+                        <option value="dressing_table">ড্রেসিং টেবিল ()</option>
+                        <option value="wardrobe_4d2dr">ওয়ারড্রব (৪ ড্রয়ার + ১ দরজা)</option>
                         <option value="wardrobe_4d">ওয়ারড্রব (শুধু ৪ ড্রয়ার)</option>
                         <option value="bed">খাট (Bed)</option>
                         <option value="office_table">অফিস টেবিল</option>
@@ -96,10 +96,10 @@
 
             <h3>🪵 ২. বোর্ডের পরিমাণ (পিস)</h3>
             <div class="grid-2">
-                <div class="form-group"><label>১৮ মিমি MDF (পিস)</label><input type="number" id="qty_18mm" value="0" step="any"></div>
-                <div class="form-group"><label>১৫ মিমি MDF (পিস)</label><input type="number" id="qty_15mm" value="0" step="any"></div>
+                <div class="form-group"><label>১৮ মিমি MDF (পিস)</label><input type="number" id="qty_18mm" value=" " step="any"></div>
+                <div class="form-group"><label>১৫ মিমি MDF (পিস)</label><input type="number" id="qty_15mm" value="" step="any"></div>
             </div>
-            <div class="form-group"><label>৬ মিমি প্লাই/বোর্ড (পিস)</label><input type="number" id="qty_6mm" value="0" step="any"></div>
+            <div class="form-group"><label>৬ মিমি প্লাই/বোর্ড (পিস)</label><input type="number" id="qty_6mm" value=" " step="any"></div>
 
             <h3>🔩 ৩. হার্ডওয়্যার ও গ্লাস (স্মার্ট অটো-হিসাব)</h3>
             <div class="grid-2">
@@ -111,22 +111,22 @@
                 <div class="form-group"><label>ড্রয়ার চ্যানেল (সেট)</label><input type="number" id="qty_channel" value="1"></div>
             </div>
             <div class="form-group">
-                <label>লুকিং গ্লাস / আয়না লেগেছে (টি)</label>
+                <label>লুকিং গ্লাস / আয়না  (টি)</label>
                 <input type="number" id="qty_glass" value="0">
             </div>
 
-            <h3>🎨 ৪. মিস্ত্রি, রঙ ও সিএনসি নকশা (টাকা)</h3>
+            <h3>🎨 ৪.   রঙ মিস্ত্রি,  ও সিএনসি নকশা (টাকা)</h3>
             <div class="grid-2">
-                <div class="form-group"><label>সিএনসি (CNC) নকশা বিল</label><input type="number" id="cost_cnc" value="0"></div>
-                <div class="form-group"><label>লেকার / কালার কেমিক্যাল মাল</label><input type="number" id="cost_lacquer" value="0"></div>
+                <div class="form-group"><label>সিএনসি (CNC) নকশা বিল</label><input type="number" id="cost_cnc" value=" "></div>
+                <div class="form-group"><label>লেকার / কালার কেমিক্যাল মাল</label><input type="number" id="cost_lacquer" value=" "></div>
             </div>
             <div class="grid-2">
-                <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="0"></div>
-                <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value="0"></div>
+                <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value=" "></div>
+                <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value=" "></div>
             </div>
             <div class="grid-2">
-                <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value="0"></div>
-                <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু, হাতুড়ি টেপ ইত্যাদি)</label><input type="number" id="cost_others" value="0"></div>
+                <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value=" "></div>
+                <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু, পিন ইত্যাদি)</label><input type="number" id="cost_others" value=" "></div>
             </div>
 
             <button type="submit" class="main-btn btn-calc">📊 হিসাব বের করুন</button>
