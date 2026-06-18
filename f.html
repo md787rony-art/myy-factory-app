@@ -79,7 +79,7 @@
 <body>
 
 <div class="header-area">
-    <h2>📁 খাতা</h2>
+    <h2>📁 Base67 খাতা</h2>
     <button class="btn-settings" onclick="openSettings()">⚙️ রেট সেটিংস</button>
 </div>
 
@@ -121,7 +121,7 @@
             <div class="form-step" id="step-2">
                 <h3>🪵 ২. Boards (পিস)</h3>
                 <div class="form-group">
-                    <label>১৮ মিলি MDF</label>
+                    <label>১৮ মিমি MDF</label>
                     <div class="input-control">
                         <button type="button" class="count-btn" onclick="stepInput('qty_18mm', -1)">-</button>
                         <input type="number" id="qty_18mm" value="0" step="any">
@@ -129,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>১৫ মিলি MDF</label>
+                    <label>১৫ মিমি MDF</label>
                     <div class="input-control">
                         <button type="button" class="count-btn" onclick="stepInput('qty_15mm', -1)">-</button>
                         <input type="number" id="qty_15mm" value="0" step="any">
@@ -137,7 +137,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>৬ মিলি প্লাই/বোর্ড</label>
+                    <label>৬ মিমি প্লাই/বোর্ড</label>
                     <div class="input-control">
                         <button type="button" class="count-btn" onclick="stepInput('qty_6mm', -1)">-</button>
                         <input type="number" id="qty_6mm" value="0" step="any">
@@ -259,9 +259,9 @@
         <span class="close-btn" onclick="closeSettings()">&times;</span>
         <h2 style="border-bottom: 2px solid #e67e22; padding-bottom:8px; margin-bottom:20px; color: #2c3e50;">⚙️ মালের রেট সেটিংস</h2>
         <form id="settingsForm" onsubmit="saveRates(event)">
-            <div class="form-group"><label>১৮ মিলি MDF রেট</label><input type="number" id="cfg_18mm" value="1790" required></div>
-            <div class="form-group"><label>১৫ মিলি MDF রেট</label><input type="number" id="cfg_15mm" value="1580" required></div>
-            <div class="form-group"><label>৬ মিলি প্লাই রেট</label><input type="number" id="cfg_6mm" value="1300" required></div>
+            <div class="form-group"><label>১৮ মিমি MDF রেট</label><input type="number" id="cfg_18mm" value="1790" required></div>
+            <div class="form-group"><label>১৫ মিমি MDF রেট</label><input type="number" id="cfg_15mm" value="1580" required></div>
+            <div class="form-group"><label>৬ মিমি প্লাই রেট</label><input type="number" id="cfg_6mm" value="1300" required></div>
             <div class="form-group"><label>হ্যান্ডেল রেট (পিস)</label><input type="number" id="cfg_handle" value="440" required></div>
             <div class="form-group"><label>ড্রয়ার চ্যানেল রেট (সেট)</label><input type="number" id="cfg_channel" value="200" required></div>
             <div class="form-group"><label>কব্জা রেট (পিস)</label><input type="number" id="cfg_hinge" value="80" required></div>
@@ -441,9 +441,9 @@
         let cOth = document.getElementById('cost_others').value || 0;
 
         let boardDetails = [];
-        if(q18 > 0) boardDetails.push(`১৮মিলি: ${q18} পিস`);
-        if(q15 > 0) boardDetails.push(`১৫মিলি: ${q15} পিস`);
-        if(q6 > 0) boardDetails.push(`৬মিি প্লাই: ${q6} পিস`);
+        if(q18 > 0) boardDetails.push(`১৮মিমি: ${q18} পিস`);
+        if(q15 > 0) boardDetails.push(`১৫মিমি: ${q15} পিস`);
+        if(q6 > 0) boardDetails.push(`৬মিমি প্লাই: ${q6} পিস`);
         
         let hardDetails = [];
         if(qLock > 0) hardDetails.push(`তালা: ${qLock}টি`);
@@ -528,7 +528,7 @@
         
         tempDiv.innerHTML = `
             <div style="text-align:center; margin-bottom: 20px; border-bottom: 3px double #2c3e50; padding-bottom: 10px;">
-                <h2 style="color: #2c3e50; margin: 0; font-size:1.4rem;"> কারখানা রেকর্ড কপি</h2>
+                <h2 style="color: #2c3e50; margin: 0; font-size:1.4rem;">Base67 কারখানা রেকর্ড কপি</h2>
                 <p style="color: #64748b; font-size: 0.8rem; margin: 5px 0 0 0;">একক প্রোডাক্ট উৎপাদন খরচ বিবরণী</p>
             </div>
             <div style="margin-bottom: 20px; background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 5px solid #3498db;">
@@ -543,7 +543,7 @@
                 <span style="font-size: 1.6rem; font-weight: bold; color: #2ecc71;">${targetRow.cells[2].innerText}</span>
             </div>
             <div style="text-align:center; margin-top:20px; font-size:0.7rem; color:#94a3b8; border-top:1px solid #e2e8f0; padding-top:10px;">
-                ডিজিটাল খাতা জেনারেটেড কপি • 
+                ডিজিটাল খাতা জেনারেটেড কপি • Base67
             </div>
         `;
         
