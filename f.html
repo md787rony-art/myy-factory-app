@@ -13,7 +13,6 @@
         .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
         @media (max-width: 1150px) { .container { grid-template-columns: 1fr; } }
         
-        /* ডায়নামিক মডার্ন কার্ড স্টাইল */
         .box { background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 5px solid #3498db; height: max-content; }
         .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 18px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
@@ -25,7 +24,6 @@
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
         label { font-size: 0.9rem; margin-bottom: 6px; font-weight: 600; color: #34495e; }
         
-        /* বাটন ও ইনপুট কন্ট্রোল স্টাইল */
         .input-control { display: flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; transition: all 0.3s; }
         .input-control:focus-within { border-color: #3498db; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
         
@@ -34,10 +32,8 @@
         
         input:focus, select:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
         
-        /* মডার্ন কাউন্টার বাটন */
         .count-btn { background: #f8fafc; border: none; color: #3498db; font-weight: bold; width: 45px; height: 46px; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
         .count-btn:hover { background: #e2e8f0; color: #2980b9; }
-        .count-btn:active { background: #cbd5e1; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         
@@ -48,34 +44,38 @@
         .btn-download-img { background: #9b59b6; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; transition: all 0.3s; }
         .btn-download-img:hover { background: #8e44ad; transform: translateY(-2px); }
         
-        /* ডায়নামিক লাইভ রেজাল্ট বক্স */
         .result-box { margin-top: 25px; background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 20px; border-radius: 14px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
         .result-box h4 { font-size: 1rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
         .total-amount { font-size: 2.8rem; font-weight: bold; color: #2ecc71; margin: 5px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        /* মোডাল ডিজাইন */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; padding: 30px; border-radius: 16px; width: 90%; max-width: 480px; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #94a3b8; transition: color 0.2s; }
-        .close-btn:hover { color: #64748b; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 16px; width: 90%; max-width: 480px; position: relative; max-height: 85vh; overflow-y: auto; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #94a3b8; }
         
-        /* খাতা এরিয়া */
         .db-box { border-top: 5px solid #3498db; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         #capture_area { background: white; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; }
         
         .table-wrapper { width: 100%; overflow-x: auto; margin-top: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; min-width: 700px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; min-width: 750px; }
         th, td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; vertical-align: top; }
         th:last-child, td:last-child { border-right: none; }
         th { background: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
-        tr:hover { background-color: #f8fafc; }
         
-        /* সুন্দর ক্যাটাগরি ডিজাইন */
         .cat-title { font-weight: bold; color: #1e293b; margin-top: 8px; display: block; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; font-size: 0.88rem; }
         .cat-details { font-size: 0.82rem; color: #64748b; padding-left: 10px; line-height: 1.5; margin: 4px 0 8px 0; }
         .plus-cost { color: #e67e22; font-weight: bold; font-size: 1.15rem; text-align: center; display: block; margin-top: 5px; }
         .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
         .record-divider { border: none; border-top: 2px dashed #3498db; margin: 15px 0; opacity: 0.5; }
+
+        /* টেবিলের ভেতরের অ্যাকশন বাটনের মডার্ন স্টাইল */
+        .btn-action-download { padding: 6px 10px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 5px; }
+        .btn-action-download:hover { background: #219653; }
+        .btn-action-delete { padding: 6px 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; }
+        .btn-action-delete:hover { background: #dc2626; }
+        
+        /* সিঙ্গেল রো ক্যাপচারের ব্যাকগ্রাউন্ড ট্রিক */
+        .capturing-row { background: white !important; padding: 25px !important; border: 2px solid #3498db !important; border-radius: 12px !important; }
+        .capturing-row .no-capture { display: none !important; }
     </style>
 </head>
 <body>
@@ -210,7 +210,7 @@
     <div class="db-box">
         <div class="db-header">
             <h2>📋 আজীবনের সেভ খাতা</h2>
-            <button class="btn-download-img" onclick="exportToImage()">📸 খাতার ছবি ডাউনলোড করুন</button>
+            <button class="btn-download-img" onclick="exportToImage()">📸 পুরো খাতার ছবি ডাউনলোড</button>
         </div>
         
         <div id="capture_area">
@@ -219,10 +219,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 20%;">মডেল / নাম</th>
-                            <th style="width: 55%;">মালের সম্পূর্ণ আলাদা ব্রেকডাউন (অফিস ডিটেলস)</th>
+                            <th style="width: 22%;">মডেল / নাম</th>
+                            <th style="width: 48%;">মালের সম্পূর্ণ আলাদা ব্রেকডাউন (অফিস ডিটেলস)</th>
                             <th style="width: 15%; text-align: center;">মোট খরচ</th>
-                            <th class="action-head" style="width: 10%; text-align: center;">অ্যাকশন</th>
+                            <th class="action-head" style="width: 15%; text-align: center;">অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="dbRows"></tbody>
@@ -256,14 +256,13 @@
     let calculatedHardwareCost = 0;
     let calculatedLaborAndOtherCost = 0;
 
-    // প্লাস-মাইনাস বাটন দিয়ে ডায়নামিকলি কম বেশি করার ফাংশন
     function stepInput(id, value) {
         let input = document.getElementById(id);
         let current = parseFloat(input.value) || 0;
         let newValue = current + value;
         if(newValue < 0) newValue = 0;
         input.value = newValue;
-        calculateLiveTotal(); // বাটন চাপলেই লাইভ ক্যালকুলেট হবে
+        calculateLiveTotal();
     }
 
     function handleProductChange() {
@@ -282,13 +281,12 @@
         else if (type === 'wardrobe_4d') { lock.value = 4; handle.value = 4; hinge.value = 0; channel.value = 4; glass.value = 0; }
         else { lock.value = 0; handle.value = 0; hinge.value = 0; channel.value = 0; glass.value = 0; }
         
-        calculateLiveTotal(); // প্রোডাক্ট ড্রপডাউন চেঞ্জ হলেও সাথে সাথে হিসাব হবে
+        calculateLiveTotal();
     }
 
     function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
 
-    // ডায়নামিকলি সব ইনপুটে লাইভ লিসেনার অ্যাড করা
     window.onload = function() {
         if(localStorage.getItem('cfg_18mm')) {
             ['18mm','15mm','6mm','handle','channel','hinge','lock','glass'].forEach(id => {
@@ -298,7 +296,6 @@
             });
         }
         
-        // সব ইনপুট ফিল্ডে টাইপ করার সাথে সাথে যেন হিসাব চেঞ্জ হয়
         const allInputs = document.querySelectorAll('#calcForm input, #calcForm select');
         allInputs.forEach(input => {
             input.addEventListener('input', calculateLiveTotal);
@@ -318,7 +315,6 @@
         calculateLiveTotal();
     }
 
-    // ডায়নামিক রিয়েল-টাইম হিসাব ফাংশন
     function calculateLiveTotal() {
         let r18 = parseFloat(document.getElementById('cfg_18mm').value)||0;
         let r15 = parseFloat(document.getElementById('cfg_15mm').value)||0;
@@ -345,7 +341,6 @@
         let cCarrying = parseFloat(document.getElementById('cost_carrying').value)||0;
         let cOthers = parseFloat(document.getElementById('cost_others').value)||0;
 
-        // ৩টি আলাদা পার্ট ব্রেকডাউন
         calculatedBoardCost = (q18 * r18) + (q15 * r15) + (q6 * r6);
         calculatedHardwareCost = (qHand * rHand) + (qChan * rChan) + (qHinge * rHinge) + (qLock * rLock) + (qGlass * rGlass);
         calculatedLaborAndOtherCost = cCnc + cLacquer + cFitting + cColor + cCarrying + cOthers;
@@ -377,7 +372,6 @@
         let cCar = document.getElementById('cost_carrying').value || 0;
         let cOth = document.getElementById('cost_others').value || 0;
 
-        // ডায়নামিক বিবরণী তৈরি (শুধুমাত্র যা খরচ হয়েছে তা-ই আসবে)
         let boardDetails = [];
         if(q18 > 0) boardDetails.push(`১৮মিমি: ${q18} পিস`);
         if(q15 > 0) boardDetails.push(`১৫মিমি: ${q15} পিস`);
@@ -431,16 +425,71 @@
         let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
         let rows = '';
         db.forEach((item, index) => {
-            rows += `<tr>
+            rows += `<tr id="row-${index}">
                 <td><strong>${item.model}</strong><br><small style="color:#64748b; font-weight:500;">${item.name}</small></td>
                 <td><div class="details-text">${item.details || 'কোনো বিবরণী নেই'}</div></td>
                 <td><span class="plus-cost">${item.cost} ৳</span></td>
                 <td class="no-capture" style="text-align:center; vertical-align:middle;">
-                    <button style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:bold; transition:0.2s;" onclick="deleteRow(${index})">ডিলিট</button>
+                    <button class="btn-action-download" onclick="exportSingleRow(${index}, '${item.model}')">📸 ডাউনলোড</button>
+                    <button class="btn-action-delete" onclick="deleteRow(${index})">ডিলিট</button>
                 </td>
             </tr>`;
         });
         document.getElementById('dbRows').innerHTML = rows;
+    }
+
+    // শুধুমাত্র একটি নির্দিষ্ট সিঙ্গেল হিসাব ডাউনলোড করার ডায়নামিক ফাংশন
+    function exportSingleRow(index, modelName) {
+        let targetRow = document.getElementById(`row-${index}`);
+        
+        // টেম্পোরারি একটি কন্টেইনার তৈরি করা যাতে ছবিটা দেখতে সুন্দর রসিদের মতো আসে
+        let tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.top = '-9999px';
+        tempDiv.style.width = '550px';
+        tempDiv.style.background = '#ffffff';
+        tempDiv.style.padding = '30px';
+        tempDiv.style.borderRadius = '12px';
+        tempDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+        tempDiv.style.fontFamily = "'Segoe UI', Arial, sans-serif";
+        
+        // মেমো বা টোকেন হেডার অংশ
+        tempDiv.innerHTML = `
+            <div style="text-align:center; margin-bottom: 20px; border-bottom: 3px double #2c3e50; padding-bottom: 10px;">
+                <h2 style="color: #2c3e50; margin: 0;">Base67 কারখানা রেকর্ড খাতা</h2>
+                <p style="color: #64748b; font-size: 0.85rem; margin: 5px 0 0 0;">একক প্রোডাক্ট উৎপাদন খরচ বিবরণী</p>
+            </div>
+            <div style="margin-bottom: 20px; background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 5px solid #3498db;">
+                <span style="font-size:0.9rem; color:#64748b;">মডেল ও আইটেম:</span>
+                <h3 style="margin: 3px 0 0 0; color:#1e293b; font-size:1.3rem;">${targetRow.cells[0].innerHTML.replace('<br>', ' - ')}</h3>
+            </div>
+            <div style="margin-bottom: 25px;">
+                ${targetRow.cells[1].innerHTML}
+            </div>
+            <div style="background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                <span style="font-size: 0.9rem; color: #cbd5e1; display:block;">সর্বমোট উৎপাদন খরচ</span>
+                <span style="font-size: 1.8rem; font-weight: bold; color: #2ecc71;">${targetRow.cells[2].innerText}</span>
+            </div>
+            <div style="text-align:center; margin-top:25px; font-size:0.75rem; color:#94a3b8; border-top:1px solid #e2e8f0; padding-top:10px;">
+                ডিজিটাল খাতা জেনারেটেড কপি • Base67
+            </div>
+        `;
+        
+        document.body.appendChild(tempDiv);
+
+        html2canvas(tempDiv, { scale: 2, useCORS: true }).then(canvas => {
+            let imgData = canvas.toDataURL('image/png');
+            let a = document.createElement('a');
+            a.href = imgData;
+            a.download = `Cost_Report_${modelName}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            document.body.removeChild(tempDiv);
+        }).catch(err => {
+            alert('দুঃখিত, সিঙ্গেল ছবি তৈরিতে সমস্যা হয়েছে।');
+            if(tempDiv) document.body.removeChild(tempDiv);
+        });
     }
 
     function deleteRow(index) {
@@ -468,16 +517,16 @@
             
             let a = document.createElement('a');
             a.href = imgData;
-            a.download = 'Base67_Dynamic_Khata.png';
+            a.download = 'Base67_Dynamic_All_Khata.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
 
-            deleteButtons.forEach(btn => btn.style.display = 'table-cell');
+            deleteButtons.forEach(btn => btn.style.display = 'inline-flex');
             if(actionHead) actionHead.style.display = 'table-cell';
         }).catch(err => {
             alert('দুঃখিত, ছবি তৈরিতে সমস্যা হয়েছে।');
-            deleteButtons.forEach(btn => btn.style.display = 'table-cell');
+            deleteButtons.forEach(btn => btn.style.display = 'inline-flex');
             if(actionHead) actionHead.style.display = 'table-cell';
         });
     }
