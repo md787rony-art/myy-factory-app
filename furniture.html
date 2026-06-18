@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base67 - ডিজিটাল কারখানা খাতা </title>
+    <title>Base67 - ডিজিটাল কারখানা খাতা</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #f4f7f9; padding: 25px 15px; color: #333; }
-        .container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
+        @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } }
         
-        .box { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid #2ecc71; }
+        .box { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid #2ecc71; height: max-content; }
         .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; }
         
         .btn-settings { background-color: #e67e22; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
@@ -31,34 +31,29 @@
         .btn-save-db { background-color: #34495e; color: white; margin-top: 10px; }
         .btn-save-db:hover { background-color: #2c3e50; }
         
-        /* ছবি ডাউনলোড বাটন স্টাইল */
         .btn-download-img { background-color: #9b59b6; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
         .btn-download-img:hover { background-color: #8e44ad; }
         
-        /* রেজাল্ট বক্স */
         .result-box { margin-top: 20px; background: #2c3e50; color: white; padding: 15px; border-radius: 8px; text-align: center; }
         .total-amount { font-size: 2.5rem; font-weight: bold; color: #2ecc71; }
 
-        /* সেটিংস পপ-আপ (Modal) */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
         .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; max-height: 85vh; overflow-y: auto; }
         .close-btn { position: absolute; right: 15px; top: 10px; font-size: 28px; cursor: pointer; color: #aaa; }
         
-        /* ডাটাবেজ খাতা স্টাইল */
-        .db-box { border-top: 4px solid #3498db; background: white; padding: 20px; border-radius: 12px; max-height: 850px; overflow-y: auto; }
-        
-        /* এই আইডি সংবলিত অংশটুকুর ছবি উঠবে */
-        #capture_area { background: white; padding: 10px; border-radius: 6px; }
+        /* ডাটাবেজ খাতা ও ছবির এরিয়া */
+        .db-box { border-top: 4px solid #3498db; background: white; padding: 20px; border-radius: 12px; }
+        #capture_area { background: white; padding: 15px; border-radius: 6px; border: 1px solid #ddd; }
         
         .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
-        th, td { padding: 12px 10px; border-bottom: 1px solid #ddd; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; min-width: 550px; }
+        th, td { padding: 10px 8px; border: 1px solid #ddd; vertical-align: top; }
         th { background: #34495e; color: white; font-weight: bold; }
-        .plus-cost { color: #e67e22; font-weight: bold; word-break: break-all; }
-        .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
         
-        /* ছবি তোলার সময় ডিলিট বাটন যাতে ছবিতে না আসে তার জন্য ক্লাস */
-        .no-capture { }
+        /* মালের বিবরণী টেক্সট ফরম্যাট */
+        .details-text { font-size: 0.8rem; color: #444; line-height: 1.4; white-space: pre-line; }
+        .plus-cost { color: #e67e22; font-weight: bold; font-size: 1rem; }
+        .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -76,7 +71,7 @@
             <div class="grid-2">
                 <div class="form-group">
                     <label>মডেল নাম্বার (Model No.)</label>
-                    <input type="text" id="model_no" placeholder="যেমন: " required>
+                    <input type="text" id="model_no" placeholder="যেমন: B-102" required>
                 </div>
                 <div class="form-group">
                     <label>প্রোডাক্টের নাম (আইটেম)</label>
@@ -84,8 +79,8 @@
                         <option value="almirah_4">আলমিরা (৪ দরজা)</option>
                         <option value="almirah_3">আলমিরা (৩ দরজা)</option>
                         <option value="almirah_2">আলমিরা (২ দরজা)</option>
-                        <option value="dressing_table">ড্রেসিং টেবিল ()</option>
-                        <option value="wardrobe_4d2dr">ওয়ারড্রব (৪ ড্রয়ার + ১ দরজা)</option>
+                        <option value="dressing_table">ড্রেসিং টেবিল (মিররসহ)</option>
+                        <option value="wardrobe_4d2dr">ওয়ারড্রব (৪ ড্রয়ার + ২ দরজা)</option>
                         <option value="wardrobe_4d">ওয়ারড্রব (শুধু ৪ ড্রয়ার)</option>
                         <option value="bed">খাট (Bed)</option>
                         <option value="office_table">অফিস টেবিল</option>
@@ -96,10 +91,10 @@
 
             <h3>🪵 ২. বোর্ডের পরিমাণ (পিস)</h3>
             <div class="grid-2">
-                <div class="form-group"><label>১৮ মিমি MDF (পিস)</label><input type="number" id="qty_18mm" value=" " step="any"></div>
-                <div class="form-group"><label>১৫ মিমি MDF (পিস)</label><input type="number" id="qty_15mm" value="" step="any"></div>
+                <div class="form-group"><label>১৮ মিমি MDF (পিস)</label><input type="number" id="qty_18mm" value="0" step="any"></div>
+                <div class="form-group"><label>১৫ মিমি MDF (পিস)</label><input type="number" id="qty_15mm" value="0" step="any"></div>
             </div>
-            <div class="form-group"><label>৬ মিমি প্লাই/বোর্ড (পিস)</label><input type="number" id="qty_6mm" value=" " step="any"></div>
+            <div class="form-group"><label>৬ মিমি প্লাই/বোর্ড (পিস)</label><input type="number" id="qty_6mm" value="0" step="any"></div>
 
             <h3>🔩 ৩. হার্ডওয়্যার ও গ্লাস (স্মার্ট অটো-হিসাব)</h3>
             <div class="grid-2">
@@ -111,22 +106,22 @@
                 <div class="form-group"><label>ড্রয়ার চ্যানেল (সেট)</label><input type="number" id="qty_channel" value="1"></div>
             </div>
             <div class="form-group">
-                <label>লুকিং গ্লাস / আয়না  (টি)</label>
+                <label>লुकিং গ্লাস / আয়না (টি)</label>
                 <input type="number" id="qty_glass" value="0">
             </div>
 
-            <h3>🎨 ৪.   রঙ মিস্ত্রি,  ও সিএনসি নকশা (টাকা)</h3>
+            <h3>🎨 ৪. রঙ, মিস্ত্রি ও সিএনসি নকশা (টাকা)</h3>
             <div class="grid-2">
-                <div class="form-group"><label>সিএনসি (CNC) নকশা বিল</label><input type="number" id="cost_cnc" value=" "></div>
-                <div class="form-group"><label>লেকার / কালার কেমিক্যাল মাল</label><input type="number" id="cost_lacquer" value=" "></div>
+                <div class="form-group"><label>সিএনসি (CNC) নকশা বিল</label><input type="number" id="cost_cnc" value="0"></div>
+                <div class="form-group"><label>লেকার / কালার কেমিক্যাল মাল</label><input type="number" id="cost_lacquer" value="0"></div>
             </div>
             <div class="grid-2">
-                <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value=" "></div>
-                <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value=" "></div>
+                <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="0"></div>
+                <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value="0"></div>
             </div>
             <div class="grid-2">
-                <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value=" "></div>
-                <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু, পিন ইত্যাদি)</label><input type="number" id="cost_others" value=" "></div>
+                <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value="0"></div>
+                <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু, পিন ইত্যাদি)</label><input type="number" id="cost_others" value="0"></div>
             </div>
 
             <button type="submit" class="main-btn btn-calc">📊 হিসাব বের করুন</button>
@@ -146,15 +141,15 @@
         </div>
         
         <div id="capture_area">
-            <h3 style="margin-top: 0; background: #34495e; color: white; border-left: 4px solid #9b59b6;">Base67 কারখানা রেকর্ড খাতা</h3>
+            <h3 style="margin-top: 0; background: #34495e; color: white; border-left: 4px solid #9b59b6; padding: 10px;">Base67 কারখানা রেকর্ড খাতা</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>মডেল</th>
-                            <th>প্রোডাক্টের নাম</th>
-                            <th>মোট খরচ (টাকা)</th>
-                            <th class="action-head">অ্যাকশন</th>
+                            <th style="width: 15%;">মডেল / নাম</th>
+                            <th style="width: 55%;">মালের সম্পূর্ণ বিবরণী (অফিস ডিটেলস)</th>
+                            <th style="width: 20%;">মোট খরচ</th>
+                            <th class="action-head" style="width: 10%;">অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="dbRows">
@@ -267,18 +262,44 @@
         if(!modelNo) { alert('দয়া করে মডেল নাম্বারটি লিখুন!'); return; }
         if(currentCalculatedTotal === 0) { alert('প্রথমে হিসাব বের করুন তারপর সেভ করুন।'); return; }
 
+        // ফরম থেকে সমস্ত ইনপুট ডাটা বিবরণীর জন্য রিড করা
+        let q18 = document.getElementById('qty_18mm').value || 0;
+        let q15 = document.getElementById('qty_15mm').value || 0;
+        let q6 = document.getElementById('qty_6mm').value || 0;
+        let qLock = document.getElementById('qty_lock').value || 0;
+        let qHand = document.getElementById('qty_handle').value || 0;
+        let qHinge = document.getElementById('qty_hinge').value || 0;
+        let qChan = document.getElementById('qty_channel').value || 0;
+        let qGlass = document.getElementById('qty_glass').value || 0;
+        
+        let cCnc = document.getElementById('cost_cnc').value || 0;
+        let cLac = document.getElementById('cost_lacquer').value || 0;
+        let cFit = document.getElementById('cost_fitting_labor').value || 0;
+        let cCol = document.getElementById('cost_color_labor').value || 0;
+        let cCar = document.getElementById('cost_carrying').value || 0;
+        let cOth = document.getElementById('cost_others').value || 0;
+
+        // মালের পূর্ণাঙ্গ টেক্সট তৈরি
+        let details = `• ১৮মিমি বোর্ড: ${q18} পিস | ১৫মিমি: ${q15} পিস | ৬মিমি: ${q6} পিস\n` +
+                      `• তালা: ${qLock} টি | হ্যান্ডেল: ${qHand} টি | কব্জা: ${qHinge} টি\n` +
+                      `• চ্যানেল: ${qChan} সেট | গ্লাস/আয়না: ${qGlass} টি\n` +
+                      `• CNC বিল: ${cCnc}৳ | লেকার মাল: ${cLac}৳ | ফিটিং মিস্ত্রি: ${cFit}৳\n` +
+                      `• কালার মিস্ত্রি: ${cCol}৳ | গাড়ি ভাড়া: ${cCar}৳ | খুচরা খরচ: ${cOth}৳`;
+
         let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
         let existingItem = db.find(item => item.model === modelNo);
 
         if(existingItem) {
+            // যদি মডেল মিলে যায় তবে খরচের পাশে যোগ হবে এবং বিবরণী আপডেট হবে
             existingItem.cost = existingItem.cost + " + " + currentCalculatedTotal.toFixed(0);
+            existingItem.details = existingItem.details + "\n\n[পরবর্তী হিসাব]:\n" + details;
         } else {
-            db.push({ model: modelNo, name: productText, cost: currentCalculatedTotal.toFixed(0) });
+            db.push({ model: modelNo, name: productText, cost: currentCalculatedTotal.toFixed(0), details: details });
         }
 
         localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
         renderDatabase();
-        alert('হিসাবটি খাতা ফাইলে সেভ করা হয়েছে!');
+        alert('পূর্ণাঙ্গ বিবরণীসহ হিসাবটি খাতায় সেভ করা হয়েছে!');
     }
 
     function renderDatabase() {
@@ -286,10 +307,10 @@
         let rows = '';
         db.forEach((item, index) => {
             rows += `<tr>
-                <td><strong>${item.model}</strong></td>
-                <td>${item.name}</td>
+                <td><strong>${item.model}</strong><br><small style="color:#7f8c8d;">${item.name}</small></td>
+                <td><div class="details-text">${item.details || 'কোনো বিবরণী নেই'}</div></td>
                 <td class="plus-cost">${item.cost} টাকা</td>
-                <td class="no-capture"><button style="padding:4px 8px; background:#e74c3c; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.8rem;" onclick="deleteRow(${index})">ডিলিট</button></td>
+                <td class="no-capture"><button style="padding:6px 10px; background:#e74c3c; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.8rem;" onclick="deleteRow(${index})">ডিলিট</button></td>
             </tr>`;
         });
         document.getElementById('dbRows').innerHTML = rows;
@@ -304,38 +325,33 @@
         }
     }
 
-    // 📸 খাতার টেবিলটিকে সুন্দর ছবি (PNG) বানিয়ে ডাউনলোড করার ফাংশন
     function exportToImage() {
         let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
         if(db.length === 0) { alert('খাতায় কোনো ডাটা নেই! আগে কিছু হিসাব সেভ করুন।'); return; }
 
-        // ছবি তোলার আগে ডিলিট বাটন ও কলাম সাময়িকভাবে লুকিয়ে ফেলা
         let deleteButtons = document.querySelectorAll('.no-capture');
         let actionHead = document.querySelector('.action-head');
         
         deleteButtons.forEach(btn => btn.style.display = 'none');
         if(actionHead) actionHead.style.display = 'none';
 
-        // ছবি তোলার মূল কাজ
         let element = document.getElementById('capture_area');
         html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
             let imgData = canvas.toDataURL('image/png');
             
-            // ছবি ডাউনলোড লিংক তৈরি
             let a = document.createElement('a');
             a.href = imgData;
-            a.download = 'Base67_Khata_Backup.png';
+            a.download = 'Base67_Detailed_Khata.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
 
-            // ছবি তোলার পর ডিলিট বাটন আবার ফিরিয়ে আনা
             deleteButtons.forEach(btn => btn.style.display = 'table-cell');
             if(actionHead) actionHead.style.display = 'table-cell';
         }).catch(err => {
             alert('দুঃখিত, ছবি তৈরিতে সমস্যা হয়েছে।');
             deleteButtons.forEach(btn => btn.style.display = 'table-cell');
-            if(actionHead) actionHead.style.display = 'table-cell';
+            if(actionHead) actionHead.style.display = 'table-cell');
         });
     }
 </script>
