@@ -3,90 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base67 - ডিজিটাল কারখানা খাতা</title>
+    <title>Base67 - স্মার্ট ডিজিটাল খাতা</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f4f7f9; padding: 25px 15px; color: #333; }
-        .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 25px; }
-        @media (max-width: 1100px) { .container { grid-template-columns: 1fr; } }
-        
-        .box { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid #2ecc71; height: max-content; }
-        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; }
-        
-        .btn-settings { background-color: #e67e22; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-settings:hover { background-color: #d35400; }
-        
-        h3 { font-size: 1.1rem; color: #2c3e50; margin: 15px 0 10px 0; background: #e8f4fd; padding: 8px; border-left: 4px solid #3498db; font-weight: bold; }
-        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; position: relative; }
-        label { font-size: 0.9rem; margin-bottom: 4px; font-weight: 600; color: #555; }
-        
-        /* বাটন ও ইনপুট কন্ট্রোল স্টাইল */
-        .input-control { display: flex; align-items: center; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; text-align: center; }
-        select { text-align-last: left; }
-        input:focus, select:focus { border-color: #3498db; outline: none; }
-        
-        /* প্লাস-মাইনাস বাটন স্টাইল */
-        .count-btn { background: #ebf5fb; border: 1px solid #aecae2; color: #2980b9; font-weight: bold; width: 38px; height: 41px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
-        .count-btn:hover { background: #3498db; color: white; }
-        .btn-minus { border-radius: 6px 0 0 6px; border-right: none; }
-        .btn-plus { border-radius: 0 6px 6px 0; border-left: none; }
-        .input-control input { border-radius: 0; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-neon: #06b6d4;
+            --secondary-neon: #a855f7;
+            --success-neon: #10b981;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button.main-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-calc { background-color: #27ae60; color: white; }
-        .btn-calc:hover { background-color: #219653; }
-        .btn-save-db { background-color: #34495e; color: white; margin-top: 10px; }
-        .btn-save-db:hover { background-color: #2c3e50; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+        body { background: var(--bg-gradient); min-height: 100vh; padding: 25px 15px; color: var(--text-main); }
         
-        .btn-download-img { background-color: #9b59b6; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
-        .btn-download-img:hover { background-color: #8e44ad; }
+        .container { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
+        @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } }
         
-        .result-box { margin-top: 20px; background: #2c3e50; color: white; padding: 15px; border-radius: 8px; text-align: center; }
-        .total-amount { font-size: 2.5rem; font-weight: bold; color: #2ecc71; }
+        /* মডার্ন গ্লাস প্যানেল */
+        .box { 
+            background: var(--panel-bg); 
+            padding: 25px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1); 
+            border: 1px solid var(--border-color); 
+            backdrop-filter: blur(12px);
+            height: max-content; 
+        }
 
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; max-height: 85vh; overflow-y: auto; }
-        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 28px; cursor: pointer; color: #aaa; }
+        .header-area { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            background: rgba(255,255,255,0.03); 
+            padding: 15px 25px; 
+            border-radius: 18px; 
+            border: 1px solid var(--border-color);
+        }
+        .header-area h2 { font-size: 1.5rem; background: linear-gradient(to right, #fff, var(--primary-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .db-box { border-top: 4px solid #3498db; background: white; padding: 20px; border-radius: 12px; }
-        #capture_area { background: white; padding: 15px; border-radius: 6px; border: 1px solid #ddd; }
+        .btn-settings { 
+            background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 10px 20px; 
+            border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.9rem; 
+            transition: all 0.3s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        .btn-settings:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
         
-        .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; min-width: 650px; }
-        th, td { padding: 10px 8px; border: 1px solid #ddd; vertical-align: top; }
-        th { background: #34495e; color: white; font-weight: bold; }
+        /* ডায়নামিক স্টেপ ইন্ডিকেটর */
+        .step-container { display: flex; justify-content: space-between; margin-bottom: 25px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .step-indicator { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); padding: 10px 15px; border-radius: 12px; cursor: pointer; flex: 1; text-align: center; margin: 0 4px; transition: all 0.3s ease; }
+        .step-indicator.active { background: linear-gradient(135deg, var(--primary-neon), #0891b2); color: white; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
         
-        /* ক্যাটাগরি ভিত্তিক খরচের ডিজাইন */
-        .cat-title { font-weight: bold; color: #2c3e50; margin-top: 3px; display: block; border-bottom: 1px dashed #ccc; padding-bottom: 2px;}
-        .cat-details { font-size: 0.8rem; color: #555; padding-left: 8px; line-height: 1.4; margin-bottom: 5px; }
-        .plus-cost { color: #e67e22; font-weight: bold; font-size: 1.1rem; text-align: center; }
-        .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .form-step { display: none; }
+        .form-step.active { display: block; animation: smoothSlide 0.4s ease forwards; }
+        @keyframes smoothSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h3 { font-size: 1.15rem; color: var(--primary-neon); margin: 10px 0 20px 0; display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
+        label { font-size: 0.9rem; margin-bottom: 8px; font-weight: 500; color: #cbd5e1; }
+        
+        /* প্রিমিয়াম ইনপুট কন্ট্রোল */
+        input, select { 
+            width: 100%; padding: 14px; background: rgba(15, 23, 42, 0.6); 
+            border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; color: white; 
+            transition: all 0.3s;
+        }
+        input:focus, select:focus { border-color: var(--primary-neon); outline: none; box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15); background: rgba(15, 23, 42, 0.8); }
+        
+        .input-control { display: flex; align-items: center; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .input-control input { border: none; text-align: center; padding: 14px 5px; background: transparent; }
+        .count-btn { background: rgba(255,255,255,0.05); border: none; color: var(--primary-neon); font-weight: bold; width: 55px; height: 50px; cursor: pointer; font-size: 1.4rem; transition: all 0.2s; }
+        .count-btn:hover { background: rgba(6, 182, 212, 0.15); color: white; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .step-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-nav { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: all 0.3s; text-align: center; }
+        .btn-next { background: linear-gradient(135deg, var(--primary-neon), #0891b2); color: white; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5); }
+        .btn-prev { background: #475569; color: #f1f5f9; }
+        .btn-prev:hover { background: #64748b; }
+        
+        /* টোটাল ক্যালকুলেশন বক্স */
+        .result-box { margin-top: 30px; background: linear-gradient(135deg, #1e1b4b, #311042); padding: 25px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .result-box h4 { color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
+        .total-amount { font-size: 2.6rem; font-weight: 800; color: var(--success-neon); margin: 10px 0; text-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        
+        button.main-btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn-save-db { background: linear-gradient(135deg, var(--success-neon), #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-save-db:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
+        
+        .btn-download-img { background: linear-gradient(135deg, var(--secondary-neon), #7c3aed); color: white; padding: 10px 20px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
+        .btn-download-img:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5); }
+        
+        /* ডাটাবেজ বা ডান পাশের রেকর্ড খাতা */
+        .db-box { border: 1px solid var(--border-color); background: var(--panel-bg); padding: 25px; border-radius: 24px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        #capture_area { background: #0f172a; padding: 20px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .table-wrapper { width: 100%; overflow-x: auto; margin-top: 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; min-width: 750px; }
+        th, td { padding: 16px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+        th:last-child, td:last-child { border-right: none; }
+        th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        
+        /* মডার্ন ক্যাটাগরি ও ব্রেকডাউন ডিজাইন */
+        .cat-title { font-weight: 600; color: var(--primary-neon); margin-top: 12px; display: block; font-size: 0.88rem; }
+        .cat-details { font-size: 0.85rem; color: #cbd5e1; padding-left: 5px; line-height: 1.6; margin: 4px 0; background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 6px; }
+        .plus-cost { color: var(--success-neon); font-weight: 700; font-size: 1.2rem; text-align: center; display: block; text-shadow: 0 0 10px rgba(16, 185, 129, 0.1); }
+        .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
+        .record-divider { border: none; border-top: 1px dashed rgba(255,255,255,0.15); margin: 15px 0; }
+
+        /* ডায়নামিক ইমেজ সেকশন */
+        .img-upload-container { background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 14px; border: 2px dashed rgba(6, 182, 212, 0.3); margin-top: 15px; transition: all 0.3s; }
+        .img-upload-container:hover { border-color: var(--primary-neon); background: rgba(6, 182, 212, 0.05); }
+        .preview-img-wrap { margin-top: 15px; display: none; text-align: center; }
+        .preview-img { max-width: 100%; max-height: 160px; border-radius: 12px; border: 1px solid var(--primary-neon); padding: 4px; background: #0f172a; }
+        .table-product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; display: block; }
+
+        /* অ্যাকশন বাটনসমূহ */
+        .btn-action-download { padding: 8px 12px; background: rgba(6, 182, 212, 0.15); color: var(--primary-neon); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; display: block; width: 100%; transition: all 0.2s; }
+        .btn-action-download:hover { background: var(--primary-neon); color: white; }
+        .btn-action-delete { padding: 8px 12px; background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; display: block; width: 100%; transition: all 0.2s; }
+        .btn-action-delete:hover { background: #ef4444; color: white; }
+
+        /* সেটিংস মোডাল */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 24px; width: 90%; max-width: 480px; position: relative; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
+        .close-btn { position: absolute; right: 25px; top: 20px; font-size: 28px; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+        .close-btn:hover { color: white; }
     </style>
 </head>
 <body>
 
 <div class="header-area">
-    <h2>📁 Base67 - ডিজিটাল কারখানা খাতা</h2>
-    <button class="btn-settings" onclick="openSettings()">⚙️ মালের রেট সেটিংস</button>
+    <h2>⚡ Base67 স্মার্ট খাতা</h2>
+    <button class="btn-settings" onclick="openSettings()">⚙️ রেট সেটিংস</button>
 </div>
 
 <div class="container">
     
     <div class="box">
-        <form id="calcForm" onsubmit="calculateTotal(event)">
-            <h3>📌 ১. ফার্নিচার</h3>
-            <div class="grid-2">
+        <div class="step-container">
+            <div class="step-indicator active" id="ind-1" onclick="jumpToStep(1)">১. আইটেম</div>
+            <div class="step-indicator" id="ind-2" onclick="jumpToStep(2)">২. বোর্ড</div>
+            <div class="step-indicator" id="ind-3" onclick="jumpToStep(3)">৩. পার্টস</div>
+            <div class="step-indicator" id="ind-4" onclick="jumpToStep(4)">৪. খরচ</div>
+        </div>
+
+        <form id="calcForm" onsubmit="event.preventDefault();">
+            
+            <div class="form-step active" id="step-1">
+                <h3>📌 ১. ফার্নিচার মডেল ও আইটেম</h3>
                 <div class="form-group">
                     <label>মডেল নাম্বার (Model No.)</label>
-                    <input type="text" id="model_no" placeholder="যেমন: B-102" style="text-align:left;" required>
+                    <input type="text" id="model_no" placeholder="যেমন: B-102" required>
                 </div>
                 <div class="form-group">
-                    <label>প্রোডাক্টের নাম (আইটেম)</label>
-                    <select id="product_type" onchange="handleProductChange()">
+                    <label>প্রোডাক্টের নাম (সিলেক্ট করলেই পরের ধাপে যাবে)</label>
+                    <select id="product_type" onchange="handleProductChangeAuto()">
+                        <option value="" disabled selected>--- সিলেক্ট করুন ---</option>
                         <option value="almirah_4">আলমিরা (৪ দরজা)</option>
                         <option value="almirah_3">আলমিরা (৩ দরজা)</option>
                         <option value="almirah_2">আলমিরা (২ দরজা)</option>
@@ -100,99 +180,121 @@
                 </div>
             </div>
 
-            <h3>🪵 ২. বোর্ডের পরিমাণ (পিস)</h3>
-            <div class="grid-2">
+            <div class="form-step" id="step-2">
+                <h3>🪵 ২. Boards (পিস সংখ্যা)</h3>
                 <div class="form-group">
                     <label>১৮ মিমি MDF</label>
                     <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_18mm', -1)">-</button>
+                        <button type="button" class="count-btn" onclick="stepInput('qty_18mm', -1)">-</button>
                         <input type="number" id="qty_18mm" value="0" step="any">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_18mm', 1)">+</button>
+                        <button type="button" class="count-btn" onclick="stepInput('qty_18mm', 1)">+</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>১৫ মিমি MDF</label>
                     <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_15mm', -1)">-</button>
+                        <button type="button" class="count-btn" onclick="stepInput('qty_15mm', -1)">-</button>
                         <input type="number" id="qty_15mm" value="0" step="any">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_15mm', 1)">+</button>
+                        <button type="button" class="count-btn" onclick="stepInput('qty_15mm', 1)">+</button>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>৬ মিমি প্লাই/বোর্ড</label>
-                <div class="input-control">
-                    <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_6mm', -1)">-</button>
-                    <input type="number" id="qty_6mm" value="0" step="any">
-                    <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_6mm', 1)">+</button>
+                <div class="form-group">
+                    <label>৬ মিমি প্লাই/বোর্ড</label>
+                    <div class="input-control">
+                        <button type="button" class="count-btn" onclick="stepInput('qty_6mm', -1)">-</button>
+                        <input type="number" id="qty_6mm" value="0" step="any">
+                        <button type="button" class="count-btn" onclick="stepInput('qty_6mm', 1)">+</button>
+                    </div>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="btn-nav btn-prev" onclick="changeStep(-1)">⬅️ পেছনে</button>
+                    <button type="button" class="btn-nav btn-next" onclick="changeStep(1)">পরের ধাপ 👍</button>
                 </div>
             </div>
 
-            <h3>🔩 ৩. হার্ডওয়্যার ও গ্লাস (স্মার্ট অটো-হিসাব)</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>তালা লেগেছে (টি)</label>
-                    <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_lock', -1)">-</button>
-                        <input type="number" id="qty_lock" value="5">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_lock', 1)">+</button>
+            <div class="form-step" id="step-3">
+                <h3>🔩 ৩. Hardware & Glass</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>তালা লেগেছে (টি)</label>
+                        <div class="input-control">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_lock', -1)">-</button>
+                            <input type="number" id="qty_lock" value="0">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_lock', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>হ্যান্ডেল লেগেছে (টি)</label>
+                        <div class="input-control">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_handle', -1)">-</button>
+                            <input type="number" id="qty_handle" value="0">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_handle', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>কব্জা / Hinge (টি)</label>
+                        <div class="input-control">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_hinge', -1)">-</button>
+                            <input type="number" id="qty_hinge" value="0">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_hinge', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ড্রয়ার চ্যানেল (সেট)</label>
+                        <div class="input-control">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_channel', -1)">-</button>
+                            <input type="number" id="qty_channel" value="0">
+                            <button type="button" class="count-btn" onclick="stepInput('qty_channel', 1)">+</button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>হ্যান্ডেল লেগেছে (টি)</label>
+                    <label>লুকিং গ্লাস / আয়না (টি)</label>
                     <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_handle', -1)">-</button>
-                        <input type="number" id="qty_handle" value="4">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_handle', 1)">+</button>
+                        <button type="button" class="count-btn" onclick="stepInput('qty_glass', -1)">-</button>
+                        <input type="number" id="qty_glass" value="0">
+                        <button type="button" class="count-btn" onclick="stepInput('qty_glass', 1)">+</button>
                     </div>
                 </div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>কব্জা / Hinge (টি)</label>
-                    <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_hinge', -1)">-</button>
-                        <input type="number" id="qty_hinge" value="16">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_hinge', 1)">+</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>ড্রয়ার চ্যানেল (সেট)</label>
-                    <div class="input-control">
-                        <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_channel', -1)">-</button>
-                        <input type="number" id="qty_channel" value="1">
-                        <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_channel', 1)">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>লুকিং গ্লাস / আয়না (টি)</label>
-                <div class="input-control">
-                    <button type="button" class="count-btn btn-minus" onclick="stepInput('qty_glass', -1)">-</button>
-                    <input type="number" id="qty_glass" value="0">
-                    <button type="button" class="count-btn btn-plus" onclick="stepInput('qty_glass', 1)">+</button>
+                <div class="step-buttons">
+                    <button type="button" class="btn-nav btn-prev" onclick="changeStep(-1)">⬅️ পেছনে</button>
+                    <button type="button" class="btn-nav btn-next" onclick="changeStep(1)">পরের ধাপ 👍</button>
                 </div>
             </div>
 
-            <h3>🎨 ৪. রঙ, মিস্ত্রি ও সিএনসি নকশা (টাকা)</h3>
-            <div class="grid-2">
-                <div class="form-group"><label>সিএনসি (CNC) বিল</label><input type="number" id="cost_cnc" value="0"></div>
-                <div class="form-group"><label>লেকার / কেমিক্যাল মাল</label><input type="number" id="cost_lacquer" value="0"></div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="0"></div>
-                <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value="0"></div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value="0"></div>
-                <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু ইত্যাদি)</label><input type="number" id="cost_others" value="0"></div>
-            </div>
+            <div class="form-step" id="step-4">
+                <h3>🎨 ৪. রঙ, মিস্ত্রি ও প্রোডাক্টের ফটো</h3>
+                <div class="grid-2">
+                    <div class="form-group"><label>সিএনসি বিল</label><input type="number" id="cost_cnc" value="0"></div>
+                    <div class="form-group"><label>লেকার কেমিক্যাল</label><input type="number" id="cost_lacquer" value="0"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="0"></div>
+                    <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value="0"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>গাড়ি ভাড়া</label><input type="number" id="cost_carrying" value="0"></div>
+                    <div class="form-group"><label>খুচরা মাল (স্ক্রু, গ্লু)</label><input type="number" id="cost_others" value="0"></div>
+                </div>
+                
+                <div class="img-upload-container">
+                    <label style="color: var(--primary-neon); font-weight: 600; cursor: pointer; display: block; text-align: center;">📸 মালের ফটো/ডিজাইন আপলোড করুন (ঐচ্ছিক)</label>
+                    <input type="file" id="product_image" accept="image/*" onchange="previewAndCompressImage(this)" style="margin-top: 10px; font-size: 0.85rem;">
+                    <div class="preview-img-wrap" id="previewWrap">
+                        <img src="" id="imgPreview" class="preview-img" alt="প্রিভিউ">
+                    </div>
+                </div>
 
-            <button type="submit" class="main-btn btn-calc">📊 হিসাব বের করুন</button>
+                <div class="step-buttons">
+                    <button type="button" class="btn-nav btn-prev" onclick="changeStep(-1)">⬅️ পেছনে</button>
+                </div>
+            </div>
         </form>
 
         <div class="result-box">
-            <h4>বর্তমান উৎপাদন খরচ:</h4>
+            <h4>মোট উৎপাদন খরচ:</h4>
             <div class="total-amount" id="grandTotal">০.০০ টাকা</div>
             <button class="main-btn btn-save-db" onclick="saveToDatabase()">💾 এই হিসাবটি খাতায় সেভ করুন</button>
         </div>
@@ -200,24 +302,23 @@
 
     <div class="db-box">
         <div class="db-header">
-            <h2>📋 আজীবনের সেভ খাতা</h2>
-            <button class="btn-download-img" onclick="exportToImage()">📸 খাতার ছবি ডাউনলোড করুন</button>
+            <h2>📋 সেভ খাতা রেকর্ড</h2>
+            <button class="btn-download-img" onclick="exportToImage()">📸 পুরো খাতার ছবি</button>
         </div>
         
         <div id="capture_area">
-            <h3 style="margin-top: 0; background: #34495e; color: white; border-left: 4px solid #9b59b6; padding: 10px;">Base67 কারখানা রেকর্ড খাতা</h3>
+            <h3 style="margin-top: 0; background: linear-gradient(90deg, #1e1b4b, #311042); color: white; padding: 15px 20px; border-radius: 10px; border-left: 5px solid var(--secondary-neon);">Base67 কারখানা রেকর্ড খাতা</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 18%;">মডেল / নাম</th>
-                            <th style="width: 57%;">মালের সম্পূর্ণ আলাদা ব্রেকডাউন (অফিস ডিটেলস)</th>
-                            <th style="width: 15%;">মোট খরচ</th>
-                            <th class="action-head" style="width: 10%;">অ্যাকশন</th>
+                            <th style="width: 25%;">মডেল / নাম ও ছবি</th>
+                            <th style="width: 45%;">মালের ব্রেকডাউন বিবরণী</th>
+                            <th style="width: 15%; text-align: center;">মোট খরচ</th>
+                            <th class="action-head" style="width: 15%; text-align: center;">অ্যাকশন</th>
                         </tr>
                     </thead>
-                    <tbody id="dbRows">
-                        </tbody>
+                    <tbody id="dbRows"></tbody>
                 </table>
             </div>
         </div>
@@ -227,7 +328,7 @@
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeSettings()">&times;</span>
-        <h2 style="border-bottom: 2px solid #e67e22; padding-bottom:5px; margin-bottom:15px;">⚙️ মালের রেট সেটিংস</h2>
+        <h2 style="border-bottom: 2px solid var(--primary-neon); padding-bottom:10px; margin-bottom:20px; color: white; font-size: 1.3rem;">⚙️ মালের রেট সেটিংস</h2>
         <form id="settingsForm" onsubmit="saveRates(event)">
             <div class="form-group"><label>১৮ মিমি MDF রেট</label><input type="number" id="cfg_18mm" value="1790" required></div>
             <div class="form-group"><label>১৫ মিমি MDF রেট</label><input type="number" id="cfg_15mm" value="1580" required></div>
@@ -237,28 +338,54 @@
             <div class="form-group"><label>কব্জা রেট (পিস)</label><input type="number" id="cfg_hinge" value="80" required></div>
             <div class="form-group"><label>তালা রেট (পিস)</label><input type="number" id="cfg_lock" value="150" required></div>
             <div class="form-group"><label>লুকিং গ্লাস / আয়না রেট (পিস)</label><input type="number" id="cfg_glass" value="650" required></div>
-            <button type="submit" class="main-btn btn-settings" style="background:#e67e22; color:white;">💾 রেট সেভ করুন</button>
+            <button type="submit" class="main-btn btn-save-db" style="width:100%; margin-top:15px; padding:12px;">💾 রেট সেভ করুন</button>
         </form>
     </div>
 </div>
 
 <script>
+    let currentStep = 1;
     let currentCalculatedTotal = 0;
-    // আলাদা হিসেবের ভেরিয়েবলসমূহ
     let calculatedBoardCost = 0;
     let calculatedHardwareCost = 0;
     let calculatedLaborAndOtherCost = 0;
+    let uploadedImageBase64 = ""; 
 
-    // বাটন দিয়ে কম বেশি করার ফাংশন
-    function stepInput(id, value) {
-        let input = document.getElementById(id);
-        let current = parseFloat(input.value) || 0;
-        let newValue = current + value;
-        if(newValue < 0) newValue = 0;
-        input.value = newValue;
+    // ছবি ব্যাকগ্রাউন্ডে কম্প্রেস ও সাইজ ছোট করার ফাংশন
+    function previewAndCompressImage(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxW = 400; 
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); 
+                    
+                    document.getElementById('imgPreview').src = uploadedImageBase64;
+                    document.getElementById('previewWrap').style.display = 'block';
+                }
+            }
+            reader.readAsDataURL(file);
+        }
     }
 
-    function handleProductChange() {
+    function handleProductChangeAuto() {
+        let modelNo = document.getElementById('model_no').value.trim();
+        if (!modelNo) { 
+            alert('দয়া করে প্রথমে একটি মডেল নাম্বার লিখুন, তারপর আইটেম সিলেক্ট করুন!'); 
+            document.getElementById('product_type').selectedIndex = 0;
+            return; 
+        }
+
         let type = document.getElementById('product_type').value;
         let lock = document.getElementById('qty_lock');
         let handle = document.getElementById('qty_handle');
@@ -273,6 +400,40 @@
         else if (type === 'wardrobe_4d2dr') { lock.value = 6; handle.value = 6; hinge.value = 8; channel.value = 4; glass.value = 0; }
         else if (type === 'wardrobe_4d') { lock.value = 4; handle.value = 4; hinge.value = 0; channel.value = 4; glass.value = 0; }
         else { lock.value = 0; handle.value = 0; hinge.value = 0; channel.value = 0; glass.value = 0; }
+        
+        calculateLiveTotal();
+        setTimeout(() => { changeStep(1); }, 300);
+    }
+
+    function changeStep(direction) {
+        if (currentStep === 1 && direction === 1) {
+            let modelNo = document.getElementById('model_no').value.trim();
+            if (!modelNo) { alert('দয়া করে প্রথমে মডেল নাম্বারটি লিখুন!'); return; }
+        }
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        document.getElementById(`ind-${currentStep}`).classList.remove('active');
+        currentStep += direction;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        document.getElementById(`ind-${currentStep}`).classList.add('active');
+    }
+
+    function jumpToStep(stepNum) {
+        let modelNo = document.getElementById('model_no').value.trim();
+        if (!modelNo && stepNum > 1) { alert('দয়া করে প্রথমে মডেল নাম্বারটি লিখুন!'); return; }
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        document.getElementById(`ind-${currentStep}`).classList.remove('active');
+        currentStep = stepNum;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        document.getElementById(`ind-${currentStep}`).classList.add('active');
+    }
+
+    function stepInput(id, value) {
+        let input = document.getElementById(id);
+        let current = parseFloat(input.value) || 0;
+        let newValue = current + value;
+        if(newValue < 0) newValue = 0;
+        input.value = newValue;
+        calculateLiveTotal();
     }
 
     function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
@@ -286,7 +447,10 @@
                 }
             });
         }
+        const allInputs = document.querySelectorAll('#calcForm input, #calcForm select');
+        allInputs.forEach(input => { input.addEventListener('input', calculateLiveTotal); });
         renderDatabase();
+        calculateLiveTotal();
     }
 
     function saveRates(event) {
@@ -296,11 +460,10 @@
         });
         alert('নতুন রেট সফলভাবে আপডেট হয়েছে!');
         closeSettings();
+        calculateLiveTotal();
     }
 
-    function calculateTotal(event) {
-        if(event) event.preventDefault();
-
+    function calculateLiveTotal() {
         let r18 = parseFloat(document.getElementById('cfg_18mm').value)||0;
         let r15 = parseFloat(document.getElementById('cfg_15mm').value)||0;
         let r6  = parseFloat(document.getElementById('cfg_6mm').value)||0;
@@ -326,23 +489,22 @@
         let cCarrying = parseFloat(document.getElementById('cost_carrying').value)||0;
         let cOthers = parseFloat(document.getElementById('cost_others').value)||0;
 
-        // ১. আলাদা আলাদা খাতের দাম হিসাব
         calculatedBoardCost = (q18 * r18) + (q15 * r15) + (q6 * r6);
         calculatedHardwareCost = (qHand * rHand) + (qChan * rChan) + (qHinge * rHinge) + (qLock * rLock) + (qGlass * rGlass);
         calculatedLaborAndOtherCost = cCnc + cLacquer + cFitting + cColor + cCarrying + cOthers;
 
-        // সর্বমোট উৎপাদন খরচ
         currentCalculatedTotal = calculatedBoardCost + calculatedHardwareCost + calculatedLaborAndOtherCost;
-
-        document.getElementById('grandTotal').innerText = currentCalculatedTotal.toFixed(2) + " টাকা";
+        document.getElementById('grandTotal').innerText = currentCalculatedTotal.toLocaleString('bn-BD', { minimumFractionDigits: 2 }) + " টাকা";
     }
 
     function saveToDatabase() {
         let modelNo = document.getElementById('model_no').value.trim().toUpperCase();
-        let productText = document.getElementById('product_type').options[document.getElementById('product_type').selectedIndex].text;
+        let productSelect = document.getElementById('product_type');
+        let productText = productSelect.options[productSelect.selectedIndex].text;
         
-        if(!modelNo) { alert('দয়া করে মডেল নাম্বারটি লিখুন!'); return; }
-        if(currentCalculatedTotal === 0) { alert('প্রথমে হিসাব বের করুন তারপর সেভ করুন।'); return; }
+        if(!modelNo) { alert('দয়া করে ১ম ধাপে গিয়ে মডেল নাম্বারটি লিখুন!'); return; }
+        if(productSelect.value === "") { alert('দয়া করে ফার্নিচার আইটেম সিলেক্ট করুন!'); return; }
+        if(currentCalculatedTotal === 0) { alert('কোনো খরচ ছাড়া হিসাব সেভ করা যাবে না।'); return; }
 
         let q18 = document.getElementById('qty_18mm').value || 0;
         let q15 = document.getElementById('qty_15mm').value || 0;
@@ -360,85 +522,63 @@
         let cCar = document.getElementById('cost_carrying').value || 0;
         let cOth = document.getElementById('cost_others').value || 0;
 
-        // খাতা ও ইমেজে যেন ৩টি পার্ট আলাদা হয়ে ক্রিস্টাল ক্লিয়ার দেখায় 
-        let detailedHTML = `
-            <span class="cat-title">🪵 ১. বোর্ড হিসাব (মোট: ${calculatedBoardCost.toFixed(0)}৳)</span>
-            <div class="cat-details">১৮মিমি: ${q18} পিস | ১৫মিমি: ${q15} পিস | ৬মিমি প্লাই: ${q6} পিস</div>
-            
-            <span class="cat-title">🔩 ২. হার্ডওয়্যার ও গ্লাস (মোট: ${calculatedHardwareCost.toFixed(0)}৳)</span>
-            <div class="cat-details">তালা: ${qLock}টি | হ্যান্ডেল: ${qHand}টি | কব্জা: ${qHinge}টি | চ্যানেল: ${qChan}সেট | গ্লাস: ${qGlass}টি</div>
-            
-            <span class="cat-title">🎨 ৩. মিস্ত্রি, রঙ ও অন্যান্য (মোট: ${calculatedLaborAndOtherCost.toFixed(0)}৳)</span>
-            <div class="cat-details">CNC: ${cCnc}৳ | লেকার কেমিক্যাল: ${cLac}৳ | ফিটিং মিস্ত্রি: ${cFit}৳ | কালার মিস্ত্রি: ${cCol}৳ | গাড়ি ভাড়া: ${cCar}৳ | খুচরা: ${cOth}৳</div>
-        `;
+        let boardDetails = [];
+        if(q18 > 0) boardDetails.push(`১৮মিমি: ${q18} পিস`);
+        if(q15 > 0) boardDetails.push(`১৫মিমি: ${q15} পিস`);
+        if(q6 > 0) boardDetails.push(`৬মিমি প্লাই: ${q6} পিস`);
+        
+        let hardDetails = [];
+        if(qLock > 0) hardDetails.push(`তালা: ${qLock}টি`);
+        if(qHand > 0) hardDetails.push(`হ্যান্ডেল: ${qHand}টি`);
+        if(qHinge > 0) hardDetails.push(`কব্জা: ${qHinge}টি`);
+        if(qChan > 0) hardDetails.push(`চ্যানেল: ${qChan}সেট`);
+        if(qGlass > 0) hardDetails.push(`গ্লাস: ${qGlass}টি`);
+
+        let laborDetails = [];
+        if(cCnc > 0) laborDetails.push(`CNC: ${cCnc}৳`);
+        if(cLac > 0) laborDetails.push(`লেকার: ${cLac}৳`);
+        if(cFit > 0) laborDetails.push(`ফিটিং: ${cFit}৳`);
+        if(cCol > 0) laborDetails.push(`কালার: ${cCol}৳`);
+        if(cCar > 0) laborDetails.push(`গাড়ি ভাড়া: ${cCar}৳`);
+        if(cOth > 0) laborDetails.push(`খুচরা: ${cOth}৳`);
+
+        let detailedHTML = '';
+        if(boardDetails.length > 0) {
+            detailedHTML += `<span class="cat-title">🪵 ১. বোর্ড হিসাব (মোট: ${calculatedBoardCost.toFixed(0)}৳)</span>
+                             <div class="cat-details">${boardDetails.join(' | ')}</div>`;
+        }
+        if(hardDetails.length > 0) {
+            detailedHTML += `<span class="cat-title">🔩 ২. হার্ডওয়্যার ও গ্লাস (মোট: ${calculatedHardwareCost.toFixed(0)}৳)</span>
+                             <div class="cat-details">${hardDetails.join(' | ')}</div>`;
+        }
+        if(laborDetails.length > 0) {
+            detailedHTML += `<span class="cat-title">🎨 ৩. মিস্ত্রি ও অন্যান্য (মোট: ${calculatedLaborAndOtherCost.toFixed(0)}৳)</span>
+                             <div class="cat-details">${laborDetails.join(' | ')}</div>`;
+        }
 
         let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
         let existingItem = db.find(item => item.model === modelNo);
 
         if(existingItem) {
             existingItem.cost = existingItem.cost + " + " + currentCalculatedTotal.toFixed(0);
-            existingItem.details = existingItem.details + "<hr style='border:1px dashed #ddd; margin:10px 0;'>" + detailedHTML;
+            existingItem.details = existingItem.details + `<div class="record-divider"></div>` + detailedHTML;
+            if(uploadedImageBase64) existingItem.image = uploadedImageBase64; 
         } else {
-            db.push({ model: modelNo, name: productText, cost: currentCalculatedTotal.toFixed(0), details: detailedHTML });
+            db.push({ model: modelNo, name: productText, cost: currentCalculatedTotal.toFixed(0), details: detailedHTML, image: uploadedImageBase64 });
         }
 
         localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
         renderDatabase();
-        alert('খাত খাত আলাদা হিসাবসহ সফলভাবে সেভ হয়েছে!');
-    }
-
-    function renderDatabase() {
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
-        let rows = '';
-        db.forEach((item, index) => {
-            rows += `<tr>
-                <td><strong>${item.model}</strong><br><small style="color:#7f8c8d;">${item.name}</small></td>
-                <td><div class="details-text">${item.details || 'কোনো বিবরণী নেই'}</div></td>
-                <td class="plus-cost">${item.cost} টাকা</td>
-                <td class="no-capture" style="text-align:center; vertical-align:middle;"><button style="padding:6px 10px; background:#e74c3c; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.8rem;" onclick="deleteRow(${index})">ডিলিট</button></td>
-            </tr>`;
-        });
-        document.getElementById('dbRows').innerHTML = rows;
-    }
-
-    function deleteRow(index) {
-        if(confirm('আপনি কি নিশ্চিত যে এই হিসাবটি খাতা থেকে চিরতরে মুছে ফেলতে চান?')) {
-            let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
-            db.splice(index, 1);
-            localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
-            renderDatabase();
-        }
-    }
-
-    function exportToImage() {
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
-        if(db.length === 0) { alert('খাতায় কোনো ডাটা নেই! আগে কিছু হিসাব সেভ করুন।'); return; }
-
-        let deleteButtons = document.querySelectorAll('.no-capture');
-        let actionHead = document.querySelector('.action-head');
         
-        deleteButtons.forEach(btn => btn.style.display = 'none');
-        if(actionHead) actionHead.style.display = 'none';
+        // ফর্ম ক্লিয়ার ও রিসেট
+        document.getElementById('model_no').value = '';
+        productSelect.selectedIndex = 0;
+        document.getElementById('product_image').value = '';
+        document.getElementById('previewWrap').style.display = 'none';
+        uploadedImageBase64 = ""; 
 
-        let element = document.getElementById('capture_area');
-        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
-            let imgData = canvas.toDataURL('image/png');
-            
-            let a = document.createElement('a');
-            a.href = imgData;
-            a.download = 'Base67_Categorized_Khata.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            deleteButtons.forEach(btn => btn.style.display = 'table-cell');
-            if(actionHead) actionHead.style.display = 'table-cell';
-        }).catch(err => {
-            alert('দুঃখিত, ছবি তৈরিতে সমস্যা হয়েছে।');
-            deleteButtons.forEach(btn => btn.style.display = 'table-cell');
-            if(actionHead) actionHead.style.display = 'table-cell';
-        });
-    }
-</script>
-</body>
-</html>
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        document.getElementById(`ind-${currentStep}`).classList.remove('active');
+        currentStep = 1;
+        document.getElementById(`step-1`).classList.add('active');
+        document.getElementById(`ind
