@@ -24,7 +24,6 @@
         .container { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
         @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } }
         
-        /* মডার্ন গ্লাস প্যানেল */
         .box { 
             background: var(--panel-bg); 
             padding: 25px; 
@@ -54,7 +53,6 @@
         }
         .btn-settings:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
         
-        /* ডায়নামিক স্টেপ ইন্ডিকেটর */
         .step-container { display: flex; justify-content: space-between; margin-bottom: 25px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 16px; border: 1px solid var(--border-color); }
         .step-indicator { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); padding: 10px 15px; border-radius: 12px; cursor: pointer; flex: 1; text-align: center; margin: 0 4px; transition: all 0.3s ease; }
         .step-indicator.active { background: linear-gradient(135deg, var(--primary-neon), #0891b2); color: white; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
@@ -67,7 +65,6 @@
         .form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
         label { font-size: 0.9rem; margin-bottom: 8px; font-weight: 500; color: #cbd5e1; }
         
-        /* প্রিমিয়াম ইনপুট কন্ট্রোল */
         input, select { 
             width: 100%; padding: 14px; background: rgba(15, 23, 42, 0.6); 
             border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; color: white; 
@@ -89,7 +86,6 @@
         .btn-prev { background: #475569; color: #f1f5f9; }
         .btn-prev:hover { background: #64748b; }
         
-        /* টোটাল ক্যালকুলেশন বক্স */
         .result-box { margin-top: 30px; background: linear-gradient(135deg, #1e1b4b, #311042); padding: 25px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .result-box h4 { color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
         .total-amount { font-size: 2.6rem; font-weight: 800; color: var(--success-neon); margin: 10px 0; text-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
@@ -101,7 +97,6 @@
         .btn-download-img { background: linear-gradient(135deg, var(--secondary-neon), #7c3aed); color: white; padding: 10px 20px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
         .btn-download-img:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5); }
         
-        /* ডাটাবেজ বা ডান পাশের রেকর্ড খাতা */
         .db-box { border: 1px solid var(--border-color); background: var(--panel-bg); padding: 25px; border-radius: 24px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         #capture_area { background: #0f172a; padding: 20px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
         
@@ -111,27 +106,23 @@
         th:last-child, td:last-child { border-right: none; }
         th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
         
-        /* মডার্ন ক্যাটাগরি ও ব্রেকডাউন ডিজাইন */
         .cat-title { font-weight: 600; color: var(--primary-neon); margin-top: 12px; display: block; font-size: 0.88rem; }
         .cat-details { font-size: 0.85rem; color: #cbd5e1; padding-left: 5px; line-height: 1.6; margin: 4px 0; background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 6px; }
         .plus-cost { color: var(--success-neon); font-weight: 700; font-size: 1.2rem; text-align: center; display: block; text-shadow: 0 0 10px rgba(16, 185, 129, 0.1); }
         .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
         .record-divider { border: none; border-top: 1px dashed rgba(255,255,255,0.15); margin: 15px 0; }
 
-        /* ডায়নামিক ইমেজ সেকশন */
         .img-upload-container { background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 14px; border: 2px dashed rgba(6, 182, 212, 0.3); margin-top: 15px; transition: all 0.3s; }
         .img-upload-container:hover { border-color: var(--primary-neon); background: rgba(6, 182, 212, 0.05); }
         .preview-img-wrap { margin-top: 15px; display: none; text-align: center; }
         .preview-img { max-width: 100%; max-height: 160px; border-radius: 12px; border: 1px solid var(--primary-neon); padding: 4px; background: #0f172a; }
         .table-product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; display: block; }
 
-        /* অ্যাকশন বাটনসমূহ */
         .btn-action-download { padding: 8px 12px; background: rgba(6, 182, 212, 0.15); color: var(--primary-neon); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; display: block; width: 100%; transition: all 0.2s; }
         .btn-action-download:hover { background: var(--primary-neon); color: white; }
         .btn-action-delete { padding: 8px 12px; background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; display: block; width: 100%; transition: all 0.2s; }
         .btn-action-delete:hover { background: #ef4444; color: white; }
 
-        /* সেটিংস মোডাল */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-content { background: #1e293b; padding: 30px; border-radius: 24px; width: 90%; max-width: 480px; position: relative; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
         .close-btn { position: absolute; right: 25px; top: 20px; font-size: 28px; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
@@ -351,7 +342,6 @@
     let calculatedLaborAndOtherCost = 0;
     let uploadedImageBase64 = ""; 
 
-    // ছবি ব্যাকগ্রাউন্ডে কম্প্রেস ও সাইজ ছোট করার ফাংশন
     function previewAndCompressImage(input) {
         const file = input.files[0];
         if (file) {
@@ -402,7 +392,13 @@
         else { lock.value = 0; handle.value = 0; hinge.value = 0; channel.value = 0; glass.value = 0; }
         
         calculateLiveTotal();
-        setTimeout(() => { changeStep(1); }, 300);
+        
+        // ফিক্সড অংশ: সরাসরি পরের ধাপে ট্র্যান্সফার
+        document.getElementById(`step-1`).classList.remove('active');
+        document.getElementById(`ind-1`).classList.remove('active');
+        currentStep = 2;
+        document.getElementById(`step-2`).classList.add('active');
+        document.getElementById(`ind-2`).classList.add('active');
     }
 
     function changeStep(direction) {
@@ -458,127 +454,4 @@
         ['18mm','15mm','6mm','handle','channel','hinge','lock','glass'].forEach(id => {
             localStorage.setItem('cfg_'+id, document.getElementById('cfg_'+id).value);
         });
-        alert('নতুন রেট সফলভাবে আপডেট হয়েছে!');
-        closeSettings();
-        calculateLiveTotal();
-    }
-
-    function calculateLiveTotal() {
-        let r18 = parseFloat(document.getElementById('cfg_18mm').value)||0;
-        let r15 = parseFloat(document.getElementById('cfg_15mm').value)||0;
-        let r6  = parseFloat(document.getElementById('cfg_6mm').value)||0;
-        let rHand = parseFloat(document.getElementById('cfg_handle').value)||0;
-        let rChan = parseFloat(document.getElementById('cfg_channel').value)||0;
-        let rHinge = parseFloat(document.getElementById('cfg_hinge').value)||0;
-        let rLock = parseFloat(document.getElementById('cfg_lock').value)||0;
-        let rGlass = parseFloat(document.getElementById('cfg_glass').value)||0;
-
-        let q18 = parseFloat(document.getElementById('qty_18mm').value)||0;
-        let q15 = parseFloat(document.getElementById('qty_15mm').value)||0;
-        let q6  = parseFloat(document.getElementById('qty_6mm').value)||0;
-        let qHand = parseFloat(document.getElementById('qty_handle').value)||0;
-        let qChan = parseFloat(document.getElementById('qty_channel').value)||0;
-        let qHinge = parseFloat(document.getElementById('qty_hinge').value)||0;
-        let qLock = parseFloat(document.getElementById('qty_lock').value)||0;
-        let qGlass = parseFloat(document.getElementById('qty_glass').value)||0;
-
-        let cCnc = parseFloat(document.getElementById('cost_cnc').value)||0;
-        let cLacquer = parseFloat(document.getElementById('cost_lacquer').value)||0;
-        let cFitting = parseFloat(document.getElementById('cost_fitting_labor').value)||0;
-        let cColor = parseFloat(document.getElementById('cost_color_labor').value)||0;
-        let cCarrying = parseFloat(document.getElementById('cost_carrying').value)||0;
-        let cOthers = parseFloat(document.getElementById('cost_others').value)||0;
-
-        calculatedBoardCost = (q18 * r18) + (q15 * r15) + (q6 * r6);
-        calculatedHardwareCost = (qHand * rHand) + (qChan * rChan) + (qHinge * rHinge) + (qLock * rLock) + (qGlass * rGlass);
-        calculatedLaborAndOtherCost = cCnc + cLacquer + cFitting + cColor + cCarrying + cOthers;
-
-        currentCalculatedTotal = calculatedBoardCost + calculatedHardwareCost + calculatedLaborAndOtherCost;
-        document.getElementById('grandTotal').innerText = currentCalculatedTotal.toLocaleString('bn-BD', { minimumFractionDigits: 2 }) + " টাকা";
-    }
-
-    function saveToDatabase() {
-        let modelNo = document.getElementById('model_no').value.trim().toUpperCase();
-        let productSelect = document.getElementById('product_type');
-        let productText = productSelect.options[productSelect.selectedIndex].text;
-        
-        if(!modelNo) { alert('দয়া করে ১ম ধাপে গিয়ে মডেল নাম্বারটি লিখুন!'); return; }
-        if(productSelect.value === "") { alert('দয়া করে ফার্নিচার আইটেম সিলেক্ট করুন!'); return; }
-        if(currentCalculatedTotal === 0) { alert('কোনো খরচ ছাড়া হিসাব সেভ করা যাবে না।'); return; }
-
-        let q18 = document.getElementById('qty_18mm').value || 0;
-        let q15 = document.getElementById('qty_15mm').value || 0;
-        let q6 = document.getElementById('qty_6mm').value || 0;
-        let qLock = document.getElementById('qty_lock').value || 0;
-        let qHand = document.getElementById('qty_handle').value || 0;
-        let qHinge = document.getElementById('qty_hinge').value || 0;
-        let qChan = document.getElementById('qty_channel').value || 0;
-        let qGlass = document.getElementById('qty_glass').value || 0;
-        
-        let cCnc = document.getElementById('cost_cnc').value || 0;
-        let cLac = document.getElementById('cost_lacquer').value || 0;
-        let cFit = document.getElementById('cost_fitting_labor').value || 0;
-        let cCol = document.getElementById('cost_color_labor').value || 0;
-        let cCar = document.getElementById('cost_carrying').value || 0;
-        let cOth = document.getElementById('cost_others').value || 0;
-
-        let boardDetails = [];
-        if(q18 > 0) boardDetails.push(`১৮মিমি: ${q18} পিস`);
-        if(q15 > 0) boardDetails.push(`১৫মিমি: ${q15} পিস`);
-        if(q6 > 0) boardDetails.push(`৬মিমি প্লাই: ${q6} পিস`);
-        
-        let hardDetails = [];
-        if(qLock > 0) hardDetails.push(`তালা: ${qLock}টি`);
-        if(qHand > 0) hardDetails.push(`হ্যান্ডেল: ${qHand}টি`);
-        if(qHinge > 0) hardDetails.push(`কব্জা: ${qHinge}টি`);
-        if(qChan > 0) hardDetails.push(`চ্যানেল: ${qChan}সেট`);
-        if(qGlass > 0) hardDetails.push(`গ্লাস: ${qGlass}টি`);
-
-        let laborDetails = [];
-        if(cCnc > 0) laborDetails.push(`CNC: ${cCnc}৳`);
-        if(cLac > 0) laborDetails.push(`লেকার: ${cLac}৳`);
-        if(cFit > 0) laborDetails.push(`ফিটিং: ${cFit}৳`);
-        if(cCol > 0) laborDetails.push(`কালার: ${cCol}৳`);
-        if(cCar > 0) laborDetails.push(`গাড়ি ভাড়া: ${cCar}৳`);
-        if(cOth > 0) laborDetails.push(`খুচরা: ${cOth}৳`);
-
-        let detailedHTML = '';
-        if(boardDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🪵 ১. বোর্ড হিসাব (মোট: ${calculatedBoardCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${boardDetails.join(' | ')}</div>`;
-        }
-        if(hardDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🔩 ২. হার্ডওয়্যার ও গ্লাস (মোট: ${calculatedHardwareCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${hardDetails.join(' | ')}</div>`;
-        }
-        if(laborDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🎨 ৩. মিস্ত্রি ও অন্যান্য (মোট: ${calculatedLaborAndOtherCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${laborDetails.join(' | ')}</div>`;
-        }
-
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
-        let existingItem = db.find(item => item.model === modelNo);
-
-        if(existingItem) {
-            existingItem.cost = existingItem.cost + " + " + currentCalculatedTotal.toFixed(0);
-            existingItem.details = existingItem.details + `<div class="record-divider"></div>` + detailedHTML;
-            if(uploadedImageBase64) existingItem.image = uploadedImageBase64; 
-        } else {
-            db.push({ model: modelNo, name: productText, cost: currentCalculatedTotal.toFixed(0), details: detailedHTML, image: uploadedImageBase64 });
-        }
-
-        localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
-        renderDatabase();
-        
-        // ফর্ম ক্লিয়ার ও রিসেট
-        document.getElementById('model_no').value = '';
-        productSelect.selectedIndex = 0;
-        document.getElementById('product_image').value = '';
-        document.getElementById('previewWrap').style.display = 'none';
-        uploadedImageBase64 = ""; 
-
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        document.getElementById(`ind-${currentStep}`).classList.remove('active');
-        currentStep = 1;
-        document.getElementById(`step-1`).classList.add('active');
-        document.getElementById(`ind
+        alert('নতুন রেট সফলভাবে আপডেট হয়েছে
