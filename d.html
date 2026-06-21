@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আর্জেন্টিনা বনাম ব্রাজিল: ফুটবল পরিসংখ্যান</title>
+    <title>আর্জেন্টিনা বনাম ব্রাজিল ও ২০২৬ ফিফা বিশ্বকাপ গাইড</title>
     <style>
         :root {
             --arg-blue: #74ACDF;
             --bra-yellow: #FEDD00;
             --bra-green: #009B3A;
-            --dark-bg: #1e1e24;
-            --card-bg: #2a2a35;
+            --wc-gold: #FFD700;
+            --dark-bg: #141419;
+            --card-bg: #22222b;
             --text-light: #ffffff;
         }
 
@@ -23,42 +24,82 @@
             text-align: center;
         }
 
-        h1 {
-            color: #fff;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
 
+        h1 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Navigation Buttons */
+        .map-navigation {
+            margin-bottom: 35px;
+            background: #1c1c24;
+            padding: 15px;
+            border-radius: 30px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover, .btn.active {
+            background-color: var(--wc-gold);
+            color: #000;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
         /* Grid Layout */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            border: 1px solid #333;
+            text-align: left;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
+        .card-full {
+            grid-column: 1 / -1;
         }
 
         h2 {
             border-bottom: 2px solid #444;
-            padding-bottom: 10px;
-            font-size: 1.4rem;
+            padding-bottom: 12px;
+            font-size: 1.5rem;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Comparison Bar */
@@ -70,80 +111,165 @@
             margin: 20px 0;
             font-weight: bold;
             line-height: 35px;
+            text-align: center;
         }
 
-        .arg-bar {
-            background-color: var(--arg-blue);
-            color: #000;
-            transition: width 0.5s;
-        }
-
-        .bra-bar {
-            background-color: var(--bra-green);
-            color: #fff;
-            transition: width 0.5s;
-        }
+        .arg-bar { background-color: var(--arg-blue); color: #000; }
+        .bra-bar { background-color: var(--bra-green); color: #fff; }
 
         /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            background: #1a1a22;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid #444;
+            padding: 12px 15px;
+            border-bottom: 1px solid #2d2d38;
             text-align: left;
         }
 
         th {
-            background-color: #333;
+            background-color: #2d2d3a;
+            color: var(--wc-gold);
         }
 
         .highlight-arg { color: var(--arg-blue); font-weight: bold; }
         .highlight-bra { color: #00ff00; font-weight: bold; }
-
-        /* Button Map-like Filter Toggle */
-        .map-navigation {
-            margin-bottom: 25px;
+        
+        ul {
+            padding-left: 20px;
+            line-height: 1.6;
         }
 
-        .btn {
-            background-color: #444;
+        /* Guide Badge */
+        .badge {
+            background: #ff4757;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
-
-        .btn:hover, .btn.active {
-            background-color: #fff;
-            color: #000;
-        }
+        .badge-group { background: #2f3542; color: #fff; }
+        .badge-date { background: #1e90ff; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>⚽ আর্জেন্টিনা বনাম ব্রাজিল: ঐতিহাসিক ডেটা ম্যাপ</h1>
+        <h1>⚽ ফুটবল ইনফো-ম্যাপ ও ২০২৬ ফিফা বিশ্বকাপ গাইড</h1>
+        <div class="subtitle">আর্জেন্টিনা-ব্রাজিল দ্বৈরথ এবং বর্তমান বিশ্বকাপের সম্পূর্ণ গাইডলাইন</div>
 
-        <!-- Navigation Buttons like Points on a Map -->
+        <!-- Navigation Buttons -->
         <div class="map-navigation">
-            <button class="btn active" onclick="filterView('all')">সব তথ্য</button>
-            <button class="btn" onclick="filterView('trophy')">ট্রফি ও যোগ্যতা</button>
-            <button class="btn" onclick="filterView('records')">রেকর্ড ও গোল</button>
-            <button class="btn" onclick="filterView('bd')">বাংলাদেশ কানেকশন</button>
+            <button class="btn active" onclick="filterView('wc')">🏆 ২০২৬ বিশ্বকাপ গাইড</button>
+            <button class="btn" onclick="filterView('trophy')">⚔️ আর্জেন্টিনা-ব্রাজিল ট্রফি</button>
+            <button class="btn" onclick="filterView('records')">📊 ইতিহাস ও রেকর্ড</button>
+            <button class="btn" onclick="filterView('bd')">🇧🇩 বাংলাদেশ কানেকশন</button>
         </div>
 
         <div class="grid">
             
-            <!-- Card 1: Last 26 Years -->
-            <div class="card" data-category="trophy">
+            <!-- ====== SECTION 1: WORLD CUP 2026 GUIDELINES ====== -->
+            <div class="card card-full" data-category="wc">
+                <h2>🏆 ২০২৬ ফিফা বিশ্বকাপ: খেলা বোঝার সহজ নিয়ম</h2>
+                <div style="line-height: 1.7;">
+                    <p>🎯 <strong>আয়োজক দেশ:</strong> যৌথভাবে আয়োজন করছে ৩টি দেশ—<strong>যুক্তরাষ্ট্র, মেক্সিকো এবং কানাডা</strong>।</p>
+                    <p>🔥 <strong>নতুন ফরম্যাট (৪৮ দল):</strong> এবারই প্রথম বিশ্বকাপে ৩২টির বদলে <strong>৪৮টি দল</strong> খেলছে। দলগুলোকে মোট <strong>১২টি গ্রুপে (Group A থেকে L)</strong> ভাগ করা হয়েছে। প্রতি গ্রুপে দল আছে ৪টি করে।</p>
+                    <p>🔄 <strong style="color: var(--wc-gold);">কীভাবে খেলা হবে (পরবর্তী রাউন্ডের নিয়ম):</strong></p>
+                    <ul>
+                        <li><strong>রাউন্ড অব ৩২ (নকআউট):</strong> প্রতি গ্রুপের চ্যাম্পিয়ন (১২টি দল) এবং রানার্সআপ (12টি দল) সরাসরি পরবর্তী রাউন্ডে যাবে (১২ + ১২ = ২৪ দল)। বাকি ৮টি দল আসবে ১২টি গ্রুপের মধ্যে যারা সেরা ৩ নম্বর দল হবে তাদের থেকে। এই মোট ৩২টি দল নিয়ে শুরু হবে নকআউট (হারলেই বিদায়) পর্ব।</li>
+                        <li>এরপর যথাক্রমে <strong>রাউন্ড অব ১৬ ➡️ কোয়ার্টার ফাইনাল ➡️ সেমিফাইনাল ➡️ ফাইনাল</strong> অনুষ্ঠিত হবে।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- WORLD CUP SCHEDULE -->
+            <div class="card card-full" data-category="wc">
+                <h2>📅 ২০২৬ বিশ্বকাপ সময়সূচি ও গুরুত্বপূর্ণ ম্যাচ (ফিক্সচার)</h2>
+                <p>খেলাগুলো জুনের ১১ তারিখ থেকে শুরু হয়ে জুলাইয়ের ১৯ তারিখ পর্যন্ত চলবে। নিচে উদ্বোধনী ম্যাচ, গ্রুপ পর্বের হাই ভোল্টেজ ম্যাচ এবং নকআউট পর্বের সূচি দেওয়া হলো:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তারিখ (২০২৬)</th>
+                            <th>ম্যাচ / পর্ব</th>
+                            <th>স্টেডিয়াম ও ভেন্যু</th>
+                            <th>বিশেষ আকর্ষণ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-date">১১ জুন</span></td>
+                            <td><strong>উদ্বোধনী ম্যাচ (মেক্সিকো বনাম প্রতিপক্ষ)</strong></td>
+                            <td>এস্তাদিও আসতেকা, মেক্সিকো সিটি</td>
+                            <td>ঐতিহাসিক মাঠে বিশ্বকাপের পর্দা উন্মোচন</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">১২ জুন</span></td>
+                            <td>কানাডার প্রথম ম্যাচ</td>
+                            <td>বিসি প্লেস, ভ্যাঙ্কুভার</td>
+                            <td>কানাডার মাটিতে প্রথম ম্যাচ</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">১২ জুন</span></td>
+                            <td>যুক্তরাষ্ট্রের প্রথম ম্যাচ</td>
+                            <td>সো-ফাই স্টেডিয়াম, লস অ্যাঞ্জেলেস</td>
+                            <td>আমেরিকার ঘরের মাঠে যাত্রা শুরু</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">১১ জুন – ২৭ জুন</span></td>
+                            <td><strong>গ্রুপ পর্ব (Group Stage)</strong></td>
+                            <td>সব ভেন্যু (যুক্তরাষ্ট্র, মেক্সিকো, কানাডা)</td>
+                            <td>৪৮টি দলের মধ্যে মোট ৭২টি ম্যাচ হবে</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">২৮ জুন – ৩ জুলাই</span></td>
+                            <td><strong>রাউন্ড অব ৩২ (নকআউট)</strong></td>
+                            <td>নির্বাচিত শহরসমূহ</td>
+                            <td>প্রথমবারের মতো চালু হওয়া নতুন নকআউট রাউন্ড</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">৪ জুলাই – ৭ জুলাই</span></td>
+                            <td><strong>রাউন্ড অব ১৬</strong></td>
+                            <td>নির্বাচিত শহরসমূহ</td>
+                            <td>কোয়ার্টার ফাইনালে ওঠার তীব্র লড়াই</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">৯ জুলাই – ১১ জুলাই</span></td>
+                            <td><strong>কোয়ার্টার ফাইনাল</strong></td>
+                            <td>লস অ্যাঞ্জেলেস, মিয়ামি, ক্যানসাস, বোস্টন</td>
+                            <td>বিশ্বের সেরা ৮ দলের মহাযুদ্ধ</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">১৪ জুলাই – ১৫ জুলাই</span></td>
+                            <td><strong>সেমিফাইনাল</strong></td>
+                            <td>ডালাস এবং আটলান্টা</td>
+                            <td>ফাইনালের টিকিট কাটার লড়াই</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-date">১৮ জুলাই</span></td>
+                            <td>৩য় স্থান নির্ধারণী ম্যাচ</td>
+                            <td>হার্ড রক স্টেডিয়াম, মিয়ামি</td>
+                            <td>ব্রোঞ্জ মেডেলের লড়াই</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge <span class="badge" style="background:#00bcd4;">১৯ জুলাই</span></td>
+                            <td><strong>🏆 মেগা ফাইনাল (Final)</strong></td>
+                            <td>মেটলাইফ স্টেডিয়াম, নিউ জার্সি (নিউ ইয়র্ক)</td>
+                            <td>👑 ২০২৬ সালের নতুন বিশ্ব চ্যাম্পিয়ন ঘোষণা</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.9rem; color: #aaa; margin-top: 10px;">💡 <em>নোট: আর্জেন্টিনা ও ব্রাজিলের গ্রুপ পর্বের সুনির্দিষ্ট ম্যাচগুলোর সময় ও প্রতিপক্ষ তাদের নিজ নিজ গ্রুপ (ক্যাটালগ ড্র) অনুযায়ী নির্ধারিত স্টেডিয়ামে অনুষ্ঠিত হচ্ছে।</em></p>
+            </div>
+
+            <!-- ====== SECTION 2: ARGENTINA VS BRAZIL DATA (PREVIOUS) ====== -->
+            <div class="card" data-category="trophy" style="display:none;">
                 <h2>🏆 গত ২৬ বছরের ট্রফি (২০০০ - ২০২৬)</h2>
                 <div class="comparison-bar">
                     <div class="arg-bar" style="width: 57%;">আর্জেন্টিনা (৪)</div>
@@ -151,74 +277,60 @@
                 </div>
                 <table>
                     <tr><th>টুর্নামেন্ট</th><th>আর্জেন্টিনা</th><th>ব্রাজিল</th></tr>
-                    <tr><td>বিশ্বকাপ</td><td>১টি (২০২২)</td><td>১টি (২০০২)</td></tr>
+                    <tr><td>বিশ্বকাল</td><td>১টি (২০২২)</td><td>১টি (২০০২)</td></tr>
                     <tr><td>কোপা আমেরিকা</td><td>২টি</td><td>২টি</td></tr>
                     <tr><td>ফিনালিসিমা</td><td>১টি</td><td>০টি</td></tr>
                 </table>
-                <p style="font-size: 0.85rem; color: #aaa; margin-top: 10px;">* ফিফা কর্তৃক বাতিল হওয়া কনফেডারেশন্স কাপ বাদে।</p>
             </div>
 
-            <!-- Card 2: Head to Head -->
-            <div class="card" data-category="records">
+            <div class="card" data-category="records" style="display:none;">
                 <h2>⚔️ মুখোমুখি লড়াই (Head-to-Head)</h2>
-                <div class="comparison-bar">
-                    <div class="arg-bar" style="width: 49%;">আর্জেন্টিনা (৪২)</div>
-                    <div class="bra-bar" style="width: 51%;">ব্রাজিল (৪৩)</div>
-                </div>
-                <p>মোট ম্যাচ: ১১০টি+ | ড্র: ২৬টি ম্যাচ</p>
-                <p><strong>বড় ব্যবধানে জয়:</strong></p>
+                <p><strong>মোট ম্যাচ:</strong> ১১০টি+ | <strong>ব্রাজিলের জয়:</strong> ৪৩ | <strong>আর্জেন্টিনার জয়:</strong> ৪২</p>
+                <hr style="border-color:#333;">
+                <p><strong>সর্বোচ্চ গোল (সবচেয়ে বড় জয়):</strong></p>
                 <ul>
                     <li><span class="highlight-arg">আর্জেন্টিনা:</span> ৬ — ১ ব্রাজিল (১৯৪০)</li>
                     <li><span class="highlight-bra">ব্রাজিল:</span> ৬ — ২ আর্জেন্টিনা (১৯৪৫)</li>
                 </ul>
-                <p><strong>সর্বনিম্ন গোল:</strong> একাধিক ম্যাচ <span style="color: #ffcc00;">০ — ০</span> ড্র হয়েছে।</p>
             </div>
 
-            <!-- Card 3: All Time & Talents -->
-            <div class="card" data-category="trophy">
+            <div class="card" data-category="trophy" style="display:none;">
                 <h2>👑 অল-টাইম যোগ্যতা ও শ্রেষ্ঠত্ব</h2>
                 <table>
                     <tr><td>বিশ্বকাপ ট্রফি</td><td>৩টি</td><td class="highlight-bra">৫টি (সেরা)</td></tr>
                     <tr><td>কোপা আমেরিকা</td><td class="highlight-arg">১৬টি (সেরা)</td><td>৯টি</td></tr>
                     <tr><td>মোট বড় ট্রফি</td><td class="highlight-arg">২৩টি</td><td>২০টি</td></tr>
-                    <tr><td>কিংবদন্তি প্লেয়ার</td><td>মেসি, ম্যারাডোনা</td><td>পেলে, রোনালদো</td></tr>
                 </table>
-                <p style="font-size: 0.9rem; text-align: left; margin-top: 10px;">💡 <strong>মেসি রেকর্ড ৪৬টি</strong> দলীয় শিরোপা নিয়ে ফুটবল ইতিহাসের সফলতম খেলোয়াড়।</p>
             </div>
 
-            <!-- Card 4: Bangladesh Connection -->
-            <div class="card" data-category="bd">
+            <div class="card" data-category="bd" style="display:none;">
                 <h2>🇧🇩 বাংলাদেশের সাথে ম্যাচ রেকর্ড</h2>
-                <div style="text-align: left; font-size: 0.95rem;">
-                    <p><strong>🇧🇩 বনাম 🇧🇷 ব্রাজিল (২০০২):</strong></p>
-                    <p>মূল জাতীয় দলের ম্যাচে ব্রাজিল ঢাকায় এসে বাংলাদেশকে <span class="highlight-bra">৬—০</span> গোলে হারায় (রোনালদিনহো, রিভালদোরা খেলেছিলেন)। অনূর্ধ্ব-১৭ ম্যাচে জিতেছিল ৭-০ গোলে।</p>
-                    <hr style="border-color: #444;">
-                    <p><strong>🇧🇩 বনাম 🇦🇷 আর্জেন্টিনা:</strong></p>
-                    <p>মূল জাতীয় দলের সাথে কখনো ম্যাচ হয়নি। তবে ১৯৮৩ সালের অনূর্ধ্ব-২০ বিশ্বকাপে আর্জেন্টিনা <span class="highlight-arg">৪—২</span> গোলে জিতেছিল (আর্জেন্টিনা বাংলাদেশের কাছে <strong>২ গোল খেয়েছিল</strong>)।</p>
-                </div>
+                <p><strong>🇧🇩 বনাম 🇧🇷 ব্রাজিল (২০০২):</strong> মূল জাতীয় দলের ম্যাচে রোনালদিনহোরা ঢাকায় এসে বাংলাদেশকে <strong>৬—০</strong> গোলে হারায়।</p>
+                <p><strong>🇧🇩 বনাম 🇦🇷 আর্জেন্টিনা:</strong> মূল দলের ম্যাচ হয়নি। ১৯৮৩ অনূর্ধ্ব-২০ বিশ্বকাপে আর্জেন্টিনা ৪—২ গোলে জেতে (আর্জেন্টিনা বাংলাদেশের কাছে <strong>২ গোল খেয়েছিল</strong>)।</p>
             </div>
 
         </div>
     </div>
 
     <script>
-        // Interactive Filter function like clicking on map layers
+        // Interactive Filter function
         function filterView(category) {
-            // Update active button class
             const buttons = document.querySelectorAll('.btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Show/Hide cards
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
+                if (card.getAttribute('data-category') === category) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
             });
         }
+        
+        // পাশে ডিফল্টভাবে বিশ্বকাপ গাইড দেখানোর জন্য লোড করা হলো
+        filterView('wc');
     </script>
 </body>
 </html>
