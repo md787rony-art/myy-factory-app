@@ -1,36 +1,314 @@
-<?php
-header('Content-Type: text/event-stream');
-header('Cache-Control: no-cache');
-header('Connection: keep-alive');
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global VoIP Dashboard — Premium Invite-Only</title>
+    <style>
+        :root {
+            --bg-dark: #090a0f;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-glow: #3b82f6;
+            --accent-success: #10b981;
+        }
 
-// ডাটাবেজ কানেকশন
-$conn = new mysqli("localhost", "root", "", "global_voip_db");
-
-$last_id = 0;
-
-// এই লুপটি ব্যাকগ্রাউন্ডে লাইভ কানেকশন ধরে রাখবে
-while (true) {
-    // শুধু নতুন আসা ওটিপি বা এসএমএস চেক করবে
-    $sql = "SELECT * FROM inbound_sms WHERE id > $last_id ORDER BY id DESC LIMIT 1";
-    $result = $conn->query($sql);
-    
-    if ($result && $row = $result->fetch_assoc()) {
-        $last_id = $row['id'];
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
         
-        // ডায়নামিক ডাটা ফরম্যাট (JSON)
-        $data = [
-            'from' => $row['from_number'],
-            'body' => $row['message_body'],
-            'time' => date('h:i A')
-        ];
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ব্যাকগ্রাউন্ড গ্লো এফেক্ট */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(59, 130, 246, 0.15);
+            filter: blur(100px);
+            top: 10%;
+            left: 20%;
+            z-index: -1;
+        }
+
+        .dashboard-container { 
+            width: 100%;
+            max-width: 1100px; 
+            background: var(--card-bg); 
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px; 
+            padding: 40px; 
+        }
         
-        // ব্রাউজারে ডাটা পুশ করে দেওয়া
-        echo "data: " . json_encode($data) . "\n\n";
-        ob_flush();
-        flush();
+        /* মডার্ন হেডার ও কান্ট্রি ট্যাব */
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 24px; 
+            margin-bottom: 32px; 
+        }
+        .brand-logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .brand-logo::before { content: ''; width: 10px; height: 10px; background: var(--accent-glow); border-radius: 50%; box-shadow: 0 0 10px var(--accent-glow); }
+        
+        .tabs-wrapper { background: rgba(255,255,255,0.02); padding: 4px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .country-tab { 
+            background: transparent; 
+            border: none; 
+            padding: 8px 16px; 
+            color: var(--text-muted);
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .country-tab.active { background: rgba(255,255,255,0.07); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+        
+        /* এক্সক্লুসিভ নোটিশ */
+        .badge-notice { 
+            background: rgba(245, 158, 11, 0.06); 
+            border: 1px solid rgba(245, 158, 11, 0.2); 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            margin-bottom: 32px; 
+            font-size: 14px;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* মডার্ন ২-কলাম গ্রিড */
+        .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; }
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+        
+        /* কার্ড স্টাইল */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.01); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 32px; 
+            transition: transform 0.3s;
+        }
+        .glass-card h2 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 24px; letter-spacing: -0.3px; }
+        
+        /* ইনপুট ফিল্ড ও নিয়ন বাটন */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input[type="text"], input[type="email"] { 
+            width: 100%; 
+            padding: 14px 16px; 
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        input[type="text"]:focus, input[type="email"]:focus {
+            outline: none;
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+        }
+        
+        .btn-neon { 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 16px; 
+            width: 100%; 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: 14px;
+            cursor: pointer; 
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        .btn-neon:hover { background: #e5e7eb; transform: translateY(-1px); }
+        
+        /* লাইভ ওটিপি স্ক্রিন */
+        .virtual-phone { 
+            font-size: 22px; 
+            font-weight: 700; 
+            color: #fff; 
+            text-align: center; 
+            background: rgba(59, 130, 246, 0.06); 
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 24px; 
+            letter-spacing: 0.5px;
+        }
+        
+        .sms-feed { max-height: 280px; overflow-y: auto; padding-right: 5px; }
+        .sms-feed::-webkit-scrollbar { width: 4px; }
+        .sms-feed::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        .otp-card { 
+            background: rgba(255,255,255,0.02); 
+            border: 1px solid var(--border-color); 
+            padding: 16px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
+            transition: all 0.3s;
+        }
+        .otp-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+        .otp-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+        .sender-tag { color: var(--accent-success); font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; }
+        .otp-code { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- নেভিগেশন বার -->
+    <div class="navbar">
+        <div class="brand-logo" id="site-title">Global VoIP (USA)</div>
+        <div class="tabs-wrapper">
+            <button class="country-tab active" onclick="updateUI('USA')">USA ($)</button>
+            <button class="country-tab" onclick="updateUI('JPN')">Japan (¥)</button>
+            <button class="country-tab" onclick="updateUI('BGD')">Bangladesh (৳)</button>
+        </div>
+    </div>
+
+    <!-- ইনভাইটেশন নোটিশ -->
+    <div class="badge-notice">
+        <span>✦</span>
+        <span id="notice-text">This secure network is strictly Invite-Only for authenticated nodes.</span>
+    </div>
+
+    <div class="main-grid">
+        <!-- বাম কলাম: অনবোর্ডিং ফর্ম -->
+        <div class="glass-card">
+            <h2 id="card-form-title">Initialize Access & Subscription</h2>
+            <form onsubmit="verifyInvite(event)">
+                <div class="input-group">
+                    <label id="lbl-name">Full Name</label>
+                    <input type="text" id="name" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label id="lbl-email">Secure Email</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label id="lbl-invite">Passcode (Invite Code)</label>
+                    <input type="text" id="invite_code" placeholder="••••-••••-••••" required>
+                </div>
+                <button type="submit" class="btn-neon" id="btn-action">Activate Secure Terminal ($9.99/mo)</button>
+            </form>
+        </div>
+
+        <!-- ডান কলাম: লাইভ প্রিমিয়াম ইনবক্স -->
+        <div class="glass-card">
+            <h2 id="card-inbox-title">Live Dynamic OTP Stream</h2>
+            <div class="virtual-phone" id="phone-number">+1 (234) 567-890</div>
+            
+            <div class="sms-feed" id="sms-feed">
+                <!-- রিয়েল-টাইম ডেমো ডাটা -->
+                <div class="otp-card">
+                    <div class="otp-top">
+                        <span class="sender-tag">Google</span>
+                        <span>Just Now</span>
+                    </div>
+                    <div class="otp-code">Your global verification token is <span style="color:var(--accent-glow)">G-99201</span></div>
+                </div>
+                <div class="otp-card">
+                    <div class="otp-top">
+                        <span class="sender-tag" style="color:#3b82f6; background:rgba(59,130,246,0.1)">Stripe</span>
+                        <span>3 mins ago</span>
+                    </div>
+                    <div class="otp-code">Your one-time payout authorization code is 554-091.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ২০২৬-এর ক্লাউড ল্যাঙ্গুয়েজ এবং কারেন্সি আর্কিটেকচার ডেটা
+    const localeEngine = {
+        USA: {
+            title: "Global VoIP (USA)",
+            notice: "This secure network is strictly Invite-Only for authenticated nodes.",
+            formTitle: "Initialize Access & Subscription",
+            lblName: "Full Name",
+            lblEmail: "Secure Email",
+            lblInvite: "Passcode (Invite Code)",
+            btn: "Activate Secure Terminal ($9.99/mo)",
+            inboxTitle: "Live Dynamic OTP Stream",
+            phone: "+1 (234) 567-890"
+        },
+        JPN: {
+            title: "Global VoIP (Japan)",
+            notice: "この暗号化ネットワークは、認証されたノード専用の完全招待制です。",
+            formTitle: "アクセス初期化とサブスクリプション",
+            lblName: "氏名",
+            lblEmail: "セキュアメール",
+            lblInvite: "アクセスコード (招待コード)",
+            btn: "ターミナルを有効化する (¥1,500/月)",
+            inboxTitle: "ライブ動的OTPストリーム",
+            phone: "+81 90-1234-5678"
+        },
+        BGD: {
+            title: "Global VoIP (Bangladesh)",
+            notice: "এই সুরক্ষিত নেটওয়ার্কটি শুধুমাত্র আমন্ত্রিত প্রিমিয়াম নোডের (Invite-Only) জন্য সংরক্ষিত।",
+            formTitle: "অ্যাকাউন্ট ভেরিফিকেশন ও সাবস্ক্রিপশন",
+            lblName: "পূর্ণ নাম",
+            lblEmail: "সুরক্ষিত ইমেল",
+            lblInvite: "পাসকোড (ইনভাইট কোড)",
+            btn: "টার্মিনাল অ্যাক্টিভ করুন (৳১২০০/মাস)",
+            inboxTitle: "লাইভ ডায়নামিক ওটিপি স্ট্রিম",
+            phone: "+৮৮০ ১৬-১২৩৪-৫৬৭৮"
+        }
+    };
+
+    // ডায়নামিক ইউআই আপডেট লজিক
+    function updateUI(country) {
+        // ট্যাব সিলেকশন অ্যানিমেশন এফেক্ট
+        const tabs = document.querySelectorAll('.country-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // কন্টেন্ট রেন্ডারিং
+        const data = localeEngine[country];
+        document.getElementById('site-title').innerText = data.title;
+        document.getElementById('notice-text').innerText = data.notice;
+        document.getElementById('card-form-title').innerText = data.formTitle;
+        document.getElementById('lbl-name').innerText = data.lblName;
+        document.getElementById('lbl-email').innerText = data.lblEmail;
+        document.getElementById('lbl-invite').innerText = data.lblInvite;
+        document.getElementById('btn-action').innerText = data.btn;
+        document.getElementById('card-inbox-title').innerText = data.inboxTitle;
+        document.getElementById('phone-number').innerText = data.phone;
     }
-    
-    // প্রতি ১ সেকেন্ড পর পর ডেটাবেজে নতুন এন্ট্রি চেক করবে (সার্ভারে প্রেশার ছাড়া)
-    sleep(1); 
-}
-?>
+
+    // ইনভাইট কোড টোকেন ম্যাচিং লজিক
+    function verifyInvite(e) {
+        e.preventDefault();
+        const code = document.getElementById('invite_code').value;
+        const secureToken = "EXCLUSIVE_VIP_2026"; 
+
+        if (code === secureToken) {
+            alert("🔒 Access Token Verified. Redirecting to encrypted payment node...");
+        } else {
+            alert("❌ Access Denied. Invalid Cryptographic Invitation Token.");
+        }
+    }
+</script>
+
+</body>
+</html>
