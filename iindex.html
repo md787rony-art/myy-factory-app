@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global VoIP & OTP Dashboard (Invite-Only)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 30px; }
+        
+        /* Header & Country Selector */
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f2f5; padding-bottom: 20px; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .lang-btn { background: #eef2f7; border: none; padding: 8px 16px; margin-left: 5px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .lang-btn.active { background: #2c3e50; color: #fff; }
+        
+        /* Invite Section */
+        .invite-box { background: #fff8db; border-left: 5px solid #ffcc00; padding: 15px; border-radius: 6px; margin-bottom: 25px; }
+        
+        /* Main Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        
+        /* Box Styles */
+        .card { background: #fafbfc; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; }
+        .card h2 { font-size: 18px; color: #2c3e50; margin-bottom: 15px; }
+        
+        /* Inputs & Buttons */
+        input[type="text"], input[type="email"] { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn-submit { background: #2ecc71; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        
+        /* Number & SMS Box */
+        .number-display { font-size: 20px; font-weight: bold; color: #3498db; text-align: center; background: #eaf2f8; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
+        .sms-item { background: #fff; border: 1px solid #e1e4e8; padding: 12px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid #2ecc71; }
+        .sms-meta { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; }
+        .sms-body { font-size: 14px; font-weight: bold; color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- হেডার এবং দেশ পরিবর্তনের বাটন -->
+    <div class="header">
+        <div class="logo" id="site-logo">Global VoIP SaaS</div>
+        <div>
+            <button class="lang-btn active" onclick="switchCountry('USA')">USA ($)</button>
+            <button class="lang-btn" onclick="switchCountry('JPN')">Japan (¥)</button>
+            <button class="lang-btn" onclick="switchCountry('BGD')">Bangladesh (৳)</button>
+        </div>
+    </div>
+
+    <!-- ইনভাইট-অনলি নোটিশ -->
+    <div class="invite-box">
+        <strong id="notice-title">🔒 এক্সক্লুসিভ অ্যাক্সেস:</strong> 
+        <span id="notice-desc">এই প্ল্যাটফর্মটি শুধুমাত্র আমন্ত্রিত বিশেষ অতিথিদের (Invite-Only) ব্যবহারের জন্য তৈরি।</span>
+    </div>
+
+    <div class="grid">
+        <!-- বাম পাশ: সাইন-আপ এবং সাবস্ক্রিপশন ফর্ম -->
+        <div class="card">
+            <h2 id="form-title">অ্যাকাউন্ট তৈরি এবং সাবস্ক্রিপশন</h2>
+            <form onsubmit="handleRegistration(event)">
+                <input type="text" placeholder="আপনার নাম" id="input-name" required>
+                <input type="email" placeholder="ইমেইল অ্যাড্রেস" id="input-email" required>
+                <input type="text" placeholder="সিক্রেট ইনভাইট কোড (Invite Code)" id="input-invite" required>
+                <button type="submit" class="btn-submit" id="btn-text">প্ল্যান অ্যাক্টিভ করুন</button>
+            </form>
+        </div>
+
+        <!-- ডান পাশ: ভার্চুয়াল নম্বর এবং ওটিপি ইনবক্স -->
+        <div class="card">
+            <h2 id="inbox-title">আপনার লাইভ ওটিপি ইনবক্স</h2>
+            <div class="number-display" id="number-box">নম্বর: বরাদ্দ করা হয়নি</div>
+            
+            <div id="sms-container">
+                <!-- লাইভ মেসেজগুলো এখানে এসে জমা হবে -->
+                <div class="sms-item">
+                    <div class="sms-meta">From: Google • Just Now</div>
+                    <div class="sms-body">Your OTP verification code is: G-482015</div>
+                </div>
+                <div class="sms-item">
+                    <div class="sms-meta">From: Facebook • 2 mins ago</div>
+                    <div class="sms-body">Use 938104 to verify your login.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // দেশ এবং ভাষার ডাটাবেজ (Localization Object)
+    const translations = {
+        USA: {
+            logo: "Global VoIP (USA)",
+            notice: "🔒 Exclusive Access:",
+            desc: "This platform is strictly Invite-Only for premium users.",
+            formH2: "Create Account & Subscribe",
+            namePlholder: "Your Name",
+            emailPlholder: "Email Address",
+            invitePlholder: "Secret Invite Code",
+            btn: "Activate Plan ($9.99/mo)",
+            inboxH2: "Your Live OTP Inbox",
+            numText: "Number: +1 (234) 567-890"
+        },
+        JPN: {
+            logo: "グローバルVoIP (日本)",
+            notice: "🔒 限定アクセス:",
+            desc: "このプラットフォームはプレミアムユーザー専用の招待制です。",
+            formH2: "アカウント作成と購読",
+            namePlholder: "お名前",
+            emailPlholder: "メールアドレス",
+            invitePlholder: "秘密の招待コード",
+            btn: "プランを有効にする (¥1,500/月)",
+            inboxH2: "ライブSMS受信トレイ",
+            numText: "番号: +81 90-1234-5678"
+        },
+        BGD: {
+            logo: "গ্লোবাল ভিওআইপি (বাংলাদেশ)",
+            notice: "🔒 এক্সক্লুসিভ অ্যাক্সেস:",
+            desc: "এই প্ল্যাটফর্মটি শুধুমাত্র আমন্ত্রিত বিশেষ অতিথিদের (Invite-Only) ব্যবহারের জন্য তৈরি।",
+            formH2: "অ্যাকাউন্ট তৈরি এবং সাবস্ক্রিপশন",
+            namePlholder: "আপনার নাম",
+            emailPlholder: "ইমেইল অ্যাড্রেস",
+            invitePlholder: "সিক্রেট ইনভাইট কোড",
+            btn: "প্ল্যান অ্যাক্টিভ করুন (৳১২০০/মাস)",
+            inboxH2: "আপনার লাইভ ওটিপি ইনবক্স",
+            numText: "নম্বর: +১২৩৪৫৬৭৮৯০ (ইউএসএ টেস্ট নম্বর)"
+        }
+    };
+
+    // দেশ পরিবর্তন করার ফাংশন
+    function switchCountry(country) {
+        // বাটনগুলোর অ্যাক্টিভ স্টেট পরিবর্তন
+        const buttons = document.querySelectorAll('.lang-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // কন্টেন্ট পরিবর্তন করা
+        const data = translations[country];
+        document.getElementById('site-logo').innerText = data.logo;
+        document.getElementById('notice-title').innerText = data.notice;
+        document.getElementById('notice-desc').innerText = data.desc;
+        document.getElementById('form-title').innerText = data.formH2;
+        document.getElementById('input-name').placeholder = data.namePlholder;
+        document.getElementById('input-email').placeholder = data.emailPlholder;
+        document.getElementById('input-invite').placeholder = data.invitePlholder;
+        document.getElementById('btn-text').innerText = data.btn;
+        document.getElementById('inbox-title').innerText = data.inboxH2;
+        document.getElementById('number-box').innerText = data.numText;
+    }
+
+    // ইনভাইট কোড চেক করার ফাংশন
+    function handleRegistration(e) {
+        e.preventDefault();
+        const code = document.getElementById('input-invite').value;
+        const secretCode = "EXCLUSIVE_VIP_2026"; // টেস্ট কোড
+
+        if (code === secretCode) {
+            alert("সফল হয়েছে! আপনার ইনভাইট কোডটি সঠিক। পেমেন্ট গেটওয়েতে রিডাইরেক্ট করা হচ্ছে...");
+        } else {
+            alert("দুঃখিত! আপনার ইনভাইট কোডটি সঠিক নয়। এটি একটি আমন্ত্রিত (Invite-Only) সাইট।");
+        }
+    }
+
+    // ডিফল্টভাবে বাংলাদেশ সিলেক্ট করে রাখা
+    switchCountry('BGD');
+</script>
+
+</body>
+</html>
