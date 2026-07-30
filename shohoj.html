@@ -9,7 +9,7 @@
         body { background-color: #f4f6f8; color: #333; }
         
         /* Navigation */
-        nav { background: #2e7d32; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; sticky: top; }
+        nav { background: #2e7d32; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 22px; font-weight: bold; }
         .vip-badge-btn { background: #ff9800; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 14px; cursor: pointer; border: none; }
         
@@ -22,13 +22,13 @@
 
         /* Products Grid */
         .section-title { font-size: 20px; color: #2e7d32; margin-bottom: 15px; border-bottom: 2px solid #2e7d32; display: inline-block; padding-bottom: 5px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
         
         .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border: 1px solid #ddd; display: flex; flex-direction: column; justify-content: space-between; }
         .product-img { width: 100%; height: 160px; object-fit: cover; background-color: #eee; }
-        .product-info { padding: 15px; }
+        .product-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .product-title { font-size: 18px; color: #2e7d32; font-weight: bold; }
-        .product-desc { font-size: 13px; color: #666; margin: 5px 0 10px 0; height: 38px; overflow: hidden; }
+        .product-desc { font-size: 13px; color: #666; margin: 5px 0 10px 0; min-height: 38px; }
         .price-tag { font-size: 16px; font-weight: bold; color: #d32f2f; margin-bottom: 10px; }
         .order-btn { background: #25d366; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
@@ -71,56 +71,8 @@
         <h2 class="section-title">🥦 তাজা শাকসবজি ও গ্রোসারি</h2>
 
         <!-- Product List Grid -->
-        <div class="product-grid">
-
-            <!-- Item 1: আলু -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা (src="আলুর ছবির লিংক") -->
-                <img src="https://via.placeholder.com/250x160?text=Potato+Image" alt="আলু" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">ডায়মন্ড আলু (১ কেজি)</div>
-                    <div class="product-desc">একদম তাজা ও পরিষ্কার ডায়মন্ড আলু, রান্নার জন্য সেরা।</div>
-                    <div class="price-tag">দাম: ৳৩০</div>
-                    <button class="order-btn" onclick="processOrder('ডায়মন্ড আলু', 30)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 2: বেগুন -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Brinjal+Image" alt="বেগুন" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">গোল বেগুন (১ কেজি)</div>
-                    <div class="product-desc">নরম ও টাটকা বেগুন, ভাজি বা ভর্তার জন্য উপযোগী।</div>
-                    <div class="price-tag">দাম: ৳৬০</div>
-                    <button class="order-btn" onclick="processOrder('গোল বেগুন', 60)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 3: টমেটো -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Tomato+Image" alt="টমেটো" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">দেশি টমেটো (১ কেজি)</div>
-                    <div class="product-desc">পাকা ও লাল টমেটো সরাসরি বাগান থেকে সংগৃহীত।</div>
-                    <div class="price-tag">দাম: ৳৮০</div>
-                    <button class="order-btn" onclick="processOrder('দেশি টমেটো', 80)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 4: পেঁয়াজ -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Onion+Image" alt="পেঁয়াজ" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">দেশি পেঁয়াজ (১ কেজি)</div>
-                    <div class="product-desc">ভালো মানের শুকনা দেশি পেঁয়াজ।</div>
-                    <div class="price-tag">দাম: ৳৫৫</div>
-                    <button class="order-btn" onclick="processOrder('দেশি পেঁয়াজ', 55)">অর্ডার করুন</button>
-                </div>
-            </div>
-
+        <div class="product-grid" id="productGrid">
+            <p style="text-align:center; grid-column: 1/-1;">পণ্য লোড হচ্ছে...</p>
         </div>
     </div>
 
@@ -155,10 +107,47 @@
     <!-- JavaScript Engine -->
     <script>
         const myWhatsApp = "8801610112370";
+        const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43";
 
         // VIP Modal Controls
         function openVipModal() { document.getElementById('vipModal').style.display = 'flex'; }
         function closeVipModal() { document.getElementById('vipModal').style.display = 'none'; }
+
+        // Load Dynamic Products
+        async function loadProducts() {
+            try {
+                let res = await fetch(DB_URL);
+                let products = await res.json();
+                let grid = document.getElementById('productGrid');
+                grid.innerHTML = "";
+
+                if(!products || products.length === 0) {
+                    grid.innerHTML = "<p style='text-align:center; grid-column:1/-1;'>কোনো পণ্য যোগ করা হয়নি।</p>";
+                    return;
+                }
+
+                products.forEach(p => {
+                    let imgUrl = p.img || 'https://via.placeholder.com/250x160?text=No+Photo';
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <img src="${imgUrl}" alt="${p.name}" class="product-img">
+                            <div class="product-info">
+                                <div>
+                                    <div class="product-title">${p.name}</div>
+                                    <div class="product-desc">${p.desc || ''}</div>
+                                </div>
+                                <div>
+                                    <div class="price-tag">দাম: ৳${p.price}</div>
+                                    <button class="order-btn" onclick="processOrder('${p.name}', ${p.price})">অর্ডার করুন</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch(e) {
+                document.getElementById('productGrid').innerHTML = "<p style='color:red; text-align:center; grid-column:1/-1;'>ডাটা লোড করা যায়নি।</p>";
+            }
+        }
 
         // VIP Reg Submission
         function submitVipForm() {
@@ -184,7 +173,7 @@
             let vipDiscountText = "";
 
             if(isVip) {
-                let discount = (itemPrice * 0.009).toFixed(2); // 0.9% Discount Calculation
+                let discount = (itemPrice * 0.009).toFixed(2);
                 finalPrice = (itemPrice - discount).toFixed(2);
                 vipDiscountText = `%0A👑 VIP ছাড় (0.9%): -৳${discount}`;
             }
@@ -192,6 +181,8 @@
             let orderMessage = `হ্যালো, আমি একটি অর্ডার করতে চাই:%0A%0A📦 পণ্য: ${itemName}%0Aমূল দাম: ৳${itemPrice}${vipDiscountText}%0A💰 চূড়ান্ত বিল: ৳${finalPrice}%0A%0Aদয়া করে আমার অর্ডারের বাকি তথ্য ও ঠিকানা নিন।`;
             window.open(`https://wa.me/${myWhatsApp}?text=${orderMessage}`, '_blank');
         }
+
+        loadProducts();
     </script>
 </body>
 </html>
