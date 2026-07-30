@@ -3,153 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সহজ বাজার - আপনার বাসার তাজা বাজার</title>
+    <title>সহজ বাজার</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #f4f6f8; color: #333; }
-        
-        nav { background: #2e7d32; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .logo { font-size: 22px; font-weight: bold; }
-        .vip-btn { background: #ff9800; color: white; padding: 8px 15px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; }
-
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-        .section-title { font-size: 20px; color: #2e7d32; margin-bottom: 20px; border-bottom: 2px solid #2e7d32; display: inline-block; padding-bottom: 4px; }
-
-        /* Products Grid */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border: 1px solid #ddd; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
-        
-        .main-img { width: 100%; height: 170px; object-fit: cover; border-radius: 6px; background-color: #eee; }
-        .thumb-gallery { display: flex; gap: 5px; margin-top: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .thumb-img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #ccc; }
-        .thumb-img:hover { border-color: #2e7d32; }
-
-        .title { font-size: 18px; color: #2e7d32; font-weight: bold; margin-top: 10px; }
-        .desc { font-size: 13px; color: #666; margin: 5px 0; height: 36px; overflow: hidden; }
-        .price { font-size: 16px; font-weight: bold; color: #d32f2f; margin-bottom: 10px; }
-        
-        .order-btn { background: #25d366; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; }
-        .form-group { margin-bottom: 12px; text-align: left; }
-        .form-group label { display: block; font-size: 12px; margin-bottom: 4px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
-        .submit-btn { background: #ff9800; color: white; padding: 10px; border: none; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; }
-
-        .loading-text { text-align: center; font-size: 16px; color: #666; grid-column: 1 / -1; padding: 40px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #f4f6f8; }
+        nav { background: #2e7d32; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .card { background: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; text-align: center; }
+        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 5px; }
+        .title { font-weight: bold; color: #2e7d32; margin: 8px 0; }
+        .price { color: #d32f2f; font-weight: bold; margin-bottom: 8px; }
+        .btn { background: #25d366; color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">🛒 সহজ বাজার</div>
-        <button class="vip-btn" onclick="openVipModal()">👑 VIP মেম্বারশিপ (৳৫০/মাস)</button>
-    </nav>
+    <nav>🛒 সহজ বাজার</nav>
 
     <div class="container">
-        <h2 class="section-title">🥦 তাজা শাকসবজি ও গ্রোসারি</h2>
-        <div class="product-grid" id="mainProductList">
-            <div class="loading-text">অ্যাডমিন ডাটা থেকে পণ্য লোড হচ্ছে...</div>
-        </div>
-    </div>
-
-    <!-- VIP Registration Modal -->
-    <div class="modal" id="vipModal">
-        <div class="modal-content">
-            <h3 style="color: #ff9800; margin-bottom: 10px;">👑 VIP মেম্বারশিপ আবেদন</h3>
-            <p style="font-size: 12px; margin-bottom: 15px;">মাসিক ৳৫০ টাকায় পান জিরো এডভান্স পেমেন্ট ও ০.৯% ছাড়!</p>
-
-            <div class="form-group"><label>আপনার নাম:</label><input type="text" id="vipName"></div>
-            <div class="form-group"><label>মোবাইল নম্বর:</label><input type="text" id="vipPhone"></div>
-            <div class="form-group"><label>ঠিকানা:</label><textarea id="vipAddress" rows="2"></textarea></div>
-
-            <button class="submit-btn" onclick="submitVipForm()">আবেদন জমা দিন</button>
-            <button onclick="closeVipModal()" style="margin-top: 10px; background: none; border: none; color: #777; cursor: pointer;">বন্ধ করুন</button>
-        </div>
+        <div class="grid" id="products"><p style="text-align:center; grid-column:1/-1;">পণ্য লোড হচ্ছে...</p></div>
     </div>
 
     <script>
-        const myWhatsApp = "8801610112370";
-        
-        // 🔑 আপনার JSONBin লিঙ্ক
-        const BIN_ID = "66f3e1f0e41b4d34e4f71a02"; // আপনার তৈরি করা Bin ID
-        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+        const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43";
 
-        async function fetchProducts() {
+        async function loadProducts() {
             try {
-                let res = await fetch(API_URL);
+                let res = await fetch(DB_URL);
                 let data = await res.json();
-                let products = data.record;
+                let grid = document.getElementById('products');
+                grid.innerHTML = "";
 
-                let container = document.getElementById('mainProductList');
-                container.innerHTML = "";
-
-                products.forEach((prod, index) => {
-                    let imgs = [prod.img1, prod.img2, prod.img3, prod.img4].filter(i => i && i.trim() !== "");
-                    let mainImg = imgs.length > 0 ? imgs[0] : "https://via.placeholder.com/250x170?text=No+Image";
-
-                    let thumbsHtml = "";
-                    if(imgs.length > 1) {
-                        thumbsHtml = `<div class="thumb-gallery">` + 
-                            imgs.map(img => `<img src="${img}" class="thumb-img" onclick="changeImg('img-${index}', '${img}')">`).join('') +
-                            `</div>`;
-                    }
-
-                    container.innerHTML += `
-                        <div class="product-card">
-                            <div>
-                                <img src="${mainImg}" id="img-${index}" class="main-img">
-                                ${thumbsHtml}
-                                <div class="title">${prod.name}</div>
-                                <div class="desc">${prod.desc || ''}</div>
-                            </div>
-                            <div>
-                                <div class="price">দাম: ৳${prod.price}</div>
-                                <button class="order-btn" onclick="order('${prod.name}', ${prod.price})">অর্ডার করুন</button>
-                            </div>
+                data.forEach(p => {
+                    grid.innerHTML += `
+                        <div class="card">
+                            <img src="${p.img || 'https://via.placeholder.com/150'}">
+                            <div class="title">${p.name}</div>
+                            <div class="price">৳${p.price}</div>
+                            <button class="btn" onclick="order('${p.name}', ${p.price})">অর্ডার করুন</button>
                         </div>
                     `;
                 });
-            } catch (err) {
-                document.getElementById('mainProductList').innerHTML = "<p class='loading-text' style='color:red;'>ডাটা লোড করতে সমস্যা হয়েছে।</p>";
+            } catch(e) {
+                document.getElementById('products').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করা যায়নি।</p>";
             }
-        }
-
-        function changeImg(id, src) { document.getElementById(id).src = src; }
-
-        function openVipModal() { document.getElementById('vipModal').style.display = 'flex'; }
-        function closeVipModal() { document.getElementById('vipModal').style.display = 'none'; }
-
-        function submitVipForm() {
-            let name = document.getElementById('vipName').value;
-            let phone = document.getElementById('vipPhone').value;
-            let address = document.getElementById('vipAddress').value;
-
-            if(!name || !phone || !address) return alert("সবগুলো তথ্য প্রদান করুন।");
-
-            let msg = `হ্যালো, আমি VIP মেম্বারশিপ নিতে চাই।%0A👤 নাম: ${name}%0A📞 ফোন: ${phone}%0A🏠 ঠিকানা: ${address}`;
-            window.open(`https://wa.me/${myWhatsApp}?text=${msg}`, '_blank');
-            closeVipModal();
         }
 
         function order(name, price) {
-            let isVip = confirm("আপনি কি সহজ বাজারের VIP মেম্বার? (০.৯% ছাড় পাবেন)");
-            let finalPrice = price;
-            let vipTxt = "";
-
-            if(isVip) {
-                let discount = (price * 0.009).toFixed(2);
-                finalPrice = (price - discount).toFixed(2);
-                vipTxt = `%0A👑 VIP ছাড়: -৳${discount}`;
-            }
-
-            let msg = `হ্যালো, আমি একটি অর্ডার করতে চাই:%0A📦 পণ্য: ${name}%0Aমূল দাম: ৳${price}${vipTxt}%0A💰 বিল: ৳${finalPrice}`;
-            window.open(`https://wa.me/${myWhatsApp}?text=${msg}`, '_blank');
+            let msg = `হ্যালো, আমি এটি অর্ডার করতে চাই:%0Aপণ্য: ${name}%0Aদাম: ৳${price}`;
+            window.open(`https://wa.me/8801?text=${msg}`, '_blank');
         }
 
-        fetchProducts();
+        loadProducts();
     </script>
 </body>
 </html>
