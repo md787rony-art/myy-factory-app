@@ -3,160 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সহজ বাজার - অ্যাডমিন প্যানেল</title>
+    <title>সহজ বাজার - অ্যাডমিন কন্ট্রোল</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #e8f5e9; padding: 20px; color: #333; }
-        .admin-box { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { color: #1b5e20; margin-bottom: 10px; text-align: center; }
-        p.subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }
-        
-        .item-form { background: #f9f9f9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .item-header h3 { color: #2e7d32; font-size: 16px; }
-        
-        .input-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-        .input-group div { flex: 1; min-width: 180px; }
-        label { display: block; font-size: 12px; color: #555; margin-bottom: 4px; font-weight: bold; }
-        input { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-        
-        .img-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
-        
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .add-btn { background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; flex: 1; }
-        .save-all-btn { background: #ff9800; color: white; padding: 15px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; flex: 2; }
-        .save-all-btn:hover { background: #e65100; }
-        .delete-btn { background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #e8f5e9; padding: 15px; color: #333; }
+        .admin-box { max-width: 700px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1b5e20; text-align: center; font-size: 20px; margin-bottom: 15px; }
+        .item-form { background: #f9f9f9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .input-group { margin-bottom: 10px; }
+        label { display: block; font-size: 12px; margin-bottom: 3px; font-weight: bold; }
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .add-btn { background: #2e7d32; color: white; padding: 10px; border: none; border-radius: 5px; flex: 1; cursor: pointer; font-weight: bold; }
+        .save-btn { background: #ff9800; color: white; padding: 12px; border: none; border-radius: 5px; flex: 2; cursor: pointer; font-weight: bold; }
+        .delete-btn { background: #d32f2f; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; float: right; font-size: 12px; }
     </style>
 </head>
 <body>
 
     <div class="admin-box">
-        <h1>⚙️ সহজ বাজার - অ্যাডমিন কন্ট্রোল প্যানেল</h1>
-        <p class="subtitle">এখান থেকে পণ্যের নাম, দাম বা ছবি পরিবর্তন করে নিচে সেভ দিন। মেইন ওয়েবসাইটে সঙ্গে সঙ্গে আপডেট হবে!</p>
-
-        <div id="adminItemsContainer">
-            <p style="text-align: center;">অ্যাডমিন ডাটা লোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন।</p>
-        </div>
+        <h1>⚙️ সহজ বাজার - অ্যাডমিন কন্ট্রোল</h1>
+        <div id="itemList"><p style="text-align:center;">ডাটা লোড হচ্ছে...</p></div>
 
         <div class="btn-group">
-            <button class="add-btn" onclick="addNewProductField()">➕ নতুন পণ্য যোগ করুন</button>
-            <button class="save-all-btn" onclick="saveDataToMainSite()">💾 মেইন ওয়েবসাইটে আপডেট সেভ করুন</button>
+            <button class="add-btn" onclick="addNewProduct()">➕ নতুন পণ্য যোগ করুন</button>
+            <button class="save-btn" onclick="saveData()">💾 সাইটে আপডেট সেভ করুন</button>
         </div>
     </div>
 
     <script>
-        // 🔑 আপনার JSONBin লিঙ্ক এবং মাস্টার কি
-        const BIN_ID = "66f3e1f0e41b4d34e4f71a02"; // আপনার তৈরি করা Bin ID
-        const MASTER_KEY = "$2a$10$v7gWJ0m...YOUR_MASTER_KEY_HERE"; // আপনার Master Key
-        
-        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        // আপনার ফ্রি রেডিমেড ডাটাবেজ লিংক (কোনো আইডি বা কি লাগবে না)
+        const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
 
-        let currentProducts = [];
+        let products = [];
 
-        // ডাটা লোড করার ফাংশন
-        async function loadAdminData() {
+        async function loadData() {
             try {
-                let res = await fetch(`${API_URL}/latest`, {
-                    headers: { 'X-Master-Key': MASTER_KEY }
-                });
-                let data = await res.json();
-                currentProducts = data.record;
-                renderAdminList();
-            } catch (err) {
-                console.error("Error loading data:", err);
-                document.getElementById('adminItemsContainer').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করতে সমস্যা হচ্ছে। API Key চেক করুন।</p>";
+                let res = await fetch(DB_URL);
+                products = await res.json();
+                render();
+            } catch(e) {
+                document.getElementById('itemList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড হয়নি। সংযোগ চেক করুন।</p>";
             }
         }
 
-        // অ্যাডমিন ফর্ম রেন্ডার করা
-        function renderAdminList() {
-            let container = document.getElementById('adminItemsContainer');
-            container.innerHTML = "";
-
-            currentProducts.forEach((item, index) => {
-                container.innerHTML += `
+        function render() {
+            let list = document.getElementById('itemList');
+            list.innerHTML = "";
+            products.forEach((p, i) => {
+                list.innerHTML += `
                     <div class="item-form">
-                        <div class="item-header">
-                            <h3>পণ্য #${index + 1}</h3>
-                            <button class="delete-btn" onclick="deleteProduct(${index})">মুছে ফেলুন (Delete)</button>
+                        <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
+                        <div class="input-group">
+                            <label>পণ্যের নাম:</label>
+                            <input type="text" id="name-${i}" value="${p.name || ''}">
                         </div>
                         <div class="input-group">
-                            <div>
-                                <label>পণ্যের নাম:</label>
-                                <input type="text" value="${item.name || ''}" id="name-${index}">
-                            </div>
-                            <div>
-                                <label>দাম (৳):</label>
-                                <input type="number" value="${item.price || 0}" id="price-${index}">
-                            </div>
-                            <div>
-                                <label>ছোট বিবরণ:</label>
-                                <input type="text" value="${item.desc || ''}" id="desc-${index}">
-                            </div>
+                            <label>দাম (৳):</label>
+                            <input type="number" id="price-${i}" value="${p.price || 0}">
                         </div>
-                        <label>ছবিগুলোর লিংক (৪টি পর্যন্ত দেওয়া যাবে):</label>
-                        <div class="img-grid">
-                            <input type="text" placeholder="ছবি ১ লিংক" value="${item.img1 || ''}" id="img1-${index}">
-                            <input type="text" placeholder="ছবি ২ লিংক" value="${item.img2 || ''}" id="img2-${index}">
-                            <input type="text" placeholder="ছবি ৩ লিংক" value="${item.img3 || ''}" id="img3-${index}">
-                            <input type="text" placeholder="ছবি ৪ লিংক" value="${item.img4 || ''}" id="img4-${index}">
+                        <div class="input-group">
+                            <label>ছবি লিংক:</label>
+                            <input type="text" id="img-${i}" value="${p.img || ''}">
                         </div>
                     </div>
                 `;
             });
         }
 
-        // নতুন খালি পণ্য আইটেম যোগ
-        function addNewProductField() {
-            currentProducts.push({ name: "", price: 0, desc: "", img1: "", img2: "", img3: "", img4: "" });
-            renderAdminList();
+        function addNewProduct() {
+            products.push({ name: "নতুন পণ্য", price: 0, img: "" });
+            render();
         }
 
-        // পণ্য আইটেম ডিলিট
-        function deleteProduct(index) {
-            if(confirm("আপনি কি নিশ্চিত এই পণ্যটি মুছে ফেলতে চান?")) {
-                currentProducts.splice(index, 1);
-                renderAdminList();
-            }
+        function removeProduct(i) {
+            products.splice(i, 1);
+            render();
         }
 
-        // মেইন ওয়েবসাইটে ডাটা সেভ করার ফাংশন
-        async function saveDataToMainSite() {
-            let updatedList = currentProducts.map((item, index) => {
-                return {
-                    id: index + 1,
-                    name: document.getElementById(`name-${index}`).value,
-                    price: parseFloat(document.getElementById(`price-${index}`).value) || 0,
-                    desc: document.getElementById(`desc-${index}`).value,
-                    img1: document.getElementById(`img1-${index}`).value,
-                    img2: document.getElementById(`img2-${index}`).value,
-                    img3: document.getElementById(`img3-${index}`).value,
-                    img4: document.getElementById(`img4-${index}`).value
-                };
-            });
+        async function saveData() {
+            let updated = products.map((p, i) => ({
+                name: document.getElementById(`name-${i}`).value,
+                price: parseFloat(document.getElementById(`price-${i}`).value) || 0,
+                img: document.getElementById(`img-${i}`).value
+            }));
 
             try {
-                let res = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': MASTER_KEY
-                    },
-                    body: JSON.stringify(updatedList)
+                let res = await fetch(DB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updated)
                 });
-
-                if(res.ok) {
-                    alert("🎉 সফলভাবে সেভ হয়েছে! মেইন ওয়েবসাইটে সাথে সাথে আপডেট হয়ে গেছে।");
-                } else {
-                    alert("সেভ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-                }
-            } catch (err) {
-                alert("নেটওয়ার্ক সমস্যা! সেভ করা সম্ভব হয়নি।");
+                if(res.ok) alert("✅ সফলভাবে সেভ হয়েছে!");
+                else alert("❌ সেভ করা যায়নি।");
+            } catch(e) {
+                alert("❌ নেটওয়ার্ক ত্রুটি!");
             }
         }
 
-        loadAdminData();
+        loadData();
     </script>
 </body>
 </html>
