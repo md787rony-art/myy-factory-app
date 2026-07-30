@@ -8,30 +8,26 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f6f8; color: #333; padding: 15px; }
         
-        .admin-container { max-width: 800px; margin: 20px auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #ddd; }
-        
-        /* Header */
+        .admin-container { max-width: 650px; margin: 0 auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #ddd; }
         .admin-header { background: #1b5e20; color: white; padding: 15px; border-radius: 8px; text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; }
         
-        /* Product Item Card */
         .product-item { background: #f9f9f9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; }
         .input-group { margin-bottom: 10px; }
         .input-group label { display: block; font-size: 13px; font-weight: bold; color: #2e7d32; margin-bottom: 5px; }
         .input-group input, .input-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
         
-        .preview-img { width: 100px; height: 70px; object-fit: cover; border-radius: 5px; margin-top: 5px; border: 1px solid #ccc; display: block; }
+        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 5px; border: 1px solid #ccc; display: block; }
         
-        /* Buttons */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .add-btn { background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 5px; flex: 1; cursor: pointer; font-weight: bold; font-size: 15px; }
-        .save-btn { background: #ff9800; color: white; padding: 12px; border: none; border-radius: 5px; flex: 2; cursor: pointer; font-weight: bold; font-size: 15px; }
+        .add-btn { background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 5px; flex: 1; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .save-btn { background: #ff9800; color: white; padding: 12px; border: none; border-radius: 5px; flex: 2; cursor: pointer; font-weight: bold; font-size: 14px; }
         .delete-btn { background: #d32f2f; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; float: right; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <div class="admin-header">⚙️ সহজ বাজার - প্রোডাক্ট অ্যাডমিন প্যানেল</div>
+        <div class="admin-header">⚙️ সহজ বাজার - অ্যাডমিন প্যানেল</div>
         
         <div id="productList">
             <p style="text-align:center;">ডাটা লোড হচ্ছে...</p>
@@ -47,18 +43,18 @@
         const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
         let products = [];
 
-        // ডাটাবেজ থেকে পণ্য লোড করা
         async function loadData() {
             try {
                 let res = await fetch(DB_URL);
                 products = await res.json();
+                if (!Array.isArray(products)) products = [];
                 render();
             } catch(e) {
-                document.getElementById('productList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড হয়নি। পেজ রিফ্রেশ দিন।</p>";
+                products = [];
+                render();
             }
         }
 
-        // অ্যাডমিন স্ক্রিনে পণ্যগুলো দেখানো
         function render() {
             let list = document.getElementById('productList');
             list.innerHTML = "";
@@ -68,27 +64,27 @@
                         <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
                         <div class="input-group">
                             <label>পণ্যের নাম:</label>
-                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: ডায়মন্ড আলু (১ কেজি)">
+                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: বেগুন">
                         </div>
                         <div class="input-group">
                             <label>বিবরণ:</label>
-                            <textarea id="desc-${i}" rows="2" placeholder="পণ্যের সংক্ষিপ্ত বিবরণ">${p.desc || ''}</textarea>
+                            <textarea id="desc-${i}" rows="2" placeholder="সংক্ষিপ্ত বিবরণ">${p.desc || ''}</textarea>
                         </div>
                         <div class="input-group">
                             <label>দাম (৳):</label>
                             <input type="number" id="price-${i}" value="${p.price || 0}">
                         </div>
                         <div class="input-group">
-                            <label>গ্যালারি থেকে ছবি বেছে নিন:</label>
+                            <label>ছবি বেছে নিন (মোবাইল গ্যালারি):</label>
                             <input type="file" accept="image/*" onchange="handleImageUpload(event, ${i})">
-                            <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/100x70?text=No+Image'}">
+                            <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/80?text=No+Image'}">
                         </div>
                     </div>
                 `;
             });
         }
 
-        // গ্যালারি থেকে ছবি নিয়ে সাইজ ছোট করা
+        // সুপার-লাইট ইমেজ কমপ্রেসর (খুবই হালকা সাইজ করবে)
         function handleImageUpload(event, index) {
             const file = event.target.files[0];
             if (!file) return;
@@ -98,14 +94,22 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
+                    
+                    // সর্বোচ্চ ১৫০ পিক্সেল সাইজ
+                    const MAX_SIZE = 150;
                     let width = img.width;
                     let height = img.height;
 
-                    // ছবির সাইজ ৩০০ পিক্সেল করে হালকা করা যেন সেভ হতে কোনো সমস্যা না হয়
-                    const MAX_WIDTH = 300;
-                    if (width > MAX_WIDTH) {
-                        height = Math.round((height * MAX_WIDTH) / width);
-                        width = MAX_WIDTH;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
                     }
 
                     canvas.width = width;
@@ -113,7 +117,9 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                    // কোয়ালিটি ০.৪ (মাত্র ২০ KB তে নেমে আসবে)
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
+                    
                     products[index].img = compressedDataUrl;
                     document.getElementById(`preview-${index}`).src = compressedDataUrl;
                 };
@@ -132,7 +138,6 @@
             render();
         }
 
-        // সাইটে ডাটা আপডেট করার ফাংশন
         async function saveData() {
             products.forEach((p, i) => {
                 p.name = document.getElementById(`name-${i}`).value;
@@ -146,8 +151,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(products)
                 });
-                if(res.ok) alert("✅ সফলভাবে সাইটে নতুন পণ্য ও দাম আপডেট হয়েছে!");
-                else alert("❌ সেভ করা যায়নি। আবার চেষ্টা করুন।");
+                
+                if(res.ok) {
+                    alert("✅ সফলভাবে সেভ হয়েছে!");
+                } else {
+                    alert("❌ সেভ করা যায়নি। অতিরিক্ত ডাটা থাকার কারণে সমস্যা হচ্ছে। ১/২টি পণ্য মুছে আবার চেষ্টা করুন।");
+                }
             } catch(e) {
                 alert("❌ নেটওয়ার্ক ত্রুটি!");
             }
