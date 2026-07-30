@@ -17,7 +17,8 @@
         .input-group input, .input-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
         
         .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 5px; border: 1px solid #ccc; display: block; }
-        
+        .upload-status { font-size: 12px; color: #ff9800; font-weight: bold; margin-top: 5px; }
+
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
         .add-btn { background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 5px; flex: 1; cursor: pointer; font-weight: bold; font-size: 14px; }
         .save-btn { background: #ff9800; color: white; padding: 12px; border: none; border-radius: 5px; flex: 2; cursor: pointer; font-weight: bold; font-size: 14px; }
@@ -41,6 +42,7 @@
 
     <script>
         const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
+        const IMGBB_API_KEY = "3c3f25c798991dcdb21c4b7ec82efec7"; // Free Image Hosting Key
         let products = [];
 
         async function loadData() {
@@ -56,7 +58,7 @@
         }
 
         function render() {
-            let list = document.getElementById('productList');
+            let list = document.getElementById('itemList') || document.getElementById('productList');
             list.innerHTML = "";
             products.forEach((p, i) => {
                 list.innerHTML += `
@@ -64,7 +66,7 @@
                         <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
                         <div class="input-group">
                             <label>পণ্যের নাম:</label>
-                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: বেগুন">
+                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: দেশি বেগুন">
                         </div>
                         <div class="input-group">
                             <label>বিবরণ:</label>
@@ -76,7 +78,8 @@
                         </div>
                         <div class="input-group">
                             <label>ছবি বেছে নিন (মোবাইল গ্যালারি):</label>
-                            <input type="file" accept="image/*" onchange="handleImageUpload(event, ${i})">
+                            <input type="file" accept="image/*" onchange="uploadImageToCloud(event, ${i})">
+                            <div id="status-${i}" class="upload-status"></div>
                             <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/80?text=No+Image'}">
                         </div>
                     </div>
@@ -84,48 +87,38 @@
             });
         }
 
-        // সুপার-লাইট ইমেজ কমপ্রেসর (খুবই হালকা সাইজ করবে)
-        function handleImageUpload(event, index) {
+        // ক্লাউড সার্ভারে ছবি আপলোড করে ইউআরএল নেওয়ার ফাংশন
+        async function uploadImageToCloud(event, index) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    
-                    // সর্বোচ্চ ১৫০ পিক্সেল সাইজ
-                    const MAX_SIZE = 150;
-                    let width = img.width;
-                    let height = img.height;
+            let statusBox = document.getElementById(`status-${index}`);
+            statusBox.innerText = "⏳ ছবি আপলোড হচ্ছে, অপেক্ষা করুন...";
 
-                    if (width > height) {
-                        if (width > MAX_SIZE) {
-                            height *= MAX_SIZE / width;
-                            width = MAX_SIZE;
-                        }
-                    } else {
-                        if (height > MAX_SIZE) {
-                            width *= MAX_SIZE / height;
-                            height = MAX_SIZE;
-                        }
-                    }
+            let formData = new FormData();
+                formData.append("image", file);
 
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
+            try {
+                let response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST",
+                    body: formData
+                });
+                let result = await response.json();
 
-                    // কোয়ালিটি ০.৪ (মাত্র ২০ KB তে নেমে আসবে)
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
-                    
-                    products[index].img = compressedDataUrl;
-                    document.getElementById(`preview-${index}`).src = compressedDataUrl;
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+                if (result.success) {
+                    let imageUrl = result.data.url;
+                    products[index].img = imageUrl;
+                    document.getElementById(`preview-${index}`).src = imageUrl;
+                    statusBox.style.color = "#2e7d32";
+                    statusBox.innerText = "✅ ছবি সফলভাবে যুক্ত হয়েছে!";
+                } else {
+                    statusBox.style.color = "red";
+                    statusBox.innerText = "❌ ছবি আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
+                }
+            } catch (e) {
+                statusBox.style.color = "red";
+                statusBox.innerText = "❌ নেটওয়ার্ক এরর!";
+            }
         }
 
         function addNewProduct() {
@@ -153,9 +146,9 @@
                 });
                 
                 if(res.ok) {
-                    alert("✅ সফলভাবে সেভ হয়েছে!");
+                    alert("✅ পণ্য ও ছবি সফলভাবে সাইটে আপডেট সেভ হয়েছে!");
                 } else {
-                    alert("❌ সেভ করা যায়নি। অতিরিক্ত ডাটা থাকার কারণে সমস্যা হচ্ছে। ১/২টি পণ্য মুছে আবার চেষ্টা করুন।");
+                    alert("❌ সেভ করা যায়নি। নেটওয়ার্ক চেক করুন।");
                 }
             } catch(e) {
                 alert("❌ নেটওয়ার্ক ত্রুটি!");
