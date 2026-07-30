@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সহজ বাজার</title>
+    <title>সহজ বাজার - তাজা শাকসবজি ও গ্রোসারি</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #f4f6f8; }
-        nav { background: #2e7d32; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
-        .container { max-width: 800px; margin: 20px auto; padding: 0 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .card { background: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; text-align: center; }
-        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 5px; }
-        .title { font-weight: bold; color: #2e7d32; margin: 8px 0; }
-        .price { color: #d32f2f; font-weight: bold; margin-bottom: 8px; }
-        .btn { background: #25d366; color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        header { background: #2e7d32; color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .card { background: white; padding: 12px; border-radius: 10px; border: 1px solid #e0e0e0; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; }
+        .title { font-weight: bold; color: #1b5e20; font-size: 16px; margin-bottom: 5px; }
+        .price { color: #d32f2f; font-weight: bold; font-size: 15px; margin-bottom: 10px; }
+        .btn { background: #25d366; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #1eb954; }
     </style>
 </head>
 <body>
 
-    <nav>🛒 সহজ বাজার</nav>
+    <header>🥦 সহজ বাজার</header>
 
     <div class="container">
         <div class="grid" id="products"><p style="text-align:center; grid-column:1/-1;">পণ্য লোড হচ্ছে...</p></div>
@@ -35,24 +36,33 @@
                 let grid = document.getElementById('products');
                 grid.innerHTML = "";
 
+                if(!data || data.length === 0) {
+                    grid.innerHTML = "<p style='text-align:center; grid-column:1/-1;'>কোনো পণ্য খুঁজে পাওয়া যায়নি।</p>";
+                    return;
+                }
+
                 data.forEach(p => {
+                    let imageSrc = p.img || 'https://via.placeholder.com/150?text=No+Photo';
                     grid.innerHTML += `
                         <div class="card">
-                            <img src="${p.img || 'https://via.placeholder.com/150'}">
-                            <div class="title">${p.name}</div>
-                            <div class="price">৳${p.price}</div>
+                            <div>
+                                <img src="${imageSrc}" alt="${p.name}">
+                                <div class="title">${p.name || 'বেনামী পণ্য'}</div>
+                                <div class="price">৳${p.price || 0}</div>
+                            </div>
                             <button class="btn" onclick="order('${p.name}', ${p.price})">অর্ডার করুন</button>
                         </div>
                     `;
                 });
             } catch(e) {
-                document.getElementById('products').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করা যায়নি।</p>";
+                document.getElementById('products').innerHTML = "<p style='color:red; text-align:center; grid-column:1/-1;'>ডাটা লোড করা যায়নি।</p>";
             }
         }
 
         function order(name, price) {
-            let msg = `হ্যালো, আমি এটি অর্ডার করতে চাই:%0Aপণ্য: ${name}%0Aদাম: ৳${price}`;
-            window.open(`https://wa.me/8801?text=${msg}`, '_blank');
+            let phone = "8801610112370"; // আপনার হোয়াটসঅ্যাপ নম্বর
+            let msg = `হ্যালো, আমি সহজ বাজার থেকে অর্ডার করতে চাই:%0A📌 পণ্য: ${name}%0A💰 দাম: ৳${price}`;
+            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
 
         loadProducts();
