@@ -5,193 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>সহজ বাজার - আপনার বাসার তাজা বাজার</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f8; color: #333; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f4f6f8; color: #333; }
         
-        /* Navigation */
-        nav { background: #2e7d32; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; sticky: top; }
+        nav { background: #2e7d32; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .logo { font-size: 22px; font-weight: bold; }
-        .vip-badge-btn { background: #ff9800; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 14px; cursor: pointer; border: none; }
-        
-        /* Hero Banner */
-        .hero { background: #e8f5e9; text-align: center; padding: 30px 15px; border-bottom: 2px solid #c8e6c9; }
-        .hero h1 { color: #1b5e20; margin-bottom: 8px; }
-        
-        /* Container */
+        .vip-btn { background: #ff9800; color: white; padding: 8px 15px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; }
+
         .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+        .section-title { font-size: 20px; color: #2e7d32; margin-bottom: 20px; border-bottom: 2px solid #2e7d32; display: inline-block; padding-bottom: 4px; }
 
         /* Products Grid */
-        .section-title { font-size: 20px; color: #2e7d32; margin-bottom: 15px; border-bottom: 2px solid #2e7d32; display: inline-block; padding-bottom: 5px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border: 1px solid #ddd; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
         
-        .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border: 1px solid #ddd; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-img { width: 100%; height: 160px; object-fit: cover; background-color: #eee; }
-        .product-info { padding: 15px; }
-        .product-title { font-size: 18px; color: #2e7d32; font-weight: bold; }
-        .product-desc { font-size: 13px; color: #666; margin: 5px 0 10px 0; height: 38px; overflow: hidden; }
-        .price-tag { font-size: 16px; font-weight: bold; color: #d32f2f; margin-bottom: 10px; }
-        .order-btn { background: #25d366; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .main-img { width: 100%; height: 170px; object-fit: cover; border-radius: 6px; background-color: #eee; }
+        .thumb-gallery { display: flex; gap: 5px; margin-top: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .thumb-img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #ccc; }
+        .thumb-img:hover { border-color: #2e7d32; }
 
-        /* Modal / VIP Form */
+        .title { font-size: 18px; color: #2e7d32; font-weight: bold; margin-top: 10px; }
+        .desc { font-size: 13px; color: #666; margin: 5px 0; height: 36px; overflow: hidden; }
+        .price { font-size: 16px; font-weight: bold; color: #d32f2f; margin-bottom: 10px; }
+        
+        .order-btn { background: #25d366; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; }
+        .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; }
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; margin-bottom: 4px; }
         .form-group input, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
         .submit-btn { background: #ff9800; color: white; padding: 10px; border: none; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; }
 
-        /* Checkout VIP Status Bar */
-        .status-box { background: #fff3e0; border: 1px solid #ffe0b2; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-
-        footer { text-align: center; padding: 15px; background: #1b5e20; color: white; margin-top: 30px; font-size: 13px; }
+        .loading-text { text-align: center; font-size: 16px; color: #666; grid-column: 1 / -1; padding: 40px; }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <nav>
         <div class="logo">🛒 সহজ বাজার</div>
-        <button class="vip-badge-btn" onclick="openVipModal()">👑 VIP মেম্বারশিপ (৳৫০/মাস)</button>
+        <button class="vip-btn" onclick="openVipModal()">👑 VIP মেম্বারশিপ (৳৫০/মাস)</button>
     </nav>
 
-    <!-- Banner -->
-    <div class="hero">
-        <h1>বাজারের ঝক্কি আর না!</h1>
-        <p>সকালে আপনার দরজায় পৌঁছে যাবে একদম তাজা কাঁচাবাজার</p>
-    </div>
-
     <div class="container">
-        
-        <!-- Status Notification -->
-        <div class="status-box">
-            💡 <b>VIP কাস্টমারদের জন্য সুবিধা:</b> মোবাইল নম্বর দিয়ে অর্ডার করার সময় অটোমেটিক <b>০.৯% ছাড়</b> এবং <b>জিরো অগ্রিম পেমেন্ট (COD)</b> প্রযোজ্য হবে!
-        </div>
-
         <h2 class="section-title">🥦 তাজা শাকসবজি ও গ্রোসারি</h2>
-
-        <!-- Product List Grid -->
-        <div class="product-grid">
-
-            <!-- Item 1: আলু -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা (src="আলুর ছবির লিংক") -->
-                <img src="https://via.placeholder.com/250x160?text=Potato+Image" alt="আলু" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">ডায়মন্ড আলু (১ কেজি)</div>
-                    <div class="product-desc">একদম তাজা ও পরিষ্কার ডায়মন্ড আলু, রান্নার জন্য সেরা।</div>
-                    <div class="price-tag">দাম: ৳৩০</div>
-                    <button class="order-btn" onclick="processOrder('ডায়মন্ড আলু', 30)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 2: বেগুন -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Brinjal+Image" alt="বেগুন" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">গোল বেগুন (১ কেজি)</div>
-                    <div class="product-desc">নরম ও টাটকা বেগুন, ভাজি বা ভর্তার জন্য উপযোগী।</div>
-                    <div class="price-tag">দাম: ৳৬০</div>
-                    <button class="order-btn" onclick="processOrder('গোল বেগুন', 60)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 3: টমেটো -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Tomato+Image" alt="টমেটো" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">দেশি টমেটো (১ কেজি)</div>
-                    <div class="product-desc">পাকা ও লাল টমেটো সরাসরি বাগান থেকে সংগৃহীত।</div>
-                    <div class="price-tag">দাম: ৳৮০</div>
-                    <button class="order-btn" onclick="processOrder('দেশি টমেটো', 80)">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- Item 4: পেঁয়াজ -->
-            <div class="product-card">
-                <!-- ছবি বসানোর জায়গা -->
-                <img src="https://via.placeholder.com/250x160?text=Onion+Image" alt="পেঁয়াজ" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">দেশি পেঁয়াজ (১ কেজি)</div>
-                    <div class="product-desc">ভালো মানের শুকনা দেশি পেঁয়াজ।</div>
-                    <div class="price-tag">দাম: ৳৫৫</div>
-                    <button class="order-btn" onclick="processOrder('দেশি পেঁয়াজ', 55)">অর্ডার করুন</button>
-                </div>
-            </div>
-
+        <div class="product-grid" id="mainProductList">
+            <div class="loading-text">অ্যাডমিন ডাটা থেকে পণ্য লোড হচ্ছে...</div>
         </div>
     </div>
 
     <!-- VIP Registration Modal -->
     <div class="modal" id="vipModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeVipModal()">&times;</span>
-            <h3 style="color: #ff9800; margin-bottom: 10px;">👑 VIP মেম্বারশিপ রেজিস্ট্রেশন</h3>
-            <p style="font-size: 12px; margin-bottom: 15px; color: #555;">মাসিক ৳৫০ টাকায় পান জিরো এডভান্স পেমেন্ট ও প্রতি অর্ডারে ০.৯% ছাড়!</p>
-            
-            <div class="form-group">
-                <label>আপনার নাম:</label>
-                <input type="text" id="vipName" placeholder="আপনার নাম লিখুন">
-            </div>
-            <div class="form-group">
-                <label>মোবাইল নম্বর (WhatsApp):</label>
-                <input type="text" id="vipPhone" placeholder="017XXXXXXXX">
-            </div>
-            <div class="form-group">
-                <label>বাসার পূর্ণাঙ্গ ঠিকানা:</label>
-                <textarea id="vipAddress" rows="2" placeholder="রোড, বাসা নং, এলাকা"></textarea>
-            </div>
-            
-            <button class="submit-btn" onclick="submitVipForm()">৳৫০ দিয়ে VIP আবেদন করুন</button>
+            <h3 style="color: #ff9800; margin-bottom: 10px;">👑 VIP মেম্বারশিপ আবেদন</h3>
+            <p style="font-size: 12px; margin-bottom: 15px;">মাসিক ৳৫০ টাকায় পান জিরো এডভান্স পেমেন্ট ও ০.৯% ছাড়!</p>
+
+            <div class="form-group"><label>আপনার নাম:</label><input type="text" id="vipName"></div>
+            <div class="form-group"><label>মোবাইল নম্বর:</label><input type="text" id="vipPhone"></div>
+            <div class="form-group"><label>ঠিকানা:</label><textarea id="vipAddress" rows="2"></textarea></div>
+
+            <button class="submit-btn" onclick="submitVipForm()">আবেদন জমা দিন</button>
+            <button onclick="closeVipModal()" style="margin-top: 10px; background: none; border: none; color: #777; cursor: pointer;">বন্ধ করুন</button>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 সহজ বাজার | হেল্পলাইন: 01610112370</p>
-    </footer>
-
-    <!-- JavaScript Engine -->
     <script>
         const myWhatsApp = "8801610112370";
+        
+        // 🔑 আপনার JSONBin লিঙ্ক
+        const BIN_ID = "66f3e1f0e41b4d34e4f71a02"; // আপনার তৈরি করা Bin ID
+        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
-        // VIP Modal Controls
+        async function fetchProducts() {
+            try {
+                let res = await fetch(API_URL);
+                let data = await res.json();
+                let products = data.record;
+
+                let container = document.getElementById('mainProductList');
+                container.innerHTML = "";
+
+                products.forEach((prod, index) => {
+                    let imgs = [prod.img1, prod.img2, prod.img3, prod.img4].filter(i => i && i.trim() !== "");
+                    let mainImg = imgs.length > 0 ? imgs[0] : "https://via.placeholder.com/250x170?text=No+Image";
+
+                    let thumbsHtml = "";
+                    if(imgs.length > 1) {
+                        thumbsHtml = `<div class="thumb-gallery">` + 
+                            imgs.map(img => `<img src="${img}" class="thumb-img" onclick="changeImg('img-${index}', '${img}')">`).join('') +
+                            `</div>`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="product-card">
+                            <div>
+                                <img src="${mainImg}" id="img-${index}" class="main-img">
+                                ${thumbsHtml}
+                                <div class="title">${prod.name}</div>
+                                <div class="desc">${prod.desc || ''}</div>
+                            </div>
+                            <div>
+                                <div class="price">দাম: ৳${prod.price}</div>
+                                <button class="order-btn" onclick="order('${prod.name}', ${prod.price})">অর্ডার করুন</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('mainProductList').innerHTML = "<p class='loading-text' style='color:red;'>ডাটা লোড করতে সমস্যা হয়েছে।</p>";
+            }
+        }
+
+        function changeImg(id, src) { document.getElementById(id).src = src; }
+
         function openVipModal() { document.getElementById('vipModal').style.display = 'flex'; }
         function closeVipModal() { document.getElementById('vipModal').style.display = 'none'; }
 
-        // VIP Reg Submission
         function submitVipForm() {
             let name = document.getElementById('vipName').value;
             let phone = document.getElementById('vipPhone').value;
             let address = document.getElementById('vipAddress').value;
 
-            if(!name || !phone || !address) {
-                alert("দয়া করে আপনার নাম, মোবাইল নম্বর এবং ঠিকানা পূরণ করুন।");
-                return;
-            }
+            if(!name || !phone || !address) return alert("সবগুলো তথ্য প্রদান করুন।");
 
-            let message = `হ্যালো সহজ বাজার, আমি VIP মেম্বারশিপ (৳৫০/মাসিক) নিতে চাই।%0A%0A👤 নাম: ${name}%0A📞 ফোন নম্বর: ${phone}%0A🏠 ঠিকানা: ${address}%0A%0Aআমি বিকাশে ৫০ টাকা ফি পরিশোধ করতে প্রস্তুত।`;
-            window.open(`https://wa.me/${myWhatsApp}?text=${message}`, '_blank');
+            let msg = `হ্যালো, আমি VIP মেম্বারশিপ নিতে চাই।%0A👤 নাম: ${name}%0A📞 ফোন: ${phone}%0A🏠 ঠিকানা: ${address}`;
+            window.open(`https://wa.me/${myWhatsApp}?text=${msg}`, '_blank');
             closeVipModal();
         }
 
-        // Order Process with VIP Choice
-        function processOrder(itemName, itemPrice) {
-            let isVip = confirm("আপনি কি সহজ বাজারের VIP মেম্বার?\n(VIP মেম্বারদের জন্য ০.৯% ছাড় এবং জিরো এডভান্স পেমেন্ট সুবিধা রয়েছে!)");
-            
-            let finalPrice = itemPrice;
-            let vipDiscountText = "";
+        function order(name, price) {
+            let isVip = confirm("আপনি কি সহজ বাজারের VIP মেম্বার? (০.৯% ছাড় পাবেন)");
+            let finalPrice = price;
+            let vipTxt = "";
 
             if(isVip) {
-                let discount = (itemPrice * 0.009).toFixed(2); // 0.9% Discount Calculation
-                finalPrice = (itemPrice - discount).toFixed(2);
-                vipDiscountText = `%0A👑 VIP ছাড় (0.9%): -৳${discount}`;
+                let discount = (price * 0.009).toFixed(2);
+                finalPrice = (price - discount).toFixed(2);
+                vipTxt = `%0A👑 VIP ছাড়: -৳${discount}`;
             }
 
-            let orderMessage = `হ্যালো, আমি একটি অর্ডার করতে চাই:%0A%0A📦 পণ্য: ${itemName}%0Aমূল দাম: ৳${itemPrice}${vipDiscountText}%0A💰 চূড়ান্ত বিল: ৳${finalPrice}%0A%0Aদয়া করে আমার অর্ডারের বাকি তথ্য ও ঠিকানা নিন।`;
-            window.open(`https://wa.me/${myWhatsApp}?text=${orderMessage}`, '_blank');
+            let msg = `হ্যালো, আমি একটি অর্ডার করতে চাই:%0A📦 পণ্য: ${name}%0Aমূল দাম: ৳${price}${vipTxt}%0A💰 বিল: ৳${finalPrice}`;
+            window.open(`https://wa.me/${myWhatsApp}?text=${msg}`, '_blank');
         }
+
+        fetchProducts();
     </script>
 </body>
 </html>
