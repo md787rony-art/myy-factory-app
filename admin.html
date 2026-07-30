@@ -1,87 +1,119 @@
-<script>
-    // ফিক্সড ও স্থায়ী ডাটাবেজ লিংক
-    const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সহজ বাজার - অ্যাডমিন কন্ট্রোল</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #e8f5e9; padding: 15px; color: #333; }
+        .admin-box { max-width: 650px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #1b5e20; text-align: center; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #c8e6c9; padding-bottom: 10px; }
+        .item-form { background: #f9f9f9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative; }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; font-size: 13px; margin-bottom: 5px; font-weight: bold; color: #2e7d32; }
+        input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; }
+        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; margin-top: 8px; border: 1px solid #ddd; display: block; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .add-btn { background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; flex: 1; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .save-btn { background: #ff9800; color: white; padding: 12px; border: none; border-radius: 6px; flex: 2; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .delete-btn { background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; float: right; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-    let products = [];
+    <div class="admin-box">
+        <h1>⚙️ সহজ বাজার - অ্যাডমিন প্যানেল</h1>
+        <div id="itemList"><p style="text-align:center;">ডাটা লোড হচ্ছে...</p></div>
 
-    async function loadData() {
-        try {
-            let res = await fetch(DB_URL);
-            products = await res.json();
-            render();
-        } catch(e) {
-            document.getElementById('itemList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড হয়নি। পেজ রিফ্রেশ দিন।</p>";
-        }
-    }
+        <div class="btn-group">
+            <button class="add-btn" onclick="addNewProduct()">➕ নতুন পণ্য যোগ করুন</button>
+            <button class="save-btn" onclick="saveData()">💾 সাইটে আপডেট সেভ করুন</button>
+        </div>
+    </div>
 
-    function render() {
-        let list = document.getElementById('itemList');
-        list.innerHTML = "";
-        products.forEach((p, i) => {
-            list.innerHTML += `
-                <div class="item-form">
-                    <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
-                    <div class="input-group">
-                        <label>পণ্যের নাম:</label>
-                        <input type="text" id="name-${i}" value="${p.name || ''}">
-                    </div>
-                    <div class="input-group">
-                        <label>দাম (৳):</label>
-                        <input type="number" id="price-${i}" value="${p.price || 0}">
-                    </div>
-                    <div class="input-group">
-                        <label>ছবি লিংক (Direct Image URL):</label>
-                        <input type="text" id="img-${i}" value="${p.img || ''}" placeholder="https://i.ibb.co/.../photo.jpg">
-                    </div>
-                </div>
-            `;
-        });
-    }
+    <script>
+        const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
+        let products = [];
 
-    function addNewProduct() {
-        products.push({ name: "নতুন পণ্য", price: 0, img: "" });
-        render();
-    }
-
-    function removeProduct(i) {
-        products.splice(i, 1);
-        render();
-    }
-
-    async function saveData() {
-        // ইমেজ লিংক ফিল্টার করে শুধুমাত্র ডাইরেক্ট লিংক নেওয়া হচ্ছে
-        let updated = products.map((p, i) => {
-            let rawImg = document.getElementById(`img-${i}`).value.trim();
-            
-            // যদি ভুল করে পুরো HTML কোড পেস্ট করে থাকেন, তবে তা থেকে লিংক বের করে নিবে
-            if(rawImg.includes('src="')) {
-                let match = rawImg.match(/src="([^"]+)"/);
-                if(match && match[1]) rawImg = match[1];
+        async function loadData() {
+            try {
+                let res = await fetch(DB_URL);
+                products = await res.json();
+                render();
+            } catch(e) {
+                document.getElementById('itemList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করতে সমস্যা হয়েছে। পেজ রিফ্রেশ দিন।</p>";
             }
+        }
 
-            return {
-                name: document.getElementById(`name-${i}`).value,
-                price: parseFloat(document.getElementById(`price-${i}`).value) || 0,
-                img: rawImg
-            };
-        });
-
-        try {
-            let res = await fetch(DB_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updated)
+        function render() {
+            let list = document.getElementById('itemList');
+            list.innerHTML = "";
+            products.forEach((p, i) => {
+                list.innerHTML += `
+                    <div class="item-form">
+                        <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
+                        <div class="input-group">
+                            <label>পণ্যের নাম:</label>
+                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: বেগুন">
+                        </div>
+                        <div class="input-group">
+                            <label>দাম (৳):</label>
+                            <input type="number" id="price-${i}" value="${p.price || 0}">
+                        </div>
+                        <div class="input-group">
+                            <label>ছবি আপলোড করুন (মোবাইল থেকে বেছে নিন):</label>
+                            <input type="file" accept="image/*" onchange="handleImageUpload(event, ${i})">
+                            <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/80?text=No+Image'}">
+                        </div>
+                    </div>
+                `;
             });
-            if(res.ok) {
-                alert("✅ সফলভাবে সেভ হয়েছে!");
-                loadData();
-            } else {
-                alert("❌ সেভ করা যায়নি। লিংক চেক করুন।");
-            }
-        } catch(e) {
-            alert("❌ নেটওয়ার্ক সমস্যা! আবার চেষ্টা করুন।");
         }
-    }
 
-    loadData();
-</script>
+        function handleImageUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    products[index].img = e.target.result; // কনভার্ট হওয়া ছবি ডাটাতে সেভ
+                    document.getElementById(`preview-${index}`).src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addNewProduct() {
+            products.push({ name: "", price: 0, img: "" });
+            render();
+        }
+
+        function removeProduct(i) {
+            products.splice(i, 1);
+            render();
+        }
+
+        async function saveData() {
+            // ইনপুট বক্সের নাম ও দাম আপডেট
+            products.forEach((p, i) => {
+                p.name = document.getElementById(`name-${i}`).value;
+                p.price = parseFloat(document.getElementById(`price-${i}`).value) || 0;
+            });
+
+            try {
+                let res = await fetch(DB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(products)
+                });
+                if(res.ok) alert("✅ পণ্য ও ছবির ডাটা সফলভাবে সেভ হয়েছে!");
+                else alert("❌ সেভ করা যায়নি। ডাটার সাইজ বেশি হলে কম আকারের ছবি দিন।");
+            } catch(e) {
+                alert("❌ নেটওয়ার্ক ত্রুটি!");
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
