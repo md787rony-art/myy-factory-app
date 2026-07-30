@@ -42,7 +42,7 @@
                 products = await res.json();
                 render();
             } catch(e) {
-                document.getElementById('itemList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করতে সমস্যা হয়েছে। পেজ রিফ্রেশ দিন।</p>";
+                document.getElementById('itemList').innerHTML = "<p style='color:red; text-align:center;'>ডাটা লোড করতে সমস্যা হয়েছে। পেজ রিফ্রেশ দিন।</p>";
             }
         }
 
@@ -55,14 +55,14 @@
                         <button class="delete-btn" onclick="removeProduct(${i})">মুছে ফেলুন</button>
                         <div class="input-group">
                             <label>পণ্যের নাম:</label>
-                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: বেগুন">
+                            <input type="text" id="name-${i}" value="${p.name || ''}" placeholder="যেমন: দেশি বেগুন">
                         </div>
                         <div class="input-group">
                             <label>দাম (৳):</label>
                             <input type="number" id="price-${i}" value="${p.price || 0}">
                         </div>
                         <div class="input-group">
-                            <label>ছবি আপলোড করুন (মোবাইল থেকে বেছে নিন):</label>
+                            <label>ছবি আপলোড করুন (গ্যালারি থেকে বেছে নিন):</label>
                             <input type="file" accept="image/*" onchange="handleImageUpload(event, ${i})">
                             <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/80?text=No+Image'}">
                         </div>
@@ -71,16 +71,40 @@
             });
         }
 
+        // ছবি অটোমেটিক রেসাইজ ও রিকমপ্রেস করার ফাংশন
         function handleImageUpload(event, index) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    products[index].img = e.target.result; // কনভার্ট হওয়া ছবি ডাটাতে সেভ
-                    document.getElementById(`preview-${index}`).src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // ম্যাক্সিমাম ৩০০ পিক্সেল চওড়া করা হবে যাতে সাইজ কম থাকে
+                    const MAX_WIDTH = 300;
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // ছবি কোয়ালিটি ০.৬ এ কমিয়ে সাইজ মাত্র ৫০-৮০ KB তে নিয়ে আসা হবে
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                    
+                    products[index].img = compressedDataUrl;
+                    document.getElementById(`preview-${index}`).src = compressedDataUrl;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function addNewProduct() {
@@ -94,7 +118,6 @@
         }
 
         async function saveData() {
-            // ইনপুট বক্সের নাম ও দাম আপডেট
             products.forEach((p, i) => {
                 p.name = document.getElementById(`name-${i}`).value;
                 p.price = parseFloat(document.getElementById(`price-${i}`).value) || 0;
@@ -106,10 +129,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(products)
                 });
-                if(res.ok) alert("✅ পণ্য ও ছবির ডাটা সফলভাবে সেভ হয়েছে!");
-                else alert("❌ সেভ করা যায়নি। ডাটার সাইজ বেশি হলে কম আকারের ছবি দিন।");
+                if(res.ok) alert("✅ পণ্য ও ছবির ডাটা সফলভাবে সেভ হয়েছে!");
+                else alert("❌ সেভ করা যায়নি। নেটওয়ার্ক চেক করুন।");
             } catch(e) {
-                alert("❌ নেটওয়ার্ক ত্রুটি!");
+                alert("❌ নেটওয়ার্ক ত্রুটি!");
             }
         }
 
