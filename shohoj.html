@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সহজ বাজার - আপনার ঘরের দরজায় তাজা বাজার</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        
+        /* Header Section */
+        header { background: #2e7d32; color: #fff; padding: 25px 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        header h1 { font-size: 2.2rem; font-weight: bold; }
+        header p { font-size: 1.1rem; margin-top: 5px; color: #e8f5e9; }
+        
+        .container { max-width: 1000px; margin: 25px auto; padding: 0 15px; }
+        
+        /* Hero Banner */
+        .hero { background: #e8f5e9; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 30px; border: 1px solid #c8e6c9; }
+        .hero h2 { color: #1b5e20; font-size: 1.5rem; margin-bottom: 8px; }
+        .hero p { color: #333; font-size: 1rem; }
+        
+        /* Feature Grid */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 35px; text-align: center; }
+        .feature-box { background: #fff; padding: 15px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .feature-box h4 { color: #2e7d32; margin-bottom: 5px; }
+
+        /* Product Section */
+        .section-title { text-align: center; color: #1b5e20; margin-bottom: 20px; font-size: 1.6rem; }
+        .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.06); text-align: center; border: 1px solid #eee; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-3px); }
+        .product-card h3 { color: #2e7d32; margin-bottom: 8px; font-size: 1.2rem; }
+        .product-card p { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
+        
+        /* WhatsApp Button */
+        .btn-whatsapp { display: inline-block; background: #25d366; color: #fff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.95rem; }
+        .btn-whatsapp:hover { background: #128c7e; }
+        
+        /* Direct Order Banner */
+        .custom-order { background: #fff3e0; border: 1px solid #ffe0b2; padding: 25px; border-radius: 12px; text-align: center; margin-top: 40px; }
+        .custom-order h3 { color: #e65100; margin-bottom: 10px; }
+        
+        /* Footer */
+        footer { text-align: center; padding: 20px; background: #1b5e20; color: #fff; margin-top: 40px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🛒 সহজ বাজার</h1>
+        <p>প্রতিদিনের তাজা কাঁচাবাজার, সরাসরি আপনার বাসার দরজায়!</p>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>বাজারের ঝক্কি আর না!</h2>
+            <p>আগের দিন অর্ডার দিন, পরের দিন সকালেই পেয়ে যান একদম তাজা শাকসবজি ও গ্রোসারি।</p>
+        </section>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature-box">
+                <h4>🥦 ১০০% তাজা</h4>
+                <p>প্রতিদিন সকালে সরাসরি বাজার থেকে বাছাইকৃত পণ্য</p>
+            </div>
+            <div class="feature-box">
+                <h4>⚖️ সঠিক ওজন</h4>
+                <p>ডিজিটাল মাপে একদম নিখুঁত ওজন নিশ্চিত</p>
+            </div>
+            <div class="feature-box">
+                <h4>🛵 সকালে ডেলিভারি</h4>
+                <p>আপনার রান্নার আগেই দরজায় পৌঁছে দেওয়া হয়</p>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <h2 class="section-title">পছন্দের আইটেম সিলেক্ট করুন</h2>
+
+        <div class="products">
+            <div class="product-card">
+                <h3>টমেটো, আলু ও পেঁয়াজ</h3>
+                <p>নিত্যদিনের প্রয়োজনীয় আলু, দেশি পেঁয়াজ ও লাল টমেটো।</p>
+                <a href="https://wa.me/8801610112370?text=আমি%20আলু,%20পেঁয়াজ%20ও%20টমেটো%20অর্ডার%20করতে%20চাই।" class="btn-whatsapp" target="_blank">অর্ডার করুন</a>
+            </div>
+
+            <div class="product-card">
+                <h3>তাজা শাকসবজি</h3>
+                <p>লাউ, পটল, মিষ্টি কুমড়া, শসা, ঝিঙ্গা ও টাটকা শাক।</p>
+                <a href="https://wa.me/8801610112370?text=আজকের%20তাজা%20সবজির%20তালিকা%20ও%20দাম%20জানতে%20চাই।" class="btn-whatsapp" target="_blank">তালিকা দেখুন</a>
+            </div>
+
+            <div class="product-card">
+                <h3>কাঁচা মরিচ, আদা ও রসুন</h3>
+                <p>রান্নার প্রয়োজনীয় দেশি আদা, রশুন ও ফ্রেশ কাঁচা মরিচ।</p>
+                <a href="https://wa.me/8801610112370?text=আমি%20কাঁচা%20মরিচ,%20আদা%20ও%20রসুন%20অর্ডার%20করতে%20চাই।" class="btn-whatsapp" target="_blank">অর্ডার করুন</a>
+            </div>
+
+            <div class="product-card">
+                <h3>মৌসুমি ফলমূল</h3>
+                <p>ফরমালিন মুক্ত তাজা মৌসুমি ফলমূল সরাসরি আপনার বাসায়।</p>
+                <a href="https://wa.me/8801610112370?text=আজকে%20কী%20কী%20ফল%20আছে%20জানতে%20চাই।" class="btn-whatsapp" target="_blank">অর্ডার করুন</a>
+            </div>
+        </div>
+
+        <!-- Custom List Order -->
+        <div class="custom-order">
+            <h3>নিজের মত পুরো বাজারের ফর্দ (List) পাঠাতে চান?</h3>
+            <p>আপনার ঘরের প্রয়োজনীয় সবকিছুর তালিকা লিখে সরাসরি আমাদের হোয়াটসঅ্যাপে পাঠিয়ে দিন।</p>
+            <br>
+            <a href="https://wa.me/8801610112370?text=হ্যালো,%20আমি%20আমার%20বাজারের%20ফর্দ%20পাঠাতে%20চাই।" class="btn-whatsapp" style="background: #e65100;" target="_blank">📝 সরাসরি বাজারের ফর্দ লিখুন</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 সহজ বাজার (Shohoj Bazar)। সর্বস্বত্ব সংরক্ষিত।</p>
+        <p>ডেলিভারি এলাকা: আপনার এলাকা, বাংলাদেশ | হটলাইন: 01610112370</p>
+    </footer>
+
+</body>
+</html>
