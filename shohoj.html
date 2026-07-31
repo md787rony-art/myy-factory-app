@@ -14,20 +14,25 @@
         header h1 span { color: #f59e0b; }
         header p { color: #34d399; font-size: 12px; margin-top: 4px; }
 
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 12px; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 12px; }
         .section-title { margin-bottom: 15px; font-size: 18px; color: #34d399; border-left: 4px solid #f59e0b; padding-left: 10px; }
 
+        /* সার্চ বক্স */
+        .search-box { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; outline: none; }
+        .search-box:focus { border-color: #f59e0b; }
+
         /* প্রোডাক্ট গ্রিড */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .product-card:hover { border-color: #f59e0b; }
-        .product-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:hover { border-color: #f59e0b; transform: translateY(-2px); }
+        .product-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; background: #0f172a; }
         .product-card h3 { font-size: 15px; margin: 8px 0 2px 0; color: #f8fafc; }
         .product-card p { font-size: 11px; color: #94a3b8; margin-bottom: 6px; }
         .product-card .price { font-size: 14px; color: #f59e0b; font-weight: bold; margin-bottom: 8px; }
-        .select-btn { background: #10b981; color: white; border: none; padding: 6px; border-radius: 5px; width: 100%; font-weight: bold; font-size: 12px; }
+        .select-btn { background: #10b981; color: white; border: none; padding: 6px; border-radius: 5px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; }
+        .select-btn:hover { background: #059669; }
 
-        /* 🪟 প্রোডাক্ট ডিটেইলস পপ-আপ (Modal) */
+        /* পপ-আপ (Modal) */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
         .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 400px; padding: 20px; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; color: #ef4444; cursor: pointer; font-weight: bold; }
@@ -36,13 +41,13 @@
         .qty-controls { display: flex; gap: 10px; align-items: center; }
         .qty-controls button { background: #334155; color: white; border: none; width: 30px; height: 30px; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; }
         
-        /* 🛒 বটম কার্ট বার (Floating Bottom Bar) */
+        /* বটম কার্ট বার */
         .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #022c22; border-top: 3px solid #10b981; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
         .cart-info { font-size: 14px; }
         .cart-info strong { color: #f59e0b; font-size: 16px; }
         .checkout-btn { background: #25d366; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
 
-        /* 📝 চেকআউট ফর্ম পপ-আপ */
+        /* চেকআউট ফর্ম পপ-আপ */
         .input-field { width: 100%; padding: 8px; margin-top: 8px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 13px; }
         .cart-items-list { max-height: 120px; overflow-y: auto; margin: 10px 0; font-size: 12px; background: #0f172a; padding: 8px; border-radius: 5px; }
     </style>
@@ -57,11 +62,15 @@
     </header>
 
     <div class="container">
-        <h2 class="section-title">🥬 যেকোনো পণ্যে ক্লিক করে পরিমাণ বেছে নিন:</h2>
+        <h2 class="section-title">🥬 ১০০+ নিত্যপ্রয়োজনীয় শাক-সবজি, ফল ও ডাল:</h2>
+        
+        <!-- সার্চ ইনপুট -->
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি এখানে খুঁজুন (যেমন: আলু, আম, ডাল)..." onkeyup="filterProducts()">
+
         <div id="productGrid" class="product-grid"></div>
     </div>
 
-    <!-- 🪟 ১. প্রোডাক্ট সিলেক্ট করার পপ-আপ -->
+    <!-- প্রোডাক্ট সিলেক্ট করার পপ-আপ -->
     <div id="productModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('productModal')">✖</span>
@@ -71,7 +80,7 @@
             <p id="mPrice" style="color:#10b981; font-weight:bold; margin-top:5px;"></p>
             
             <div class="qty-box">
-                <span>পরিমাণ (কেজি/হালি/পিস):</span>
+                <span>পরিমাণ নির্বাচন করুন:</span>
                 <div class="qty-controls">
                     <button onclick="changeQty(-1)">-</button>
                     <span id="pQty" style="font-weight:bold; color:#f59e0b;">১</span>
@@ -83,7 +92,7 @@
         </div>
     </div>
 
-    <!-- 📝 ২. অর্ডার করার পপ-আপ ফর্ম -->
+    <!-- অর্ডার ফর্ম পপ-আপ -->
     <div id="checkoutModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('checkoutModal')">✖</span>
@@ -104,7 +113,7 @@
         </div>
     </div>
 
-    <!-- 🛒 বটম কার্ট বার (সবসময় নিচে থাকবে) -->
+    <!-- বটম কার্ট বার -->
     <div class="cart-bar">
         <div class="cart-info">
             আইটেম: <span id="cartCount" style="color:#10b981; font-weight:bold;">০</span> টি | 
@@ -117,31 +126,119 @@
         // 📱 আপনার WhatsApp নাম্বার দিন (দেশের কোড ৮৮ সহ)
         const WHATSAPP_NUMBER = "8801610112370"; 
 
-        // 🥦 পণ্যের নাম, দাম ও বিশ্বস্ত ছবি
+        // ১০০টি পণ্যের ডাটাবেজ
         const products = [
             { id: 1, name: "গোল আলু", price: 45, unit: "কেজি", desc: "নতুন দেশি লাল আলু", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 2, name: "পাকা টমেটো", price: 60, unit: "কেজি", desc: "লাল টকটকে তাজা টমেটো", img: "https://images.pexels.com/photos/533280/pexels-photo-533280.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 3, name: "বেগুন", price: 50, unit: "কেজি", desc: "তাজা বেগুন", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 4, name: "কাঁচা মরিচ", price: 120, unit: "কেজি", desc: "দেশি ঝাল কাঁচা মরিচ", img: "https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 5, name: "দেশি পিয়াজ", price: 70, unit: "কেজি", desc: "শুকনো লাল পিয়াজ", img: "https://images.pexels.com/photos/533342/pexels-photo-533342.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 6, name: "রসুন", price: 220, unit: "কেজি", desc: "বড় কোয়া দেশি রসুন", img: "https://images.pexels.com/photos/928251/pexels-photo-928251.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 7, name: "আদা", price: 200, unit: "কেজি", desc: "তাজা দেশি আদা", img: "https://images.pexels.com/photos/1337825/pexels-photo-1337825.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 8, name: "মিষ্টি কুমড়া", price: 40, unit: "কেজি", desc: "পাকা মিষ্টি কুমড়া", img: "https://images.pexels.com/photos/54320/pumpkin-squash-autumn-golden-54320.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 9, name: "গাজর", price: 50, unit: "কেজি", desc: "মিষ্টি লাল গাজর", img: "https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 10, name: "শসা", price: 40, unit: "কেজি", desc: "সালাদের দেশি শসা", img: "https://images.pexels.com/photos/2329440/pexels-photo-2329440.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 11, name: "কাগজি লেবু", price: 20, unit: "হালি", desc: "রসালো সবুজ লেবু", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
-            { id: 12, name: "লাল শাক", price: 20, unit: "আঁটি", desc: "তাজা লাল শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" }
+            { id: 2, name: "মিষ্টি আলু", price: 50, unit: "কেজি", desc: "তাজা মিষ্টি আলু", img: "https://images.pexels.com/photos/966158/pexels-photo-966158.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 3, name: "লাল আলু", price: 55, unit: "কেজি", desc: "দেশি লাল আলু", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 4, name: "বেগুন", price: 50, unit: "কেজি", desc: "তাজা বেগুন", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 5, name: "টমেটো", price: 60, unit: "কেজি", desc: "লাল টকটকে পাকা টমেটো", img: "https://images.pexels.com/photos/533280/pexels-photo-533280.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 6, name: "শসা", price: 40, unit: "কেজি", desc: "সালাদের তাজা শসা", img: "https://images.pexels.com/photos/2329440/pexels-photo-2329440.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 7, name: "গাজর", price: 50, unit: "কেজি", desc: "মিষ্টি লাল গাজর", img: "https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 8, name: "মুলা", price: 35, unit: "কেজি", desc: "সাদা তাজা মুলা", img: "https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 9, name: "শালগম", price: 40, unit: "কেজি", desc: "শীতকালীন শালগম", img: "https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 10, name: "ফুলকপি", price: 40, unit: "পিস", desc: "তাজা ফুলকপি", img: "https://images.pexels.com/photos/405238/pexels-photo-405238.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 11, name: "বাঁধাকপি", price: 35, unit: "পিস", desc: "কচি বাঁধাকপি", img: "https://images.pexels.com/photos/255469/pexels-photo-255469.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 12, name: "ব্রকলি", price: 70, unit: "পিস", desc: "তাজা ব্রকলি", img: "https://images.pexels.com/photos/47347/broccoli-vegetable-food-healthy-47347.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 13, name: "লাউ", price: 60, unit: "পিস", desc: "কচি মিষ্টি লাউ", img: "https://images.pexels.com/photos/5929641/pexels-photo-5929641.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 14, name: "মিষ্টি কুমড়া", price: 40, unit: "কেজি", desc: "পাকা মিষ্টি কুমড়া", img: "https://images.pexels.com/photos/54320/pumpkin-squash-autumn-golden-54320.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 15, name: "চাল কুমড়া", price: 50, unit: "পিস", desc: "তাজা চাল কুমড়া", img: "https://images.pexels.com/photos/54320/pumpkin-squash-autumn-golden-54320.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 16, name: "ঝিঙা", price: 50, unit: "কেজি", desc: "তাজা ঝিঙা", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 17, name: "চিচিঙ্গা", price: 45, unit: "কেজি", desc: "লম্বা চিচিঙ্গা", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 18, name: "ধুন্দুল", price: 45, unit: "কেজি", desc: "তাজা ধুন্দুল", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 19, name: "করলা", price: 60, unit: "কেজি", desc: "তিতা করলা", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 20, name: "উচ্ছে", price: 65, unit: "কেজি", desc: "ছোট উচ্ছে", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 21, name: "পটল", price: 50, unit: "কেজি", desc: "তাজা পটল", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 22, name: "ঢেঁড়স", price: 55, unit: "কেজি", desc: "কচি ঢেঁড়স", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 23, name: "বরবটি", price: 60, unit: "কেজি", desc: "তাজা বরবটি", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 24, name: "শিম", price: 70, unit: "কেজি", desc: "দেশি শিম", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 25, name: "কড়াইশুঁটি", price: 100, unit: "কেজি", desc: "তাজা কড়াইশুঁটি", img: "https://images.pexels.com/photos/255469/pexels-photo-255469.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 26, name: "মটরশুঁটি", price: 100, unit: "কেজি", desc: "সবুজ মটরশুঁটি", img: "https://images.pexels.com/photos/255469/pexels-photo-255469.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 27, name: "কাঁচা কলা", price: 30, unit: "হালি", desc: "সবুজ কাঁচা কলা", img: "https://images.pexels.com/photos/2873989/pexels-photo-2873989.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 28, name: "কাঁচা পেঁপে", price: 40, unit: "কেজি", desc: "সবুজ কাঁচা পেঁপে", img: "https://images.pexels.com/photos/5945847/pexels-photo-5945847.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 29, name: "কচু", price: 50, unit: "কেজি", desc: "দেশি কচু", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 30, name: "মুখী কচু", price: 60, unit: "কেজি", desc: "মুখী কচু", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 31, name: "ওল", price: 50, unit: "কেজি", desc: "দেশি ওল", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 32, name: "সজনে ডাঁটা", price: 80, unit: "কেজি", desc: "তাজা সজনে ডাঁটা", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 33, name: "সজনে ফুল", price: 120, unit: "কেজি", desc: "তাজা সজনে ফুল", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 34, name: "জলপাই", price: 80, unit: "কেজি", desc: "টক জলপাই", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 35, name: "কাঁকরোল", price: 70, unit: "কেজি", desc: "তাজা কাঁকরোল", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 36, name: "কাঁঠালের বিচি", price: 90, unit: "কেজি", desc: "পরিষ্কার কাঁঠালের বিচি", img: "https://images.pexels.com/photos/2275295/pexels-photo-2275295.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 37, name: "ভুট্টা", price: 40, unit: "পিস", desc: "মিষ্টি ভুট্টা", img: "https://images.pexels.com/photos/547263/pexels-photo-547263.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 38, name: "রসুন", price: 220, unit: "কেজি", desc: "দেশি রসুন", img: "https://images.pexels.com/photos/928251/pexels-photo-928251.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 39, name: "আদা", price: 200, unit: "কেজি", desc: "তাজা আদা", img: "https://images.pexels.com/photos/1337825/pexels-photo-1337825.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 40, name: "পেঁয়াজ", price: 70, unit: "কেজি", desc: "দেশি পেঁয়াজ", img: "https://images.pexels.com/photos/533342/pexels-photo-533342.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 41, name: "কাঁচামরিচ", price: 120, unit: "কেজি", desc: "ঝাল কাঁচামরিচ", img: "https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 42, name: "শুকনা মরিচ", price: 180, unit: "কেজি", desc: "শুকনো লাল মরিচ", img: "https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 43, name: "পালং শাক", price: 20, unit: "আঁটি", desc: "তাজা পালং শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 44, name: "লাল শাক", price: 20, unit: "আঁটি", desc: "তাজা লাল শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 45, name: "পুঁই শাক", price: 25, unit: "আঁটি", desc: "কচি পুঁই শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 46, name: "কলমি শাক", price: 15, unit: "আঁটি", desc: "তাজা কলমি শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 47, name: "ডাটা শাক", price: 20, unit: "আঁটি", desc: "তাজা ডাটা শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 48, name: "কচু শাক", price: 20, unit: "আঁটি", desc: "তাজা কচু শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 49, name: "সরিষা শাক", price: 20, unit: "আঁটি", desc: "তাজা সরিষা শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 50, name: "মুলা শাক", price: 20, unit: "আঁটি", desc: "তাজা মুলা শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 51, name: "লাউ শাক", price: 30, unit: "আঁটি", desc: "কচি লাউ শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 52, name: "কুমড়া শাক", price: 30, unit: "আঁটি", desc: "কচি কুমড়া শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 53, name: "পাট শাক", price: 20, unit: "আঁটি", desc: "তাজা পাট শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 54, name: "মেথি শাক", price: 25, unit: "আঁটি", desc: "তাজা মেথি শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 55, name: "হেলেঞ্চা শাক", price: 20, unit: "আঁটি", desc: "তাজা হেলেঞ্চা শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 56, name: "শাপলা শাক", price: 30, unit: "আঁটি", desc: "তাজা শাপলা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 57, name: "থানকুনি পাতা", price: 15, unit: "আঁটি", desc: "ভেষজ থানকুনি পাতা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 58, name: "ধনিয়া পাতা", price: 10, unit: "আঁটি", desc: "সুগন্ধযুক্ত ধনিয়া পাতা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 59, name: "পুদিনা পাতা", price: 15, unit: "আঁটি", desc: "তাজা পুদিনা পাতা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 60, name: "কারিপাতা", price: 10, unit: "আঁটি", desc: "তাজা কারিপাতা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 61, name: "তুলসী পাতা", price: 15, unit: "আঁটি", desc: "তাজা তুলসী পাতা", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 62, name: "লেবু", price: 20, unit: "হালি", desc: "রসালো লেবু", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 63, name: "কাগজি লেবু", price: 25, unit: "হালি", desc: "সুগন্ধি কাগজী লেবু", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 64, name: "বাতাবি লেবু", price: 50, unit: "পিস", desc: "বড় মিষ্টি বাতাবি লেবু", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 65, name: "কমলা", price: 180, unit: "কেজি", desc: "মিষ্টি তাজা কমলা", img: "https://images.pexels.com/photos/327098/pexels-photo-327098.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 66, name: "মাল্টা", price: 200, unit: "কেজি", desc: "রসালো মাল্টা", img: "https://images.pexels.com/photos/327098/pexels-photo-327098.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 67, name: "আম", price: 120, unit: "কেজি", desc: "পাকা মিষ্টি আম", img: "https://images.pexels.com/photos/2294477/pexels-photo-2294477.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 68, name: "কাঁঠাল", price: 250, unit: "পিস", desc: "পাকা মিষ্টি কাঁঠাল", img: "https://images.pexels.com/photos/2275295/pexels-photo-2275295.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 69, name: "কলা", price: 40, unit: "হালি", desc: "সাগর কলা", img: "https://images.pexels.com/photos/2873989/pexels-photo-2873989.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 70, name: "পেয়ারা", price: 60, unit: "কেজি", desc: "দেশি পেয়ারা", img: "https://images.pexels.com/photos/6157049/pexels-photo-6157049.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 71, name: "আনারস", price: 50, unit: "পিস", desc: "মিষ্টি পাকা আনারস", img: "https://images.pexels.com/photos/1015568/pexels-photo-1015568.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 72, name: "তরমুজ", price: 60, unit: "কেজি", desc: "বড় মিষ্টি তরমুজ", img: "https://images.pexels.com/photos/1313267/pexels-photo-1313267.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 73, name: "বাঙ্গি", price: 70, unit: "কেজি", desc: "পাকা সুগন্ধি বাংগি", img: "https://images.pexels.com/photos/1313267/pexels-photo-1313267.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 74, name: "লিচু", price: 200, unit: "শ", desc: "রসালো লাল লিচু", img: "https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 75, name: "জাম", price: 150, unit: "কেজি", desc: "পাকা মিষ্টি জাম", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 76, name: "কালোজাম", price: 160, unit: "কেজি", desc: "দেশি কালোজাম", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 77, name: "কুল", price: 80, unit: "কেজি", desc: "মিষ্টি বরই", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 78, name: "বরই", price: 80, unit: "কেজি", desc: "আপেল কুল", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 79, name: "আমড়া", price: 60, unit: "কেজি", desc: "টকটকে আমড়া", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 80, name: "বেল", price: 50, unit: "পিস", desc: "পাকা বেল", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 81, name: "ডাব", price: 60, unit: "পিস", desc: "ডাবের তাজা পানি", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 82, name: "নারিকেল", price: 70, unit: "পিস", desc: "পাকা নারিকেল", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 83, name: "তেঁতুল", price: 100, unit: "কেজি", desc: "শুকনো তেঁতুল", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 84, name: "আতা", price: 120, unit: "কেজি", desc: "পাকা আতাফল", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 85, name: "সফেদা", price: 130, unit: "কেজি", desc: "মিষ্টি সফেদা", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 86, name: "ডালিম", price: 250, unit: "কেজি", desc: "লাল বেদানা", img: "https://images.pexels.com/photos/6157049/pexels-photo-6157049.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 87, name: "আঙুর", price: 220, unit: "কেজি", desc: "বেগুনি/সবুজ আঙুর", img: "https://images.pexels.com/photos/708777/pexels-photo-708777.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 88, name: "আপেল", price: 200, unit: "কেজি", desc: "লাল ফুজি আপেল", img: "https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 89, name: "নাশপাতি", price: 240, unit: "কেজি", desc: "তাজা নাশপাতি", img: "https://images.pexels.com/photos/568471/pexels-photo-568471.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 90, name: "খেজুর", price: 350, unit: "কেজি", desc: "ভালো মানের খেজুর", img: "https://images.pexels.com/photos/33242/dates-dried-fruit-sweet-healthy.jpg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 91, name: "কিশমিশ", price: 400, unit: "কেজি", desc: "পরিষ্কার কিশমিশ", img: "https://images.pexels.com/photos/33242/dates-dried-fruit-sweet-healthy.jpg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 92, name: "মসুর ডাল", price: 140, unit: "কেজি", desc: "দেশি মসুর ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 93, name: "মুগ ডাল", price: 160, unit: "কেজি", desc: "ভাজা মুগ ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 94, name: "ছোলা", price: 110, unit: "কেজি", desc: "ভালো মানের ছোলা", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 95, name: "বুট", price: 120, unit: "কেজি", desc: "বুট ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 96, name: "অড়হর ডাল", price: 180, unit: "কেজি", desc: "অড়হর ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 97, name: "মাষকলাই ডাল", price: 150, unit: "কেজি", desc: "মাষকলাই ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 98, name: "খেসারি ডাল", price: 100, unit: "কেজি", desc: "খেসারি ডাল", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 99, name: "সয়াবিন", price: 140, unit: "কেজি", desc: "সয়াবিন দানা", img: "https://images.pexels.com/photos/4113822/pexels-photo-4113822.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 100, name: "চিনাবাদাম", price: 180, unit: "কেজি", desc: "কাঁচা চিনাবাদাম", img: "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=400" }
         ];
 
         let cart = [];
         let selectedProduct = null;
         let currentQty = 1;
 
-        // ১. পেজে প্রোডাক্ট লোড করা
-        function renderProducts() {
+        // পেজে প্রোডাক্ট লোড করা
+        function renderProducts(listToRender) {
             let grid = document.getElementById('productGrid');
             grid.innerHTML = "";
-            products.forEach(p => {
+            listToRender.forEach(p => {
                 grid.innerHTML += `
                     <div class="product-card" onclick="openProductModal(${p.id})">
                         <img src="${p.img}" alt="${p.name}">
@@ -154,7 +251,14 @@
             });
         }
 
-        // ২. পপ-আপ ওপেন
+        // সার্চ ফিল্টার ফাংশন
+        function filterProducts() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+            renderProducts(filtered);
+        }
+
+        // পপ-আপ ওপেন
         function openProductModal(id) {
             selectedProduct = products.find(p => p.id === id);
             currentQty = 1;
@@ -177,7 +281,7 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        // ৩. কার্টে যোগ করা
+        // কার্টে যোগ করা
         function addToCart() {
             let existing = cart.find(item => item.id === selectedProduct.id);
             if(existing) {
@@ -189,7 +293,7 @@
             closeModal('productModal');
         }
 
-        // ৪. কার্ট বার আপডেট
+        // কার্ট বার আপডেট
         function updateCartBar() {
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
             let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -198,7 +302,7 @@
             document.getElementById('cartTotal').innerText = totalPrice;
         }
 
-        // ৫. চেকআউট পপ-আপ
+        // চেকআউট পপ-আপ
         function openCheckout() {
             if (cart.length === 0) {
                 alert("আপনার কার্ট খালি! যেকোনো পণ্য সিলেক্ট করুন।");
@@ -224,7 +328,7 @@
             document.getElementById('checkoutModal').style.display = 'flex';
         }
 
-        // ৬. WhatsApp-এ অর্ডার সেন্ড
+        // WhatsApp-এ অর্ডার পাঠানো
         function sendWhatsAppOrder() {
             let name = document.getElementById('custName').value.trim();
             let address = document.getElementById('custAddress').value.trim();
@@ -248,22 +352,19 @@
 
             message += `\n💰 *সর্বমোট বিল:* ৳${totalPrice}\n\nঅর্ডারটি দ্রুত ডেলিভারির অনুরোধ করা হলো।`;
 
-            // WhatsApp লিঙ্ক তৈরি
             let whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
             
-            // সাকসেস মেসেজ দেখানো
             alert("✅ অর্ডার সফল হয়েছে!\nআমাদের প্রতিনিধি খুব দ্রুত আপনার সাথে যোগাযোগ করবে।");
 
-            // কার্ট ক্লিয়ার
             cart = [];
             updateCartBar();
             closeModal('checkoutModal');
 
-            // WhatsApp ওপেন
             window.open(whatsappUrl, '_blank');
         }
 
-        renderProducts();
+        // প্রথমবার লোড করার সময় সব পণ্য দেখাবে
+        renderProducts(products);
     </script>
 </body>
 </html>
