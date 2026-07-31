@@ -36,11 +36,11 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
         .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 400px; padding: 20px; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; color: #ef4444; cursor: pointer; font-weight: bold; }
-        .modal-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-        .qty-box { margin: 15px 0; display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 8px; }
-        .qty-controls { display: flex; gap: 10px; align-items: center; }
-        .qty-controls button { background: #334155; color: white; border: none; width: 30px; height: 30px; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .modal-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
         
+        .qty-box { margin: 15px 0; background: #0f172a; padding: 12px; border-radius: 8px; }
+        .qty-select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; background: #1e293b; color: #f59e0b; border: 1px solid #334155; font-weight: bold; font-size: 14px; outline: none; }
+
         /* বটম কার্ট বার */
         .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #022c22; border-top: 3px solid #10b981; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
         .cart-info { font-size: 14px; }
@@ -80,12 +80,12 @@
             <p id="mPrice" style="color:#10b981; font-weight:bold; margin-top:5px;"></p>
             
             <div class="qty-box">
-                <span>পরিমাণ নির্বাচন করুন:</span>
-                <div class="qty-controls">
-                    <button onclick="changeQty(-1)">-</button>
-                    <span id="pQty" style="font-weight:bold; color:#f59e0b;">১</span>
-                    <button onclick="changeQty(1)">+</button>
-                </div>
+                <label style="font-size: 13px; color: #fff;">পরিমাণ নির্বাচন করুন (গ্রাম/কেজি):</label>
+                <select id="qtySelect" class="qty-select" onchange="calculateModalPrice()"></select>
+            </div>
+
+            <div style="text-align: right; margin-bottom: 10px; font-weight: bold; color: #f59e0b;">
+                মোট দাম: ৳ <span id="modalCalculatedPrice">0</span>
             </div>
 
             <button class="select-btn" style="padding:10px; font-size:14px;" onclick="addToCart()">🛒 কার্টে যোগ করুন</button>
@@ -124,7 +124,7 @@
 
     <script>
         // 📱 আপনার WhatsApp নাম্বার দিন (দেশের কোড ৮৮ সহ)
-        const WHATSAPP_NUMBER = "8801610112370"; 
+        const WHATSAPP_NUMBER = "8801700000000"; 
 
         // ১০০টি পণ্যের ডাটাবেজ
         const products = [
@@ -232,9 +232,7 @@
 
         let cart = [];
         let selectedProduct = null;
-        let currentQty = 1;
 
-        // পেজে প্রোডাক্ট লোড করা
         function renderProducts(listToRender) {
             let grid = document.getElementById('productGrid');
             grid.innerHTML = "";
@@ -251,30 +249,53 @@
             });
         }
 
-        // সার্চ ফিল্টার ফাংশন
         function filterProducts() {
             let query = document.getElementById('searchInput').value.toLowerCase();
             let filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
             renderProducts(filtered);
         }
 
-        // পপ-আপ ওপেন
+        // পপ-আপ ওপেন করার সময় গ্রাম ও কেজির অপশন তৈরি
         function openProductModal(id) {
             selectedProduct = products.find(p => p.id === id);
-            currentQty = 1;
             document.getElementById('mImg').src = selectedProduct.img;
             document.getElementById('mTitle').innerText = selectedProduct.name;
             document.getElementById('mDesc').innerText = selectedProduct.desc;
             document.getElementById('mPrice').innerText = `মূল্য: ৳ ${selectedProduct.price} / ${selectedProduct.unit}`;
-            document.getElementById('pQty').innerText = currentQty;
+            
+            let selectBox = document.getElementById('qtySelect');
+            selectBox.innerHTML = "";
+
+            if (selectedProduct.unit === "কেজি") {
+                selectBox.innerHTML = `
+                    <option value="0.100">১০০ গ্রাম</option>
+                    <option value="0.250">২৫০ গ্রাম (পোয়া)</option>
+                    <option value="0.500"> ৫০০ গ্রাম (আধা কেজি)</option>
+                    <option value="0.750">৭৫০ গ্রাম</option>
+                    <option value="1.000" selected>১ কেজি</option>
+                    <option value="2.000">২ কেজি</option>
+                    <option value="3.000">৩ কেজি</option>
+                    <option value="5.000">৫ কেজি</option>
+                `;
+            } else {
+                selectBox.innerHTML = `
+                    <option value="1">১ ${selectedProduct.unit}</option>
+                    <option value="2">২ ${selectedProduct.unit}</option>
+                    <option value="3">৩ ${selectedProduct.unit}</option>
+                    <option value="4">৪ ${selectedProduct.unit}</option>
+                    <option value="5">৫ ${selectedProduct.unit}</option>
+                `;
+            }
+
+            calculateModalPrice();
             document.getElementById('productModal').style.display = 'flex';
         }
 
-        function changeQty(amount) {
-            if (currentQty + amount >= 1) {
-                currentQty += amount;
-                document.getElementById('pQty').innerText = currentQty;
-            }
+        // গ্রাম/কেজি অনু্যায়ী দাম হিসাব
+        function calculateModalPrice() {
+            let qtyVal = parseFloat(document.getElementById('qtySelect').value);
+            let totalPrice = Math.round(selectedProduct.price * qtyVal);
+            document.getElementById('modalCalculatedPrice').innerText = totalPrice;
         }
 
         function closeModal(modalId) {
@@ -283,26 +304,35 @@
 
         // কার্টে যোগ করা
         function addToCart() {
-            let existing = cart.find(item => item.id === selectedProduct.id);
+            let selectObj = document.getElementById('qtySelect');
+            let qtyVal = parseFloat(selectObj.value);
+            let labelText = selectObj.options[selectObj.selectedIndex].text;
+            let totalPrice = Math.round(selectedProduct.price * qtyVal);
+
+            let existing = cart.find(item => item.id === selectedProduct.id && item.labelText === labelText);
             if(existing) {
-                existing.qty += currentQty;
+                existing.totalPrice += totalPrice;
             } else {
-                cart.push({ ...selectedProduct, qty: currentQty });
+                cart.push({ 
+                    id: selectedProduct.id, 
+                    name: selectedProduct.name, 
+                    labelText: labelText, 
+                    totalPrice: totalPrice 
+                });
             }
+
             updateCartBar();
             closeModal('productModal');
         }
 
-        // কার্ট বার আপডেট
         function updateCartBar() {
-            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let totalItems = cart.length;
+            let totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
             document.getElementById('cartCount').innerText = totalItems;
             document.getElementById('cartTotal').innerText = totalPrice;
         }
 
-        // চেকআউট পপ-আপ
         function openCheckout() {
             if (cart.length === 0) {
                 alert("আপনার কার্ট খালি! যেকোনো পণ্য সিলেক্ট করুন।");
@@ -313,12 +343,11 @@
             let totalPrice = 0;
 
             cart.forEach(item => {
-                let itemTotal = item.price * item.qty;
-                totalPrice += itemTotal;
+                totalPrice += item.totalPrice;
                 cartListHtml += `
                     <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span>• ${item.name} (${item.qty} ${item.unit})</span>
-                        <span style="color:#f59e0b;">৳ ${itemTotal}</span>
+                        <span>• ${item.name} (${item.labelText})</span>
+                        <span style="color:#f59e0b;">৳ ${item.totalPrice}</span>
                     </div>
                 `;
             });
@@ -328,7 +357,6 @@
             document.getElementById('checkoutModal').style.display = 'flex';
         }
 
-        // WhatsApp-এ অর্ডার পাঠানো
         function sendWhatsAppOrder() {
             let name = document.getElementById('custName').value.trim();
             let address = document.getElementById('custAddress').value.trim();
@@ -345,9 +373,8 @@
 
             let totalPrice = 0;
             cart.forEach(item => {
-                let itemTotal = item.price * item.qty;
-                totalPrice += itemTotal;
-                message += `- ${item.name}: ${item.qty} ${item.unit} = ৳${itemTotal}\n`;
+                totalPrice += item.totalPrice;
+                message += `- ${item.name}: ${item.labelText} = ৳${item.totalPrice}\n`;
             });
 
             message += `\n💰 *সর্বমোট বিল:* ৳${totalPrice}\n\nঅর্ডারটি দ্রুত ডেলিভারির অনুরোধ করা হলো।`;
@@ -363,7 +390,6 @@
             window.open(whatsappUrl, '_blank');
         }
 
-        // প্রথমবার লোড করার সময় সব পণ্য দেখাবে
         renderProducts(products);
     </script>
 </body>
