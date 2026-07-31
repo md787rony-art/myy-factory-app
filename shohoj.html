@@ -6,32 +6,45 @@
     <title>পচা বাজার - POCHA BAZAR</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #fff; padding-bottom: 60px; }
+        body { background-color: #0f172a; color: #fff; padding-bottom: 120px; }
 
-        /* হেডার ও অফার ব্যানার */
-        .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 14px; }
-        header { background: #022c22; padding: 20px; text-align: center; border-bottom: 4px solid #f59e0b; }
-        header h1 { font-size: 28px; color: #ffffff; }
+        .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 13px; }
+        header { background: #022c22; padding: 15px; text-align: center; border-bottom: 4px solid #f59e0b; }
+        header h1 { font-size: 24px; color: #ffffff; }
         header h1 span { color: #f59e0b; }
-        header p { color: #34d399; font-size: 14px; margin-top: 5px; }
+        header p { color: #34d399; font-size: 12px; margin-top: 4px; }
 
-        /* কন্টেইনার */
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-        .section-title { margin-bottom: 20px; font-size: 20px; color: #34d399; border-left: 4px solid #f59e0b; padding-left: 10px; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 12px; }
+        .section-title { margin-bottom: 15px; font-size: 18px; color: #34d399; border-left: 4px solid #f59e0b; padding-left: 10px; }
 
-        /* প্রোডাক্ট গ্রিড লেআউট */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
-        .product-card:hover { transform: translateY(-3px); border-color: #10b981; }
-        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; background: #0f172a; }
-        .product-card h3 { font-size: 16px; margin: 10px 0 4px 0; color: #f8fafc; }
-        .product-card p { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
-        .product-card .price { font-size: 15px; color: #f59e0b; font-weight: bold; margin-bottom: 10px; }
-        .buy-btn { background: #10b981; color: white; border: none; padding: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .buy-btn:hover { background: #059669; }
+        /* প্রোডাক্ট গ্রিড */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .product-card:hover { border-color: #f59e0b; }
+        .product-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+        .product-card h3 { font-size: 15px; margin: 8px 0 2px 0; color: #f8fafc; }
+        .product-card p { font-size: 11px; color: #94a3b8; margin-bottom: 6px; }
+        .product-card .price { font-size: 14px; color: #f59e0b; font-weight: bold; margin-bottom: 8px; }
+        .select-btn { background: #10b981; color: white; border: none; padding: 6px; border-radius: 5px; width: 100%; font-weight: bold; font-size: 12px; }
 
-        /* ফুটার */
-        footer { text-align: center; padding: 25px; color: #64748b; font-size: 13px; background: #022c22; margin-top: 40px; }
+        /* 🪟 প্রোডাক্ট ডিটেইলস পপ-আপ (Modal) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+        .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 400px; padding: 20px; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; color: #ef4444; cursor: pointer; font-weight: bold; }
+        .modal-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+        .qty-box { margin: 15px 0; display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .qty-controls { display: flex; gap: 10px; align-items: center; }
+        .qty-controls button { background: #334155; color: white; border: none; width: 30px; height: 30px; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        
+        /* 🛒 বটম কার্ট বার (Floating Bottom Bar) */
+        .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #022c22; border-top: 3px solid #10b981; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
+        .cart-info { font-size: 14px; }
+        .cart-info strong { color: #f59e0b; font-size: 16px; }
+        .checkout-btn { background: #25d366; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+
+        /* 📝 চেকআউট ফর্ম পপ-আপ */
+        .input-field { width: 100%; padding: 8px; margin-top: 8px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 13px; }
+        .cart-items-list { max-height: 120px; overflow-y: auto; margin: 10px 0; font-size: 12px; background: #0f172a; padding: 8px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -44,177 +57,213 @@
     </header>
 
     <div class="container">
-        <h2 class="section-title">🥬 দেশি তাজা কাঁচা বাজার:</h2>
-        
-        <div class="product-grid">
+        <h2 class="section-title">🥬 যেকোনো পণ্যে ক্লিক করে পরিমাণ বেছে নিন:</h2>
+        <div id="productGrid" class="product-grid"></div>
+    </div>
 
-            <!-- ১. আলু -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" alt="গোল আলু">
-                <div>
-                    <h3>গোল আলু</h3>
-                    <p>দেশি লাল আলু</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৪৫ / কেজি</div>
-                    <button class="buy-btn" onclick="order('গোল আলু')">অর্ডার করুন</button>
+    <!-- 🪟 ১. প্রোডাক্ট সিলেক্ট করার পপ-আপ -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('productModal')">✖</span>
+            <img id="mImg" src="" alt="">
+            <h3 id="mTitle" style="color:#f59e0b;"></h3>
+            <p id="mDesc" style="font-size: 12px; color: #94a3b8;"></p>
+            <p id="mPrice" style="color:#10b981; font-weight:bold; margin-top:5px;"></p>
+            
+            <div class="qty-box">
+                <span>পরিমাণ (কেজি/হালি/পিস):</span>
+                <div class="qty-controls">
+                    <button onclick="changeQty(-1)">-</button>
+                    <span id="pQty" style="font-weight:bold; color:#f59e0b;">১</span>
+                    <button onclick="changeQty(1)">+</button>
                 </div>
             </div>
 
-            <!-- ২. টমেটো -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" alt="পাকা টমেটো">
-                <div>
-                    <h3>পাকা টমেটো</h3>
-                    <p>ক্ষেতের তাজা টমেটো</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৬০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('পাকা টমেটো')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৩. বেগুন -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" alt="গোল বেগুন">
-                <div>
-                    <h3>বেগুন</h3>
-                    <p>তাজা বেগুনি/গোল বেগুন</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৫০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('বেগুন')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৪. কাঁচা মরিচ -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=400" alt="কাঁচা মরিচ">
-                <div>
-                    <h3>কাঁচা মরিচ</h3>
-                    <p>ঝাল দেশি মরিচ</p>
-                </div>
-                <div>
-                    <div class="price">৳ ১২০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('কাঁচা মরিচ')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৫. পিয়াজ -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cf?w=400" alt="দেশি পিয়াজ">
-                <div>
-                    <h3>দেশি পিয়াজ</h3>
-                    <p>ভালো মানের শুকনো পিয়াজ</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৭০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('দেশি পিয়াজ')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৬. রসুন -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=400" alt="রসুন">
-                <div>
-                    <h3>রসুন</h3>
-                    <p>দেশি এক কোয়া/বড় রসুন</p>
-                </div>
-                <div>
-                    <div class="price">৳ ২২০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('রসুন')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৭. আদা -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1615485290176-02e26e0e6403?w=400" alt="আদা">
-                <div>
-                    <h3>তাজা আদা</h3>
-                    <p>দেশি মানসম্মত আদা</p>
-                </div>
-                <div>
-                    <div class="price">৳ ২০০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('আদা')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৮. মিষ্টি কুমড়া -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1570586437263-ab629fccc818?w=400" alt="মিষ্টি কুমড়া">
-                <div>
-                    <h3>মিষ্টি কুমড়া</h3>
-                    <p>পাকা মিষ্টি কুমড়া</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৪০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('মিষ্টি কুমড়া')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ৯. লাউ -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1598170845058-12ef4a45753b?w=400" alt="কচি লাউ">
-                <div>
-                    <h3>কচি লাউ</h3>
-                    <p>মিষ্টি তাজা পানি লাউ</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৬০ / পিস</div>
-                    <button class="buy-btn" onclick="order('কচি লাউ')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ১০. গাজর -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1598170845058-12ef4a45753b?w=400" alt="লাল গাজর">
-                <div>
-                    <h3>লাল গাজর</h3>
-                    <p>তাজা দেশি গাজর</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৫০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('লাল গাজর')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ১১. শসা -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=400" alt="দেশি শসা">
-                <div>
-                    <h3>দেশি শসা</h3>
-                    <p>সালাদের তাজা শসা</p>
-                </div>
-                <div>
-                    <div class="price">৳ ৪০ / কেজি</div>
-                    <button class="buy-btn" onclick="order('দেশি শসা')">অর্ডার করুন</button>
-                </div>
-            </div>
-
-            <!-- ১২. লেবু -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1534531141161-e41d133a4b97?w=400" alt="কাগজি লেবু">
-                <div>
-                    <h3>কাগজি লেবু</h3>
-                    <p>রসালো বড় সাইজ লেবু</p>
-                </div>
-                <div>
-                    <div class="price">৳ ২০ / হালি</div>
-                    <button class="buy-btn" onclick="order('কাগজি লেবু')">অর্ডার করুন</button>
-                </div>
-            </div>
-
+            <button class="select-btn" style="padding:10px; font-size:14px;" onclick="addToCart()">🛒 কার্টে যোগ করুন</button>
         </div>
     </div>
 
-    <footer>
-        <p>© ২০২৬ পচা বাজার | md787rony-art.github.io</p>
-    </footer>
+    <!-- 📝 ২. অর্ডার করার পপ-আপ ফর্ম -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('checkoutModal')">✖</span>
+            <h3 style="color:#10b981; margin-bottom:10px;">🛍️ আপনার অর্ডারের তালিকা:</h3>
+            <div id="cartList" class="cart-items-list"></div>
+            
+            <h4 id="finalTotal" style="color:#f59e0b; text-align:right; margin-bottom:10px;"></h4>
+
+            <label style="font-size: 12px;">আপনার নাম:</label>
+            <input type="text" id="custName" class="input-field" placeholder="আপনার পুরো নাম">
+
+            <label style="font-size: 12px; margin-top:8px; display:block;">সম্পূর্ণ ঠিকানা:</label>
+            <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
+
+            <button class="checkout-btn" style="width:100%; margin-top:15px; justify-content:center; padding:12px;" onclick="sendWhatsAppOrder()">
+                📱 WhatsApp-এ অর্ডার নিশ্চিত করুন
+            </button>
+        </div>
+    </div>
+
+    <!-- 🛒 বটম কার্ট বার (সবসময় নিচে থাকবে) -->
+    <div class="cart-bar">
+        <div class="cart-info">
+            আইটেম: <span id="cartCount" style="color:#10b981; font-weight:bold;">০</span> টি | 
+            মোট: <strong>৳ <span id="cartTotal">০</span></strong>
+        </div>
+        <button class="checkout-btn" onclick="openCheckout()">অর্ডার কনফার্ম করুন ➔</button>
+    </div>
 
     <script>
-        function order(productName) {
-            alert(`'${productName}' অর্ডার করতে আপনার নাম ও ঠিকানা মেসেজ করুন বা কল দিন।`);
+        // 📱 আপনার WhatsApp নাম্বার দিন (দেশের কোড ৮৮ সহ)
+        const WHATSAPP_NUMBER = "8801700000000"; 
+
+        // 🥦 পণ্যের নাম, দাম ও বিশ্বস্ত ছবি
+        const products = [
+            { id: 1, name: "গোল আলু", price: 45, unit: "কেজি", desc: "নতুন দেশি লাল আলু", img: "https://images.pexels.com/photos/144248/potatoes-vegetables-erdbirne-ground-pear-144248.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 2, name: "পাকা টমেটো", price: 60, unit: "কেজি", desc: "লাল টকটকে তাজা টমেটো", img: "https://images.pexels.com/photos/533280/pexels-photo-533280.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 3, name: "বেগুন", price: 50, unit: "কেজি", desc: "তাজা বেগুন", img: "https://images.pexels.com/photos/321551/pexels-photo-321551.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 4, name: "কাঁচা মরিচ", price: 120, unit: "কেজি", desc: "দেশি ঝাল কাঁচা মরিচ", img: "https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 5, name: "দেশি পিয়াজ", price: 70, unit: "কেজি", desc: "শুকনো লাল পিয়াজ", img: "https://images.pexels.com/photos/533342/pexels-photo-533342.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 6, name: "রসুন", price: 220, unit: "কেজি", desc: "বড় কোয়া দেশি রসুন", img: "https://images.pexels.com/photos/928251/pexels-photo-928251.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 7, name: "আদা", price: 200, unit: "কেজি", desc: "তাজা দেশি আদা", img: "https://images.pexels.com/photos/1337825/pexels-photo-1337825.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 8, name: "মিষ্টি কুমড়া", price: 40, unit: "কেজি", desc: "পাকা মিষ্টি কুমড়া", img: "https://images.pexels.com/photos/54320/pumpkin-squash-autumn-golden-54320.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 9, name: "গাজর", price: 50, unit: "কেজি", desc: "মিষ্টি লাল গাজর", img: "https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 10, name: "শসা", price: 40, unit: "কেজি", desc: "সালাদের দেশি শসা", img: "https://images.pexels.com/photos/2329440/pexels-photo-2329440.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 11, name: "কাগজি লেবু", price: 20, unit: "হালি", desc: "রসালো সবুজ লেবু", img: "https://images.pexels.com/photos/1414110/pexels-photo-1414110.jpeg?auto=compress&cs=tinysrgb&w=400" },
+            { id: 12, name: "লাল শাক", price: 20, unit: "আঁটি", desc: "তাজা লাল শাক", img: "https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=400" }
+        ];
+
+        let cart = [];
+        let selectedProduct = null;
+        let currentQty = 1;
+
+        // ১. পেজে প্রোডাক্ট লোড করা
+        function renderProducts() {
+            let grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="openProductModal(${p.id})">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="price">৳ ${p.price} / ${p.unit}</div>
+                        <button class="select-btn">পরিমাণ সিলেক্ট করুন</button>
+                    </div>
+                `;
+            });
         }
+
+        // ২. পপ-আপ ওপেন
+        function openProductModal(id) {
+            selectedProduct = products.find(p => p.id === id);
+            currentQty = 1;
+            document.getElementById('mImg').src = selectedProduct.img;
+            document.getElementById('mTitle').innerText = selectedProduct.name;
+            document.getElementById('mDesc').innerText = selectedProduct.desc;
+            document.getElementById('mPrice').innerText = `মূল্য: ৳ ${selectedProduct.price} / ${selectedProduct.unit}`;
+            document.getElementById('pQty').innerText = currentQty;
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function changeQty(amount) {
+            if (currentQty + amount >= 1) {
+                currentQty += amount;
+                document.getElementById('pQty').innerText = currentQty;
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // ৩. কার্টে যোগ করা
+        function addToCart() {
+            let existing = cart.find(item => item.id === selectedProduct.id);
+            if(existing) {
+                existing.qty += currentQty;
+            } else {
+                cart.push({ ...selectedProduct, qty: currentQty });
+            }
+            updateCartBar();
+            closeModal('productModal');
+        }
+
+        // ৪. কার্ট বার আপডেট
+        function updateCartBar() {
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            document.getElementById('cartCount').innerText = totalItems;
+            document.getElementById('cartTotal').innerText = totalPrice;
+        }
+
+        // ৫. চেকআউট পপ-আপ
+        function openCheckout() {
+            if (cart.length === 0) {
+                alert("আপনার কার্ট খালি! যেকোনো পণ্য সিলেক্ট করুন।");
+                return;
+            }
+
+            let cartListHtml = "";
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                let itemTotal = item.price * item.qty;
+                totalPrice += itemTotal;
+                cartListHtml += `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span>• ${item.name} (${item.qty} ${item.unit})</span>
+                        <span style="color:#f59e0b;">৳ ${itemTotal}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cartList').innerHTML = cartListHtml;
+            document.getElementById('finalTotal').innerText = `সর্বমোট: ৳ ${totalPrice}`;
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        // ৬. WhatsApp-এ অর্ডার সেন্ড
+        function sendWhatsAppOrder() {
+            let name = document.getElementById('custName').value.trim();
+            let address = document.getElementById('custAddress').value.trim();
+
+            if (!name || !address) {
+                alert("অনুগ্রহ করে আপনার নাম ও ঠিকানা দিন!");
+                return;
+            }
+
+            let message = `🛒 *পচা বাজার - নতুন অর্ডার*\n\n`;
+            message += `👤 *কাস্টমার নাম:* ${name}\n`;
+            message += `📍 *ঠিকানা:* ${address}\n\n`;
+            message += `🥬 *অর্ডারের তালিকা:*\n`;
+
+            let totalPrice = 0;
+            cart.forEach(item => {
+                let itemTotal = item.price * item.qty;
+                totalPrice += itemTotal;
+                message += `- ${item.name}: ${item.qty} ${item.unit} = ৳${itemTotal}\n`;
+            });
+
+            message += `\n💰 *সর্বমোট বিল:* ৳${totalPrice}\n\nঅর্ডারটি দ্রুত ডেলিভারির অনুরোধ করা হলো।`;
+
+            // WhatsApp লিঙ্ক তৈরি
+            let whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            
+            // সাকসেস মেসেজ দেখানো
+            alert("✅ অর্ডার সফল হয়েছে!\nআমাদের প্রতিনিধি খুব দ্রুত আপনার সাথে যোগাযোগ করবে।");
+
+            // কার্ট ক্লিয়ার
+            cart = [];
+            updateCartBar();
+            closeModal('checkoutModal');
+
+            // WhatsApp ওপেন
+            window.open(whatsappUrl, '_blank');
+        }
+
+        renderProducts();
     </script>
 </body>
 </html>
