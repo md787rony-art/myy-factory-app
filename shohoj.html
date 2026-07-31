@@ -8,49 +8,30 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #fff; padding-bottom: 60px; }
 
-        /* হেডার */
+        /* হেডার ও অফার ব্যানার */
+        .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 14px; }
         header { background: #022c22; padding: 20px; text-align: center; border-bottom: 4px solid #f59e0b; }
         header h1 { font-size: 28px; color: #ffffff; }
         header h1 span { color: #f59e0b; }
         header p { color: #34d399; font-size: 14px; margin-top: 5px; }
 
-        /* অফার ব্যানার */
-        .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 14px; }
+        /* কন্টেইনার */
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+        .section-title { margin-bottom: 20px; font-size: 20px; color: #34d399; border-left: 4px solid #f59e0b; padding-left: 10px; }
 
-        /* মেইন কন্টেইনার */
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-
-        /* পণ্য গ্রিড (ইউজার ভিউ) */
+        /* প্রোডাক্ট গ্রিড লেআউট */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; background: #0f172a; }
-        .product-card h3 { font-size: 16px; margin: 10px 0 5px 0; color: #f8fafc; }
+        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; padding: 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-3px); border-color: #10b981; }
+        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; background: #0f172a; }
+        .product-card h3 { font-size: 16px; margin: 10px 0 4px 0; color: #f8fafc; }
         .product-card p { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
-        .product-card .price { font-size: 16px; color: #f59e0b; font-weight: bold; margin-bottom: 10px; }
-        .buy-btn { background: #10b981; color: white; border: none; padding: 8px; border-radius: 5px; width: 100%; cursor: pointer; font-weight: bold; }
+        .product-card .price { font-size: 15px; color: #f59e0b; font-weight: bold; margin-bottom: 10px; }
+        .buy-btn { background: #10b981; color: white; border: none; padding: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .buy-btn:hover { background: #059669; }
 
-        /* --- 🕵️‍♂️ লুকানো অ্যাডমিন সেকশন --- */
-        #adminPanel { display: none; background: #ffffff; color: #333; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 2px solid #f59e0b; }
-        .admin-title { font-size: 20px; font-weight: bold; color: #022c22; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .admin-close { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-
-        .product-item-edit { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; border-left: 5px solid #10b981; }
-        .input-group { margin-bottom: 10px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; font-weight: bold; color: #022c22; margin-bottom: 4px; }
-        .input-group input, .input-group textarea { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 13px; }
-        
-        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 5px; border: 1px solid #10b981; }
-        .upload-status { font-size: 12px; font-weight: bold; margin-top: 4px; }
-
-        .admin-controls { display: flex; gap: 10px; margin-top: 15px; }
-        .add-btn { background: #10b981; color: white; border: none; padding: 10px; border-radius: 5px; flex: 1; font-weight: bold; cursor: pointer; }
-        .save-btn { background: #f59e0b; color: #0f172a; border: none; padding: 10px; border-radius: 5px; flex: 2; font-weight: bold; cursor: pointer; }
-        .delete-btn { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; float: right; font-size: 11px; cursor: pointer; }
-
-        /* ফুটার ও লুকানো অ্যাডমিন বাটন */
-        footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; position: relative; }
-        .hidden-admin-btn { position: absolute; right: 10px; bottom: 10px; opacity: 0.15; cursor: pointer; font-size: 14px; user-select: none; }
-        .hidden-admin-btn:hover { opacity: 1; }
+        /* ফুটার */
+        footer { text-align: center; padding: 25px; color: #64748b; font-size: 13px; background: #022c22; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -63,238 +44,177 @@
     </header>
 
     <div class="container">
+        <h2 class="section-title">🥬 দেশি তাজা কাঁচা বাজার:</h2>
         
-        <!-- 🕵️‍♂️ অ্যাডমিন কন্ট্রোল প্যানেল (লুকানো) -->
-        <div id="adminPanel">
-            <div class="admin-title">
-                ⚙️ অ্যাডমিন কন্ট্রোল প্যানেল
-                <button class="admin-close" onclick="closeAdmin()">✖ বন্ধ করুন</button>
+        <div class="product-grid">
+
+            <!-- ১. আলু -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" alt="গোল আলু">
+                <div>
+                    <h3>গোল আলু</h3>
+                    <p>দেশি লাল আলু</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৪৫ / কেজি</div>
+                    <button class="buy-btn" onclick="order('গোল আলু')">অর্ডার করুন</button>
+                </div>
             </div>
-            
-            <div id="adminProductList"></div>
 
-            <div class="admin-controls">
-                <button class="add-btn" onclick="addNewProduct()">➕ নতুন পণ্য যোগ করুন</button>
-                <button class="save-btn" onclick="saveData()">💾 সাইটে আপডেট সেভ করুন</button>
+            <!-- ২. টমেটো -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" alt="পাকা টমেটো">
+                <div>
+                    <h3>পাকা টমেটো</h3>
+                    <p>ক্ষেতের তাজা টমেটো</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৬০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('পাকা টমেটো')">অর্ডার করুন</button>
+                </div>
             </div>
-        </div>
 
-        <!-- 🛍️ গ্রাহকদের জন্য পণ্য প্রদর্শন এলাকা -->
-        <h2 style="margin-bottom: 15px; font-size: 18px; color: #34d399;">🥬 আজকের তাজা বাজার:</h2>
-        <div id="userProductGrid" class="product-grid">
-            <p style="grid-column: 1/-1; text-align:center;">🔄 পণ্য লোড হচ্ছে...</p>
-        </div>
+            <!-- ৩. বেগুন -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" alt="গোল বেগুন">
+                <div>
+                    <h3>বেগুন</h3>
+                    <p>তাজা বেগুনি/গোল বেগুন</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৫০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('বেগুন')">অর্ডার করুন</button>
+                </div>
+            </div>
 
+            <!-- ৪. কাঁচা মরিচ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=400" alt="কাঁচা মরিচ">
+                <div>
+                    <h3>কাঁচা মরিচ</h3>
+                    <p>ঝাল দেশি মরিচ</p>
+                </div>
+                <div>
+                    <div class="price">৳ ১২০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('কাঁচা মরিচ')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ৫. পিয়াজ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cf?w=400" alt="দেশি পিয়াজ">
+                <div>
+                    <h3>দেশি পিয়াজ</h3>
+                    <p>ভালো মানের শুকনো পিয়াজ</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৭০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('দেশি পিয়াজ')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ৬. রসুন -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=400" alt="রসুন">
+                <div>
+                    <h3>রসুন</h3>
+                    <p>দেশি এক কোয়া/বড় রসুন</p>
+                </div>
+                <div>
+                    <div class="price">৳ ২২০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('রসুন')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ৭. আদা -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1615485290176-02e26e0e6403?w=400" alt="আদা">
+                <div>
+                    <h3>তাজা আদা</h3>
+                    <p>দেশি মানসম্মত আদা</p>
+                </div>
+                <div>
+                    <div class="price">৳ ২০০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('আদা')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ৮. মিষ্টি কুমড়া -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1570586437263-ab629fccc818?w=400" alt="মিষ্টি কুমড়া">
+                <div>
+                    <h3>মিষ্টি কুমড়া</h3>
+                    <p>পাকা মিষ্টি কুমড়া</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৪০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('মিষ্টি কুমড়া')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ৯. লাউ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1598170845058-12ef4a45753b?w=400" alt="কচি লাউ">
+                <div>
+                    <h3>কচি লাউ</h3>
+                    <p>মিষ্টি তাজা পানি লাউ</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৬০ / পিস</div>
+                    <button class="buy-btn" onclick="order('কচি লাউ')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ১০. গাজর -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1598170845058-12ef4a45753b?w=400" alt="লাল গাজর">
+                <div>
+                    <h3>লাল গাজর</h3>
+                    <p>তাজা দেশি গাজর</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৫০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('লাল গাজর')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ১১. শসা -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=400" alt="দেশি শসা">
+                <div>
+                    <h3>দেশি শসা</h3>
+                    <p>সালাদের তাজা শসা</p>
+                </div>
+                <div>
+                    <div class="price">৳ ৪০ / কেজি</div>
+                    <button class="buy-btn" onclick="order('দেশি শসা')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+            <!-- ১২. লেবু -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1534531141161-e41d133a4b97?w=400" alt="কাগজি লেবু">
+                <div>
+                    <h3>কাগজি লেবু</h3>
+                    <p>রসালো বড় সাইজ লেবু</p>
+                </div>
+                <div>
+                    <div class="price">৳ ২০ / হালি</div>
+                    <button class="buy-btn" onclick="order('কাগজি লেবু')">অর্ডার করুন</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <footer>
         <p>© ২০২৬ পচা বাজার | md787rony-art.github.io</p>
-        <!-- 🤫 একদম এক কোণায় আবছা লুকিয়ে থাকা বাটন -->
-        <span class="hidden-admin-btn" onclick="openAdmin()" title="Admin Control">⚙️</span>
     </footer>
 
     <script>
-        const DB_URL = "https://api.npoint.io/46e4c7604473efbc3e43"; 
-        const IMGBB_API_KEY = "3c3f25c798991dcdb21c4b7ec82efec7";
-        const ADMIN_PASSWORD = "1234"; // 🔐 পাসওয়ার্ড
-
-        let products = [];
-
-        // ১. ডাটা লোড
-        async function loadData() {
-            try {
-                let res = await fetch(DB_URL);
-                products = await res.json();
-                if (!Array.isArray(products)) products = [];
-                renderUserView();
-            } catch(e) {
-                products = [];
-                renderUserView();
-            }
+        function order(productName) {
+            alert(`'${productName}' অর্ডার করতে আপনার নাম ও ঠিকানা মেসেজ করুন বা কল দিন।`);
         }
-
-        // ২. ইউজার ভিউ
-        function renderUserView() {
-            let grid = document.getElementById('userProductGrid');
-            grid.innerHTML = "";
-            
-            if(products.length === 0) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center;">বর্তমানে কোনো পণ্য নেই।</p>`;
-                return;
-            }
-
-            products.forEach(p => {
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <img src="${p.img || 'https://via.placeholder.com/150?text=No+Image'}" alt="${p.name}">
-                        <div>
-                            <h3>${p.name || 'পণ্য'}</h3>
-                            <p>${p.desc || ''}</p>
-                        </div>
-                        <div>
-                            <div class="price">৳ ${p.price || 0}</div>
-                            <button class="buy-btn" onclick="alert('অর্ডার করতে কল করুন বা মেসেজ দিন!')">অর্ডার করুন</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // ৩. অ্যাডমিন ভিউ
-        function renderAdminView() {
-            let list = document.getElementById('adminProductList');
-            list.innerHTML = "";
-
-            products.forEach((p, i) => {
-                list.innerHTML += `
-                    <div class="product-item-edit">
-                        <button class="delete-btn" onclick="removeProduct(${i})">🗑️ মুছে ফেলুন</button>
-                        <div class="input-group">
-                            <label>পণ্যের নাম:</label>
-                            <input type="text" id="name-${i}" value="${p.name || ''}" oninput="updateLocalData(${i})">
-                        </div>
-                        <div class="input-group">
-                            <label>বিবরণ:</label>
-                            <textarea id="desc-${i}" rows="2" oninput="updateLocalData(${i})">${p.desc || ''}</textarea>
-                        </div>
-                        <div class="input-group">
-                            <label>দাম (৳):</label>
-                            <input type="number" id="price-${i}" value="${p.price || 0}" oninput="updateLocalData(${i})">
-                        </div>
-                        <div class="input-group">
-                            <label>ছবি নির্বাচন করুন:</label>
-                            <input type="file" accept="image/*" onchange="processAndUpload(event, ${i})">
-                            <div id="status-${i}" class="upload-status"></div>
-                            <img id="preview-${i}" class="preview-img" src="${p.img || 'https://via.placeholder.com/80?text=No+Image'}">
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // ৪. অ্যাডমিন মোড অন/অফ
-        function openAdmin() {
-            let pass = prompt("🔐 অ্যাডমিন অ্যাক্সেস পাসওয়ার্ড দিন:");
-            if (pass === ADMIN_PASSWORD) {
-                document.getElementById('adminPanel').style.display = 'block';
-                renderAdminView();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else if(pass !== null) {
-                alert("❌ ভুল পাসওয়ার্ড!");
-            }
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-
-        function updateLocalData(i) {
-            products[i].name = document.getElementById(`name-${i}`).value;
-            products[i].desc = document.getElementById(`desc-${i}`).value;
-            products[i].price = parseFloat(document.getElementById(`price-${i}`).value) || 0;
-        }
-
-        // ৫. ১০০% ওয়ার্কিং ছবি আপলোড ফাংশন (Base64)
-        function processAndUpload(event, index) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            let statusBox = document.getElementById(`status-${index}`);
-            statusBox.style.color = "#f59e0b";
-            statusBox.innerText = "⏳ ছবি প্রসেস ও আপলোড হচ্ছে...";
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > MAX_WIDTH) {
-                        height = Math.round((height * MAX_WIDTH) / width);
-                        width = MAX_WIDTH;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const base64Image = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
-
-                    let formData = new FormData();
-                    formData.append("key", IMGBB_API_KEY);
-                    formData.append("image", base64Image);
-
-                    fetch("https://api.imgbb.com/1/upload", {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(res => res.json())
-                    .then(result => {
-                        if (result.success && result.data && result.data.url) {
-                            let imageUrl = result.data.url;
-                            products[index].img = imageUrl;
-                            document.getElementById(`preview-${index}`).src = imageUrl;
-                            statusBox.style.color = "#10b981";
-                            statusBox.innerText = "✅ ছবি আপলোড সম্পন্ন!";
-                        } else {
-                            statusBox.style.color = "#ef4444";
-                            statusBox.innerText = "❌ আপলোড ব্যর্থ! অন্য ছবি চেষ্টা করুন।";
-                        }
-                    })
-                    .catch(err => {
-                        statusBox.style.color = "#ef4444";
-                        statusBox.innerText = "❌ নেটওয়ার্ক ত্রুটি!";
-                    });
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function addNewProduct() {
-            products.push({ name: "", desc: "", price: 0, img: "" });
-            renderAdminView();
-        }
-
-        function removeProduct(i) {
-            if (confirm("পণ্যটি মুছে ফেলতে চান?")) {
-                products.splice(i, 1);
-                renderAdminView();
-            }
-        }
-
-        // ৬. ডাটা সেভ
-        async function saveData() {
-            products.forEach((p, i) => {
-                p.name = document.getElementById(`name-${i}`).value;
-                p.desc = document.getElementById(`desc-${i}`).value;
-                p.price = parseFloat(document.getElementById(`price-${i}`).value) || 0;
-            });
-
-            try {
-                let res = await fetch(DB_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(products)
-                });
-                
-                if(res.ok) {
-                    alert("✅ সাইট সফলভাবে আপডেট হয়েছে!");
-                    renderUserView();
-                    closeAdmin();
-                } else {
-                    alert("❌ সেভ করা যায়নি।");
-                }
-            } catch(e) {
-                alert("❌ নেটওয়ার্ক ত্রুটি!");
-            }
-        }
-
-        loadData();
     </script>
 </body>
 </html>
