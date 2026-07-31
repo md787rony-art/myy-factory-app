@@ -10,7 +10,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #fff; padding-bottom: 120px; }
 
-        .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 13px; }
+        /* ডান থেকে বামে স্ক্রোলিং ব্যানার */
+        .banner { background: #ef4444; color: white; padding: 8px 0; font-weight: bold; font-size: 13px; overflow: hidden; }
+        .banner marquee { display: block; }
+
         header { background: #022c22; padding: 15px; text-align: center; border-bottom: 4px solid #f59e0b; position: relative; }
         header h1 { font-size: 26px; color: #ffffff; }
         header h1 span { color: #f59e0b; }
@@ -40,6 +43,11 @@
         .vip-box h3 { color: #f59e0b; font-size: 16px; margin-bottom: 5px; }
         .vip-box p { font-size: 12px; color: #cbd5e1; margin-bottom: 10px; }
         .vip-btn { background: #f59e0b; color: #000; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+        /* VIP সুবিধা সমূহের স্টাইল */
+        .vip-features { background: #0f172a; border-radius: 8px; padding: 12px; margin: 12px 0; text-align: left; font-size: 12px; color: #cbd5e1; }
+        .vip-features ul { list-style-type: none; padding-left: 0; }
+        .vip-features li { margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
         .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 440px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; }
@@ -84,7 +92,12 @@
 </head>
 <body>
 
-    <div class="banner">🔥 ১০% ছাড় প্রথম অর্ডারে! কোড: FRESH10</div>
+    <!-- ডান থেকে বাম দিকে রানিং ব্যানার -->
+    <div class="banner">
+        <marquee behavior="scroll" direction="left" scrollamount="6">
+            🔥 ১০% ছাড় প্রথম অর্ডারে! কোড: FRESH10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛒 তাজা শাক-সবজি ও মাছ-মাংসের বিশ্বস্ত ঠিকানা - পচা বাজার!
+        </marquee>
+    </div>
 
     <header>
         <h1>🛒 <span>পচা বাজার</span> (POCHA BAZAR)</h1>
@@ -97,13 +110,43 @@
         <!-- VIP কাস্টমার এরিয়া -->
         <div class="vip-box">
             <h3>👑 ভিআইপি মেম্বারশিপ এবং ডেলিভারি সাবস্ক্রিপশন</h3>
-            <p>প্রতি সপ্তাহে বা মাসে নিয়মিত বাজার পেতে আমাদের VIP সাবস্ক্রিপশন চালু করুন এবং ১০% অতিরিক্ত ছাড় পান!</p>
-            <button class="vip-btn" onclick="subscribeVIP()">⭐ ভিআইপি মেম্বারশিপ নিন</button>
+            <p>প্রতি সপ্তাহে বা মাসে নিয়মিত বাজার পেতে আমাদের VIP সাবস্ক্রিপশন চালু করুন এবং বিশেষ সুবিধা উপভোগ করুন!</p>
+            <button class="vip-btn" onclick="openVIPModal()">⭐ ভিআইপি সুবিধা দেখুন ও যুক্ত হোন</button>
         </div>
 
         <h2 class="section-title">🥬 নিত্যপ্রয়োজনীয় শাক-সবজি, মাছ-মাংস ও কাঁচাবাজার:</h2>
         <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি এখানে খুঁজুন..." onkeyup="filterProducts()">
         <div id="productGrid" class="product-grid"></div>
+    </div>
+
+    <!-- VIP সাবস্ক্রিপশন মোডাল -->
+    <div id="vipModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('vipModal')">✖</span>
+            <h3 style="color:#f59e0b; text-align:center;">👑 ভিআইপি মেম্বারশিপের বিশেষ সুবিধাসমূহ:</h3>
+            
+            <div class="vip-features">
+                <ul>
+                    <li>✅ <b>প্রতি অর্ডারে ফ্ল্যাট ১০% ছাড়:</b> সব ধরনের বাজারে সবসময় ১০% ছাড়।</li>
+                    <li>✅ <b>ফ্রি ডেলিভারি সুবিধা:</b> ভিআইপি সদস্যদের কোনো ডেলিভারি চার্জ নেই।</li>
+                    <li>✅ <b>ফার্স্ট প্রpriority ডেলিভারি:</b> অর্ডারের মাত্র ১ ঘণ্টার মধ্যে হোম ডেলিভারি।</li>
+                    <li>✅ <b>বাছাই করা সেরা পণ্য:</b> সবচেয়ে তাজা ও ফ্রেশ মাছ-মাংস এবং সবজি অগ্রাধিকারে প্যাক করা হয়।</li>
+                    <li>✅ <b>সাপ্তাহিক/মাসিক শিডিউল:</b> আপনার ফ্রিজ খালি হওয়ার আগেই নির্দিষ্ট দিনে অটো-ডেলিভারি।</li>
+                </ul>
+            </div>
+
+            <p style="font-size:12px; color:#34d399; margin-bottom:8px; text-align:center;">মেম্বারশিপের আবেদন করতে আপনার তথ্য দিন:</p>
+            
+            <label style="font-size: 11px;">আপনার নাম:</label>
+            <input type="text" id="vipName" class="input-field" placeholder="আপনার পুরো নাম">
+
+            <label style="font-size: 11px; margin-top:6px; display:block;">মোবাইল/WhatsApp নম্বর:</label>
+            <input type="text" id="vipPhone" class="input-field" placeholder="017XXXXXXXX">
+
+            <button class="checkout-btn" style="width:100%; margin-top:15px; justify-content:center; padding:10px;" onclick="sendVIPRequest()">
+                📱 WhatsApp-এ ভিআইপি রিকোয়েস্ট পাঠান
+            </button>
+        </div>
     </div>
 
     <!-- প্রোডাক্ট মোডাল -->
@@ -143,7 +186,7 @@
             <label style="font-size: 11px; margin-top:4px; display:block;">সম্পূর্ণ ঠিকানা:</label>
             <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
 
-            <!-- নতুন ফিচার: ডেলিভারি সিডিউল -->
+            <!-- ডেলিভারি সিডিউল -->
             <div style="display: flex; gap: 8px; margin-top: 4px;">
                 <div style="flex:1;">
                     <label style="font-size: 11px;">ডেলিভারির তারিখ:</label>
@@ -159,7 +202,7 @@
                 </div>
             </div>
 
-            <!-- নতুন ফিচার: বিশেষ নির্দেশনা -->
+            <!-- বিশেষ নির্দেশনা -->
             <label style="font-size: 11px; margin-top:4px; display:block;">বিশেষ কোনো নির্দেশনা / কী লাগবে:</label>
             <input type="text" id="custNotes" class="input-field" placeholder="যেমন: মাছ কেটে দেবেন, বা কচি সবজি দিবেন...">
 
@@ -192,7 +235,7 @@
         </div>
     </div>
 
-    <!-- ক্যাশ মেমো টেমপ্লেট (ছবি ডাউনলোডের জন্য) -->
+    <!-- ক্যাশ মেমো টেমপ্লেট -->
     <div id="invoiceTemplate">
         <h2>🛒 পচা বাজার</h2>
         <div class="inv-slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
@@ -375,11 +418,28 @@
             document.getElementById('cartTotal').innerText = cart.reduce((sum, item) => sum + item.totalPrice, 0);
         }
 
-        function subscribeVIP() {
-            let phone = prompt("VIP সাবস্ক্রিপশনের জন্য আপনার মোবাইল নম্বর দিন:");
-            if(phone) {
-                alert("ধন্যবাদ! আমাদের প্রতিনিধি শীঘ্রই ভিআইপি মেম্বারশিপ কনফার্ম করতে আপনার সাথে যোগাযোগ করবেন।");
+        /* VIP ফাংশনসমূহ */
+        function openVIPModal() {
+            document.getElementById('vipModal').style.display = 'flex';
+        }
+
+        function sendVIPRequest() {
+            let name = document.getElementById('vipName').value.trim();
+            let phone = document.getElementById('vipPhone').value.trim();
+
+            if(!name || !phone) {
+                alert("অনুগ্রহ করে আপনার নাম ও মোবাইল নম্বর দিন!");
+                return;
             }
+
+            let message = `👑 *পচা বাজার - ভিআইপি মেম্বারশিপ রিকোয়েস্ট*\n\n`;
+            message += `👤 *কাস্টমারের নাম:* ${name}\n`;
+            message += `📞 *মোবাইল নম্বর:* ${phone}\n\n`;
+            message += `আমি পচা বাজারের VIP মেম্বারশিপ সাবস্ক্রিপশন নিতে আগ্রহী। অনুগ্রহ করে বিস্তারিত জানান।`;
+
+            let whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            closeModal('vipModal');
+            window.open(whatsappUrl, '_blank');
         }
 
         function openCheckout() {
@@ -401,9 +461,7 @@
                 `;
             });
 
-            // ডিফল্ট আজকের তারিখ সিলেক্ট করে রাখা
             document.getElementById('delivDate').valueAsDate = new Date();
-
             document.getElementById('cartList').innerHTML = cartListHtml;
             document.getElementById('finalTotal').innerText = `সর্বমোট বিল: ৳ ${totalPrice}`;
             document.getElementById('checkoutModal').style.display = 'flex';
@@ -461,7 +519,6 @@
             document.getElementById('invAdv').innerText = advAmount;
             document.getElementById('invDue').innerText = dueAmount;
 
-            // মেমো ছবি আকারে ডাউনলোড
             let invoiceElem = document.getElementById('invoiceTemplate');
             
             html2canvas(invoiceElem, { scale: 2 }).then(canvas => {
@@ -470,7 +527,6 @@
                 link.href = canvas.toDataURL('image/jpeg');
                 link.click();
 
-                // WhatsApp মেসেজ পাঠানো
                 let message = `🛒 *পচা বাজার - নতুন অর্ডার*\n`;
                 message += `_"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"_\n\n`;
                 message += `👤 *কাস্টমার:* ${name}\n`;
