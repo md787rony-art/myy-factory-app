@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পচা বাজার - POCHA BAZAR</title>
-    <!-- html2canvas 라이ব্রেরি -->
+    <!-- html2canvas লাইব্রেরি -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #fff; padding-bottom: 120px; }
 
         .banner { background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 13px; }
-        header { background: #022c22; padding: 15px; text-align: center; border-bottom: 4px solid #f59e0b; }
-        header h1 { font-size: 24px; color: #ffffff; }
+        header { background: #022c22; padding: 15px; text-align: center; border-bottom: 4px solid #f59e0b; position: relative; }
+        header h1 { font-size: 26px; color: #ffffff; }
         header h1 span { color: #f59e0b; }
+        header .slogan { color: #f59e0b; font-size: 13px; font-style: italic; margin-top: 2px; font-weight: bold; }
         header p { color: #34d399; font-size: 12px; margin-top: 4px; }
+        
+        .hotline-btn { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-top: 8px; }
 
         .container { max-width: 1100px; margin: 20px auto; padding: 0 12px; }
         .section-title { margin-bottom: 15px; font-size: 18px; color: #34d399; border-left: 4px solid #f59e0b; padding-left: 10px; }
@@ -32,8 +35,14 @@
         .select-btn { background: #10b981; color: white; border: none; padding: 6px; border-radius: 5px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; }
         .select-btn:hover { background: #059669; }
 
+        /* ভিআইপি সাবস্ক্রিপশন সেকশন */
+        .vip-box { background: linear-gradient(135deg, #1e293b, #065f46); border: 2px dashed #f59e0b; border-radius: 12px; padding: 15px; text-align: center; margin: 25px 0; }
+        .vip-box h3 { color: #f59e0b; font-size: 16px; margin-bottom: 5px; }
+        .vip-box p { font-size: 12px; color: #cbd5e1; margin-bottom: 10px; }
+        .vip-btn { background: #f59e0b; color: #000; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-        .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 420px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: #1e293b; border: 2px solid #f59e0b; border-radius: 12px; width: 100%; max-width: 440px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; color: #ef4444; cursor: pointer; font-weight: bold; }
         .modal-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
         
@@ -45,7 +54,7 @@
         .cart-info strong { color: #f59e0b; font-size: 16px; }
         .checkout-btn { background: #25d366; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
 
-        .input-field { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 13px; }
+        .input-field { width: 100%; padding: 8px; margin-top: 4px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 12px; }
         .cart-items-list { max-height: 100px; overflow-y: auto; margin: 8px 0; font-size: 12px; background: #0f172a; padding: 8px; border-radius: 5px; }
 
         .payment-box { background: #0f172a; border: 1px solid #f59e0b; border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 12px; }
@@ -55,19 +64,20 @@
         /* ক্যাশ মেমো টেমপ্লেট */
         #invoiceTemplate {
             position: absolute; left: -9999px; top: -9999px;
-            width: 360px; background: #ffffff; color: #000000;
+            width: 380px; background: #ffffff; color: #000000;
             padding: 20px; border-radius: 8px; font-family: Arial, sans-serif;
         }
-        #invoiceTemplate h2 { color: #022c22; text-align: center; margin-bottom: 2px; }
+        #invoiceTemplate h2 { color: #022c22; text-align: center; margin-bottom: 0px; }
+        #invoiceTemplate .inv-slogan { text-align: center; font-size: 11px; color: #d97706; font-style: italic; margin-bottom: 8px; font-weight: bold; }
         #invoiceTemplate p { text-align: center; font-size: 11px; color: #555; }
-        #invoiceTemplate .inv-details { margin: 12px 0; font-size: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; }
-        #invoiceTemplate table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+        #invoiceTemplate .inv-details { margin: 10px 0; font-size: 11px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; line-height: 1.5; }
+        #invoiceTemplate table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
         #invoiceTemplate th { background: #f3f4f6; text-align: left; padding: 5px; border-bottom: 1px solid #ddd; }
         #invoiceTemplate td { padding: 5px; border-bottom: 1px solid #eee; }
         
         .inv-summary { margin-top: 10px; border-top: 1px solid #333; padding-top: 8px; font-size: 12px; }
         .inv-summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .inv-summary-row.due { font-weight: bold; font-size: 14px; color: #d97706; border-top: 1px dashed #ccc; padding-top: 4px; }
+        .inv-summary-row.due { font-weight: bold; font-size: 13px; color: #d97706; border-top: 1px dashed #ccc; padding-top: 4px; }
         
         #invoiceTemplate .inv-footer { text-align: center; margin-top: 15px; font-size: 10px; color: #777; border-top: 1px solid #ddd; padding-top: 8px; }
     </style>
@@ -78,10 +88,19 @@
 
     <header>
         <h1>🛒 <span>পচা বাজার</span> (POCHA BAZAR)</h1>
-        <p>নামে পচা হলেও পণ্য ১০০% তাজা ও বিশুদ্ধ!</p>
+        <div class="slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
+        <p>কল করে সরাসরি অর্ডার করুন:</p>
+        <a href="tel:01886343188" class="hotline-btn">📞 কল করুন: 01886-343188</a>
     </header>
 
     <div class="container">
+        <!-- VIP কাস্টমার এরিয়া -->
+        <div class="vip-box">
+            <h3>👑 ভিআইপি মেম্বারশিপ এবং ডেলিভারি সাবস্ক্রিপশন</h3>
+            <p>প্রতি সপ্তাহে বা মাসে নিয়মিত বাজার পেতে আমাদের VIP সাবস্ক্রিপশন চালু করুন এবং ১০% অতিরিক্ত ছাড় পান!</p>
+            <button class="vip-btn" onclick="subscribeVIP()">⭐ ভিআইপি মেম্বারশিপ নিন</button>
+        </div>
+
         <h2 class="section-title">🥬 নিত্যপ্রয়োজনীয় শাক-সবজি, মাছ-মাংস ও কাঁচাবাজার:</h2>
         <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি এখানে খুঁজুন..." onkeyup="filterProducts()">
         <div id="productGrid" class="product-grid"></div>
@@ -113,56 +132,77 @@
     <div id="checkoutModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('checkoutModal')">✖</span>
-            <h3 style="color:#10b981; margin-bottom:5px;">🛍️ আপনার অর্ডারের তালিকা:</h3>
+            <h3 style="color:#10b981; margin-bottom:5px;">🛍️ অর্ডারের বিস্তারিত বিবরণ:</h3>
             <div id="cartList" class="cart-items-list"></div>
-            
             <h4 id="finalTotal" style="color:#f59e0b; text-align:right; margin-bottom:10px;"></h4>
+
+            <!-- কাস্টমার তথ্য -->
+            <label style="font-size: 11px;">আপনার নাম:</label>
+            <input type="text" id="custName" class="input-field" placeholder="আপনার নাম">
+
+            <label style="font-size: 11px; margin-top:4px; display:block;">সম্পূর্ণ ঠিকানা:</label>
+            <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
+
+            <!-- নতুন ফিচার: ডেলিভারি সিডিউল -->
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                <div style="flex:1;">
+                    <label style="font-size: 11px;">ডেলিভারির তারিখ:</label>
+                    <input type="date" id="delivDate" class="input-field">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size: 11px;">ডেলিভারির সময়:</label>
+                    <select id="delivTime" class="input-field">
+                        <option value="সকাল ৮টা - ১১টা">সকাল ৮টা - ১১টা</option>
+                        <option value="দুপুর ১২টা - ৩টা">দুপুর ১২টা - ৩টা</option>
+                        <option value="বিকেল ৪টা - ৭টা">বিকেল ৪টা - ৭টা</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- নতুন ফিচার: বিশেষ নির্দেশনা -->
+            <label style="font-size: 11px; margin-top:4px; display:block;">বিশেষ কোনো নির্দেশনা / কী লাগবে:</label>
+            <input type="text" id="custNotes" class="input-field" placeholder="যেমন: মাছ কেটে দেবেন, বা কচি সবজি দিবেন...">
 
             <!-- এডভান্স পেমেন্ট সেকশন -->
             <div class="payment-box">
-                <p style="color:#10b981; font-weight:bold; font-size:13px; margin-bottom:5px;">💳 এডভান্স পেমেন্ট সেকশন:</p>
-                <p>অর্ডার কনফার্ম করতে এডভান্স সেন্ড মানি করুন:</p>
-                <p>• বিকাশ: <span class="pay-num">01886-343188</span></p>
-                <p>• নগদ: <span class="pay-num">0177777289</span></p>
+                <p style="color:#10b981; font-weight:bold; font-size:12px; margin-bottom:3px;">💳 এডভান্স পেমেন্ট সেকশন:</p>
+                <p>• বিকাশ: <span class="pay-num">01886-343188</span> | নগদ: <span class="pay-num">0177777289</span></p>
             </div>
 
-            <label style="font-size: 12px;">আপনার নাম:</label>
-            <input type="text" id="custName" class="input-field" placeholder="আপনার পুরো নাম">
-
-            <label style="font-size: 12px; margin-top:6px; display:block;">সম্পূর্ণ ঠিকানা:</label>
-            <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
-
-            <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <div style="display: flex; gap: 8px;">
                 <div style="flex:1;">
                     <label style="font-size: 11px;">পেমেন্ট মেথড:</label>
                     <select id="payMethod" class="input-field">
-                        <option value="bKash">বিকাশ (bKash)</option>
-                        <option value="Nagad">নগদ (Nagad)</option>
+                        <option value="bKash">বিকাশ</option>
+                        <option value="Nagad">নগদ</option>
                     </select>
                 </div>
                 <div style="flex:1;">
-                    <label style="font-size: 11px;">এডভান্স পরিমাণ (৳):</label>
-                    <input type="number" id="advAmount" class="input-field" value="50" placeholder="টাকা">
+                    <label style="font-size: 11px;">এডভান্স (৳):</label>
+                    <input type="number" id="advAmount" class="input-field" value="50">
                 </div>
             </div>
 
-            <label style="font-size: 11px; margin-top:6px; display:block;">ট্রানজেকশন ID (TxnID):</label>
+            <label style="font-size: 11px; margin-top:4px; display:block;">ট্রানজেকশন ID (TxnID):</label>
             <input type="text" id="txnId" class="input-field" placeholder="যেমন: 9J87KLX12">
 
-            <button class="checkout-btn" style="width:100%; margin-top:12px; justify-content:center; padding:12px;" onclick="processOrderAndDownload()">
+            <button class="checkout-btn" style="width:100%; margin-top:10px; justify-content:center; padding:10px;" onclick="processOrderAndDownload()">
                 📱 মেমো ডাউনলোড ও WhatsApp-এ পাঠান
             </button>
         </div>
     </div>
 
-    <!-- হিডেন ক্যাশ মেমো টেমপ্লেট -->
+    <!-- ক্যাশ মেমো টেমপ্লেট (ছবি ডাউনলোডের জন্য) -->
     <div id="invoiceTemplate">
         <h2>🛒 পচা বাজার</h2>
-        <p>অর্ডার মেমো ও ক্যাশ রসিদ</p>
+        <div class="inv-slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
+        <p>হটলাইন: 01886-343188 | ক্যাশ মেমো</p>
         <div class="inv-details">
             <div><b>তারিখ:</b> <span id="invDate"></span></div>
             <div><b>নাম:</b> <span id="invName"></span></div>
             <div><b>ঠিকানা:</b> <span id="invAddress"></span></div>
+            <div><b>ডেলিভারি সিডিউল:</b> <span id="invSchedule" style="color:#d97706; font-weight:bold;"></span></div>
+            <div><b>বিশেষ নোট:</b> <span id="invNotes"></span></div>
             <div><b>পেমেন্ট মেথড:</b> <span id="invMethod"></span> (Txn: <span id="invTxn"></span>)</div>
         </div>
         <table>
@@ -193,7 +233,7 @@
 
         <div class="inv-footer">
             ধন্যবাদ পচা বাজারে শপিং করার জন্য! ❤️<br>
-            যেকোনো প্রয়োজনে যোগাযোগ করুন।
+            যেকোনো প্রয়োজনে কল করুন: 01886-343188
         </div>
     </div>
 
@@ -207,10 +247,8 @@
     </div>
 
     <script>
-        // কাস্টমাইজড ফোন নাম্বার
         const WHATSAPP_NUMBER = "8801886343188"; 
 
-        // সম্পূর্ণ প্রোডাক্ট লিস্ট (সঠিক ছবি সহ)
         const products = [
             { id: 1, name: "গোল আলু", price: 45, unit: "কেজি", desc: "নতুন দেশি গোল আলু", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" },
             { id: 2, name: "মিষ্টি আলু", price: 50, unit: "কেজি", desc: "তাজা মিষ্টি আলু", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400" },
@@ -219,7 +257,7 @@
             { id: 5, name: "টমেটো", price: 60, unit: "কেজি", desc: "লাল টকটকে পাকা টমেটো", img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" },
             { id: 6, name: "শসা", price: 40, unit: "কেজি", desc: "সালাদের তাজা দেশি শসা", img: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=400" },
             { id: 7, name: "গাজর", price: 50, unit: "কেজি", desc: "মিষ্টি লাল গাজর", img: "https://images.unsplash.com/photo-1598170845058-12ef4a457939?w=400" },
-            { id: 8, name: "রসুন", price: 220, unit: "কেজি", desc: "দেশি এককোয়া/একদানা রসুন", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" },
+            { id: 8, name: "রসুন", price: 220, unit: "কেজি", desc: "দেশি রসুন", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" },
             { id: 9, name: "আদা", price: 200, unit: "কেজি", desc: "তাজা মানসম্মত আদা", img: "https://images.unsplash.com/photo-1615485290178-984e1a0b3297?w=400" },
             { id: 10, name: "পেঁয়াজ", price: 70, unit: "কেজি", desc: "দেশি পেঁয়াজ", img: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8ce?w=400" },
             { id: 11, name: "কাঁচামরিচ", price: 120, unit: "কেজি", desc: "ঝাল ও সবুজ কাঁচামরিচ", img: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=400" },
@@ -337,6 +375,13 @@
             document.getElementById('cartTotal').innerText = cart.reduce((sum, item) => sum + item.totalPrice, 0);
         }
 
+        function subscribeVIP() {
+            let phone = prompt("VIP সাবস্ক্রিপশনের জন্য আপনার মোবাইল নম্বর দিন:");
+            if(phone) {
+                alert("ধন্যবাদ! আমাদের প্রতিনিধি শীঘ্রই ভিআইপি মেম্বারশিপ কনফার্ম করতে আপনার সাথে যোগাযোগ করবেন।");
+            }
+        }
+
         function openCheckout() {
             if (cart.length === 0) {
                 alert("আপনার কার্ট খালি!");
@@ -356,6 +401,9 @@
                 `;
             });
 
+            // ডিফল্ট আজকের তারিখ সিলেক্ট করে রাখা
+            document.getElementById('delivDate').valueAsDate = new Date();
+
             document.getElementById('cartList').innerHTML = cartListHtml;
             document.getElementById('finalTotal').innerText = `সর্বমোট বিল: ৳ ${totalPrice}`;
             document.getElementById('checkoutModal').style.display = 'flex';
@@ -364,6 +412,10 @@
         function processOrderAndDownload() {
             let name = document.getElementById('custName').value.trim();
             let address = document.getElementById('custAddress').value.trim();
+            let delivDate = document.getElementById('delivDate').value;
+            let delivTime = document.getElementById('delivTime').value;
+            let custNotes = document.getElementById('custNotes').value.trim() || "নেই";
+            
             let payMethod = document.getElementById('payMethod').value;
             let advAmount = parseFloat(document.getElementById('advAmount').value) || 0;
             let txnId = document.getElementById('txnId').value.trim();
@@ -385,6 +437,8 @@
             document.getElementById('invDate').innerText = new Date().toLocaleDateString('bn-BD');
             document.getElementById('invName').innerText = name;
             document.getElementById('invAddress').innerText = address;
+            document.getElementById('invSchedule').innerText = `${delivDate} (${delivTime})`;
+            document.getElementById('invNotes').innerText = custNotes;
             document.getElementById('invMethod').innerText = payMethod;
             document.getElementById('invTxn').innerText = txnId;
 
@@ -417,9 +471,12 @@
                 link.click();
 
                 // WhatsApp মেসেজ পাঠানো
-                let message = `🛒 *পচা বাজার - নতুন অর্ডার*\n\n`;
+                let message = `🛒 *পচা বাজার - নতুন অর্ডার*\n`;
+                message += `_"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"_\n\n`;
                 message += `👤 *কাস্টমার:* ${name}\n`;
-                message += `📍 *ঠিকানা:* ${address}\n\n`;
+                message += `📍 *ঠিকানা:* ${address}\n`;
+                message += `⏰ *ডেলিভারি সিডিউল:* ${delivDate} (${delivTime})\n`;
+                message += `📝 *বিশেষ নির্দেশনা:* ${custNotes}\n\n`;
                 message += `🥬 *আইটেম লিস্ট:*\n${messageList}\n`;
                 message += `💰 *মোট বিল:* ৳${totalPrice}\n`;
                 message += `✅ *এডভান্স পেমেন্ট:* ৳${advAmount} (${payMethod} - Txn: ${txnId})\n`;
