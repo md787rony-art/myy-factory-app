@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পচা বাজার - POCHA BAZAR 3D</title>
+    <!-- html2canvas 라이ব্রেরি -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8fafc; color: #0f172a; padding-bottom: 120px; overflow-x: hidden; }
+
+        /* রানিং ব্যানার */
+        .banner { background: #ef4444; color: white; padding: 8px 0; font-weight: bold; font-size: 13px; overflow: hidden; }
+        .banner marquee { display: block; }
+
+        /* হেডার ডিজাইন */
+        header { background: #ffffff; padding: 20px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        header h1 { font-size: 28px; color: #0f172a; font-weight: 800; }
+        header h1 span { color: #059669; }
+        header .slogan { color: #d97706; font-size: 14px; font-style: italic; margin-top: 4px; font-weight: 600; }
+        header p { color: #475569; font-size: 13px; margin-top: 6px; }
+        
+        .hotline-btn { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; text-align: center; }
+        .section-title { margin: 25px 0 10px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
+        .sub-title { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+
+        .search-box { width: 100%; max-width: 500px; padding: 12px 18px; margin: 0 auto 30px auto; border-radius: 30px; border: 2px solid #cbd5e1; background: #ffffff; color: #0f172a; font-size: 14px; outline: none; transition: 0.3s; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .search-box:focus { border-color: #059669; box-shadow: 0 0 12px rgba(5, 150, 105, 0.2); }
+
+        /* 3D Carousel / Ring Gallery Container */
+        .ring-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 420px;
+            position: relative;
+            margin: 40px auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring-stage {
+            width: 200px;
+            height: 260px;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .product-card-3d {
+            position: absolute;
+            width: 200px;
+            height: 260px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            border: 1px solid #e2e8f0;
+            backface-visibility: visible;
+            transition: border-color 0.3s, transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card-3d:hover {
+            border-color: #059669;
+        }
+
+        .product-card-3d img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .product-card-3d h3 { font-size: 15px; color: #0f172a; margin-top: 6px; }
+        .product-card-3d p { font-size: 11px; color: #64748b; margin: 2px 0; }
+        .product-card-3d .price { font-size: 14px; color: #059669; font-weight: bold; }
+        .select-btn { background: #059669; color: white; border: none; padding: 6px; border-radius: 6px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; }
+
+        /* VIP সাবস্ক্রিপশন সেকশন */
+        .vip-box { background: linear-gradient(135deg, #065f46, #022c22); color: white; border-radius: 16px; padding: 20px; text-align: center; margin: 30px auto; max-width: 800px; box-shadow: 0 10px 20px rgba(6, 95, 70, 0.2); }
+        .vip-box h3 { color: #f59e0b; font-size: 18px; margin-bottom: 6px; }
+        .vip-box p { font-size: 13px; color: #e2e8f0; margin-bottom: 12px; }
+        .vip-btn { background: #f59e0b; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        .vip-features { background: #ffffff; color: #0f172a; border-radius: 10px; padding: 14px; margin: 12px 0; text-align: left; font-size: 13px; border: 1px solid #cbd5e1; }
+        .vip-features ul { list-style-type: none; padding-left: 0; }
+        .vip-features li { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+        .modal-card { background: #ffffff; color: #0f172a; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .close-btn { position: absolute; top: 12px; right: 16px; font-size: 22px; color: #ef4444; cursor: pointer; font-weight: bold; }
+        .modal-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+        
+        .qty-box { margin: 15px 0; background: #f1f5f9; padding: 12px; border-radius: 8px; }
+        .qty-select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; background: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; font-weight: bold; font-size: 14px; outline: none; }
+
+        .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 2px solid #10b981; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 -10px 20px rgba(0,0,0,0.08); }
+        .cart-info { font-size: 15px; color: #0f172a; }
+        .cart-info strong { color: #059669; font-size: 18px; }
+        .checkout-btn { background: #25d366; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+
+        .input-field { width: 100%; padding: 10px; margin-top: 4px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 13px; outline: none; }
+        .cart-items-list { max-height: 120px; overflow-y: auto; margin: 10px 0; font-size: 13px; background: #f1f5f9; padding: 10px; border-radius: 8px; }
+
+        .payment-box { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 12px; margin: 12px 0; font-size: 12px; }
+        .payment-box p { color: #065f46; margin-bottom: 4px; }
+        .pay-num { color: #059669; font-weight: bold; }
+
+        /* ক্যাশ মেমো টেমপ্লেট */
+        #invoiceTemplate {
+            position: absolute; left: -9999px; top: -9999px;
+            width: 380px; background: #ffffff; color: #000000;
+            padding: 20px; border-radius: 8px; font-family: Arial, sans-serif;
+        }
+        #invoiceTemplate h2 { color: #022c22; text-align: center; margin-bottom: 0px; }
+        #invoiceTemplate .inv-slogan { text-align: center; font-size: 11px; color: #d97706; font-style: italic; margin-bottom: 8px; font-weight: bold; }
+        #invoiceTemplate p { text-align: center; font-size: 11px; color: #555; }
+        #invoiceTemplate .inv-details { margin: 10px 0; font-size: 11px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; line-height: 1.5; }
+        #invoiceTemplate table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
+        #invoiceTemplate th { background: #f3f4f6; text-align: left; padding: 5px; border-bottom: 1px solid #ddd; }
+        #invoiceTemplate td { padding: 5px; border-bottom: 1px solid #eee; }
+        
+        .inv-summary { margin-top: 10px; border-top: 1px solid #333; padding-top: 8px; font-size: 12px; }
+        .inv-summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .inv-summary-row.due { font-weight: bold; font-size: 13px; color: #d97706; border-top: 1px dashed #ccc; padding-top: 4px; }
+        
+        #invoiceTemplate .inv-footer { text-align: center; margin-top: 15px; font-size: 10px; color: #777; border-top: 1px solid #ddd; padding-top: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- রানিং ব্যানার -->
+    <div class="banner">
+        <marquee behavior="scroll" direction="left" scrollamount="6">
+            🔥 ১০% ছাড় প্রথম অর্ডারে! কোড: FRESH10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛒 তাজা শাক-সবজি ও মাছ-মাংসের বিশ্বস্ত ঠিকানা - পচা বাজার!
+        </marquee>
+    </div>
+
+    <header>
+        <h1>🛒 <span>পচা বাজার</span> (POCHA BAZAR)</h1>
+        <div class="slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
+        <p>কল করে সরাসরি অর্ডার করুন:</p>
+        <a href="tel:01886343188" class="hotline-btn">📞 কল করুন: 01886-343188</a>
+    </header>
+
+    <div class="container">
+        <!-- VIP কাস্টমার এরিয়া -->
+        <div class="vip-box">
+            <h3>👑 ভিআইপি মেম্বারশিপ এবং ডেলিভারি সাবস্ক্রিপশন</h3>
+            <p>প্রতি সপ্তাহে বা মাসে নিয়মিত বাজার পেতে আমাদের VIP সাবস্ক্রিপশন চালু করুন এবং বিশেষ সুবিধা উপভোগ করুন!</p>
+            <button class="vip-btn" onclick="openVIPModal()">⭐ ভিআইপি সুবিধা দেখুন ও যুক্ত হোন</button>
+        </div>
+
+        <h2 class="section-title">🥬 নিত্যপ্রয়োজনীয় ৩D বাজার গ্যালারি</h2>
+        <p class="sub-title">মাউস বা আঙুল দিয়ে ডানে/বামে টেনে থ্রিডি-তে প্রোডাক্টগুলো ঘুরে দেখুন</p>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি খুঁজুন..." onkeyup="filterProducts()">
+
+        <!-- 3D Ring Gallery -->
+        <div class="ring-container" id="ringContainer">
+            <div class="ring-stage" id="ringStage"></div>
+        </div>
+    </div>
+
+    <!-- VIP সাবস্ক্রিপশন মোডাল -->
+    <div id="vipModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('vipModal')">✖</span>
+            <h3 style="color:#059669; text-align:center;">👑 ভিআইপি মেম্বারশিপের বিশেষ সুবিধাসমূহ:</h3>
+            
+            <div class="vip-features">
+                <ul>
+                    <li>✅ <b>প্রতি অর্ডারে ফ্ল্যাট ১০% ছাড়:</b> সব ধরনের বাজারে সবসময় ১০% ছাড়।</li>
+                    <li>✅ <b>ফ্রি ডেলিভারি সুবিধা:</b> ভিআইপি সদস্যদের কোনো ডেলিভারি চার্জ নেই।</li>
+                    <li>✅ <b>ফার্স্ট Priority ডেলিভারি:</b> অর্ডারের মাত্র ১ ঘণ্টার মধ্যে হোম ডেলিভারি।</li>
+                    <li>✅ <b>বাছাই করা সেরা পণ্য:</b> সবচেয়ে তাজা ও ফ্রেশ মাছ-মাংস এবং সবজি।</li>
+                    <li>✅ <b>সাপ্তাহিক/মাসিক শিডিউল:</b> নির্দিষ্ট দিনে অটো-ডেলিভারি সুবিধা।</li>
+                </ul>
+            </div>
+
+            <p style="font-size:12px; color:#059669; margin-bottom:8px; text-align:center;">মেম্বারশিপের আবেদন করতে আপনার তথ্য দিন:</p>
+            
+            <label style="font-size: 11px; font-weight: bold;">আপনার নাম:</label>
+            <input type="text" id="vipName" class="input-field" placeholder="আপনার পুরো নাম">
+
+            <label style="font-size: 11px; font-weight: bold; margin-top:8px; display:block;">মোবাইল/WhatsApp নম্বর:</label>
+            <input type="text" id="vipPhone" class="input-field" placeholder="017XXXXXXXX">
+
+            <button class="checkout-btn" style="width:100%; margin-top:15px; justify-content:center; padding:12px;" onclick="sendVIPRequest()">
+                📱 WhatsApp-এ ভিআইপি রিকোয়েস্ট পাঠান
+            </button>
+        </div>
+    </div>
+
+    <!-- প্রোডাক্ট মোডাল -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('productModal')">✖</span>
+            <img id="mImg" src="" alt="">
+            <h3 id="mTitle" style="color:#059669;"></h3>
+            <p id="mDesc" style="font-size: 12px; color: #64748b;"></p>
+            <p id="mPrice" style="color:#d97706; font-weight:bold; margin-top:5px;"></p>
+            
+            <div class="qty-box">
+                <label style="font-size: 13px; color: #0f172a; font-weight: bold;">পরিমাণ নির্বাচন করুন:</label>
+                <select id="qtySelect" class="qty-select" onchange="calculateModalPrice()"></select>
+            </div>
+
+            <div style="text-align: right; margin-bottom: 15px; font-weight: bold; color: #059669; font-size: 16px;">
+                মোট দাম: ৳ <span id="modalCalculatedPrice">0</span>
+            </div>
+
+            <button class="select-btn" style="padding:12px; font-size:14px;" onclick="addToCart()">🛒 কার্টে যোগ করুন</button>
+        </div>
+    </div>
+
+    <!-- অর্ডার ও পেমেন্ট মোডাল -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal('checkoutModal')">✖</span>
+            <h3 style="color:#059669; margin-bottom:8px;">🛍️ অর্ডারের বিস্তারিত বিবরণ:</h3>
+            <div id="cartList" class="cart-items-list"></div>
+            <h4 id="finalTotal" style="color:#d97706; text-align:right; margin-bottom:12px;"></h4>
+
+            <!-- কাস্টমার তথ্য -->
+            <label style="font-size: 11px; font-weight: bold;">আপনার নাম:</label>
+            <input type="text" id="custName" class="input-field" placeholder="আপনার নাম">
+
+            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">সম্পূর্ণ ঠিকানা:</label>
+            <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
+
+            <!-- ডেলিভারি সিডিউল -->
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <div style="flex:1;">
+                    <label style="font-size: 11px; font-weight: bold;">ডেলিভারির তারিখ:</label>
+                    <input type="date" id="delivDate" class="input-field">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size: 11px; font-weight: bold;">ডেলিভারির সময়:</label>
+                    <select id="delivTime" class="input-field">
+                        <option value="সকাল ৮টা - ১১টা">সকাল ৮টা - ১১টা</option>
+                        <option value="দুপুর ১২টা - ৩টা">দুপুর ১২টা - ৩টা</option>
+                        <option value="বিকেল ৪টা - ৭টা">বিকেল ৪টা - ৭টা</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- বিশেষ নির্দেশনা -->
+            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">বিশেষ কোনো নির্দেশনা / কী লাগবে:</label>
+            <input type="text" id="custNotes" class="input-field" placeholder="যেমন: মাছ কেটে দেবেন, বা কচি সবজি দিবেন...">
+
+            <!-- এডভান্স পেমেন্ট সেকশন -->
+            <div class="payment-box">
+                <p style="color:#059669; font-weight:bold; font-size:12px; margin-bottom:3px;">💳 এডভান্স পেমেন্ট সেকশন:</p>
+                <p>• বিকাশ: <span class="pay-num">01886-343188</span> | নগদ: <span class="pay-num">0177777289</span></p>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+                <div style="flex:1;">
+                    <label style="font-size: 11px; font-weight: bold;">পেমেন্ট মেথড:</label>
+                    <select id="payMethod" class="input-field">
+                        <option value="bKash">বিকাশ</option>
+                        <option value="Nagad">নগদ</option>
+                    </select>
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size: 11px; font-weight: bold;">এডভান্স (৳):</label>
+                    <input type="number" id="advAmount" class="input-field" value="50">
+                </div>
+            </div>
+
+            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">ট্রানজেকশন ID (TxnID):</label>
+            <input type="text" id="txnId" class="input-field" placeholder="যেমন: 9J87KLX12">
+
+            <button class="checkout-btn" style="width:100%; margin-top:12px; justify-content:center; padding:12px;" onclick="processOrderAndDownload()">
+                📱 মেমো ডাউনলোড ও WhatsApp-এ পাঠান
+            </button>
+        </div>
+    </div>
+
+    <!-- ক্যাশ মেমো টেমপ্লেট -->
+    <div id="invoiceTemplate">
+        <h2>🛒 পচা বাজার</h2>
+        <div class="inv-slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
+        <p>হটলাইন: 01886-343188 | ক্যাশ মেমো</p>
+        <div class="inv-details">
+            <div><b>তারিখ:</b> <span id="invDate"></span></div>
+            <div><b>নাম:</b> <span id="invName"></span></div>
+            <div><b>ঠিকানা:</b> <span id="invAddress"></span></div>
+            <div><b>ডেলিভারি সিডিউল:</b> <span id="invSchedule" style="color:#d97706; font-weight:bold;"></span></div>
+            <div><b>বিশেষ নোট:</b> <span id="invNotes"></span></div>
+            <div><b>পেমেন্ট মেথড:</b> <span id="invMethod"></span> (Txn: <span id="invTxn"></span>)</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>পণ্য</th>
+                    <th>পরিমাণ</th>
+                    <th style="text-align: right;">মূল্য</th>
+                </tr>
+            </thead>
+            <tbody id="invTableBody"></tbody>
+        </table>
+
+        <div class="inv-summary">
+            <div class="inv-summary-row">
+                <span>সর্বমোট বিল:</span>
+                <span>৳<span id="invTotal"></span></span>
+            </div>
+            <div class="inv-summary-row" style="color: #16a34a;">
+                <span>এডভান্স জমা:</span>
+                <span>- ৳<span id="invAdv"></span></span>
+            </div>
+            <div class="inv-summary-row due">
+                <span>বকেয়া (ক্যাশ অন ডেলিভারি):</span>
+                <span>৳<span id="invDue"></span></span>
+            </div>
+        </div>
+
+        <div class="inv-footer">
+            ধন্যবাদ পচা বাজারে শপিং করার জন্য! ❤️<br>
+            যেকোনো প্রয়োজনে কল করুন: 01886-343188
+        </div>
+    </div>
+
+    <!-- বটম কার্ট বার -->
+    <div class="cart-bar">
+        <div class="cart-info">
+            আইটেম: <span id="cartCount" style="color:#059669; font-weight:bold;">০</span> টি | 
+            মোট: <strong>৳ <span id="cartTotal">০</span></strong>
+        </div>
+        <button class="checkout-btn" onclick="openCheckout()">অর্ডার কনফার্ম করুন ➔</button>
+    </div>
+
+    <script>
+        const WHATSAPP_NUMBER = "8801886343188"; 
+
+        const products = [
+            { id: 1, name: "গোল আলু", price: 45, unit: "কেজি", desc: "নতুন দেশি গোল আলু", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" },
+            { id: 2, name: "মিষ্টি আলু", price: 50, unit: "কেজি", desc: "তাজা মিষ্টি আলু", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400" },
+            { id: 3, name: "লাল আলু", price: 55, unit: "কেজি", desc: "দেশি লাল আলু", img: "https://images.unsplash.com/photo-1508313880080-c4bef0730395?w=400" },
+            { id: 4, name: "বেগুন", price: 50, unit: "কেজি", desc: "তাজা গোল/লম্বা বেগুন", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" },
+            { id: 5, name: "টমেটো", price: 60, unit: "কেজি", desc: "লাল টকটকে পাকা টমেটো", img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" },
+            { id: 6, name: "শসা", price: 40, unit: "কেজি", desc: "সালাদের তাজা দেশি শসা", img: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=400" },
+            { id: 7, name: "গাজর", price: 50, unit: "কেজি", desc: "মিষ্টি লাল গাজর", img: "https://images.unsplash.com/photo-1598170845058-12ef4a457939?w=400" },
+            { id: 8, name: "রসুন", price: 220, unit: "কেজি", desc: "দেশি রসুন", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400" },
+            { id: 9, name: "আদা", price: 200, unit: "কেজি", desc: "তাজা মানসম্মত আদা", img: "https://images.unsplash.com/photo-1615485290178-984e1a0b3297?w=400" },
+            { id: 10, name: "পেঁয়াজ", price: 70, unit: "কেজি", desc: "দেশি পেঁয়াজ", img: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8ce?w=400" },
+            { id: 11, name: "কাঁচামরিচ", price: 120, unit: "কেজি", desc: "ঝাল ও সবুজ কাঁচামরিচ", img: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=400" },
+            { id: 12, name: "লাল শাক", price: 20, unit: "আঁটি", desc: "তাজা টাটকা লাল শাক", img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400" },
+            { id: 13, name: "পালং শাক", price: 25, unit: "আঁটি", desc: "সবুজ পালং শাক", img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400" },
+            { id: 14, name: "রুই মাছ", price: 350, unit: "কেজি", desc: "নদীর তাজা রুই মাছ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
+            { id: 15, name: "কাতলা মাছ", price: 380, unit: "কেজি", desc: "বড় সাইজের কাতলা মাছ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
+            { id: 16, name: "ইলিশ মাছ", price: 1200, unit: "কেজি", desc: "পদ্মার তাজা ইলিশ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
+            { id: 17, name: "মুরগির মাংস", price: 170, unit: "কেজি", desc: "ড্রেসিং করা ব্রয়লার", img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400" },
+            { id: 18, name: "গরুর মাংস", price: 750, unit: "কেজি", desc: "হাড় ও চর্বি সহ খাঁটি মাংস", img: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400" },
+            { id: 19, name: "খাসির মাংস", price: 1050, unit: "কেজি", desc: "তাজা খাসির মাংস", img: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400" },
+            { id: 20, name: "মসুর ডাল", price: 140, unit: "কেজি", desc: "দেশি চিকন মসুর ডাল", img: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=400" }
+        ];
+
+        let cart = [];
+        let selectedProduct = null;
+        let currentRotation = 0;
+        let activeProducts = [...products];
+
+        // Render 3D Ring Gallery
+        function render3DRing(listToRender) {
+            const stage = document.getElementById('ringStage');
+            stage.innerHTML = "";
+            const total = listToRender.length;
+            if(total === 0) return;
+
+            const radius = Math.max(280, total * 32); 
+            const angleStep = 360 / total;
+
+            listToRender.forEach((p, index) => {
+                const angle = index * angleStep;
+                const card = document.createElement('div');
+                card.className = 'product-card-3d';
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                
+                card.innerHTML = `
+                    <img src="${p.img}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p>${p.desc}</p>
+                    <div class="price">৳ ${p.price} / ${p.unit}</div>
+                    <button class="select-btn" onclick="event.stopPropagation(); openProductModal(${p.id})">পরিমাণ সিলেক্ট করুন</button>
+                `;
+
+                card.onclick = () => {
+                    openProductModal(p.id);
+                };
+
+                stage.appendChild(card);
+            });
+        }
+
+        // Search Filter
+        function filterProducts() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            activeProducts = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+            render3DRing(activeProducts);
+        }
+
+        // Drag to rotate 3D Ring
+        let isDragging = false;
+        let startX = 0;
+
+        const ringContainer = document.getElementById('ringContainer');
+        const ringStage = document.getElementById('ringStage');
+
+        ringContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - startX;
+            currentRotation += deltaX * 0.25;
+            ringStage.style.transform = `rotateY(${currentRotation}deg)`;
+            startX = e.clientX;
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Touch events for Mobile
+        ringContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.touches[0].clientX - startX;
+            currentRotation += deltaX * 0.3;
+            ringStage.style.transform = `rotateY(${currentRotation}deg)`;
+            startX = e.touches[0].clientX;
+        });
+
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        // Auto rotate slowly
+        setInterval(() => {
+            if (!isDragging) {
+                currentRotation += 0.15;
+                ringStage.style.transform = `rotateY(${currentRotation}deg)`;
+            }
+        }, 30);
+
+        function openProductModal(id) {
+            selectedProduct = products.find(p => p.id === id);
+            document.getElementById('mImg').src = selectedProduct.img;
+            document.getElementById('mTitle').innerText = selectedProduct.name;
+            document.getElementById('mDesc').innerText = selectedProduct.desc;
+            document.getElementById('mPrice').innerText = `মূল্য: ৳ ${selectedProduct.price} / ${selectedProduct.unit}`;
+            
+            let selectBox = document.getElementById('qtySelect');
+            selectBox.innerHTML = "";
+
+            if (selectedProduct.unit === "কেজি") {
+                selectBox.innerHTML = `
+                    <option value="0.100">১০০ গ্রাম</option>
+                    <option value="0.250">২৫০ গ্রাম (পোয়া)</option>
+                    <option value="0.500"> ৫০০ গ্রাম (আধা কেজি)</option>
+                    <option value="0.750">৭৫০ গ্রাম</option>
+                    <option value="1.000" selected>১ কেজি</option>
+                    <option value="2.000">২ কেজি</option>
+                    <option value="3.000">৩ কেজি</option>
+                    <option value="5.000">৫ কেজি</option>
+                `;
+            } else if (selectedProduct.unit === "আঁটি") {
+                selectBox.innerHTML = `
+                    <option value="1">১ আঁটি</option>
+                    <option value="2">২ আঁটি</option>
+                    <option value="3">৩ আঁটি</option>
+                    <option value="5">৫ আঁটি</option>
+                `;
+            } else {
+                selectBox.innerHTML = `
+                    <option value="1">১ ${selectedProduct.unit}</option>
+                    <option value="2">২ ${selectedProduct.unit}</option>
+                    <option value="3">৩ ${selectedProduct.unit}</option>
+                    <option value="5">৫ ${selectedProduct.unit}</option>
+                `;
+            }
+
+            calculateModalPrice();
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function calculateModalPrice() {
+            let qtyVal = parseFloat(document.getElementById('qtySelect').value);
+            let totalPrice = Math.round(selectedProduct.price * qtyVal);
+            document.getElementById('modalCalculatedPrice').innerText = totalPrice;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function addToCart() {
+            let selectObj = document.getElementById('qtySelect');
+            let qtyVal = parseFloat(selectObj.value);
+            let labelText = selectObj.options[selectObj.selectedIndex].text;
+            let totalPrice = Math.round(selectedProduct.price * qtyVal);
+
+            let existing = cart.find(item => item.id === selectedProduct.id && item.labelText === labelText);
+            if(existing) {
+                existing.totalPrice += totalPrice;
+            } else {
+                cart.push({ 
+                    id: selectedProduct.id, 
+                    name: selectedProduct.name, 
+                    labelText: labelText, 
+                    totalPrice: totalPrice 
+                });
+            }
+
+            updateCartBar();
+            closeModal('productModal');
+        }
+
+        function updateCartBar() {
+            document.getElementById('cartCount').innerText = cart.length;
+            document.getElementById('cartTotal').innerText = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+        }
+
+        /* VIP Functions */
+        function openVIPModal() {
+            document.getElementById('vipModal').style.display = 'flex';
+        }
+
+        function sendVIPRequest() {
+            let name = document.getElementById('vipName').value.trim();
+            let phone = document.getElementById('vipPhone').value.trim();
+
+            if(!name || !phone) {
+                alert("অনুগ্রহ করে আপনার নাম ও মোবাইল নম্বর দিন!");
+                return;
+            }
+
+            let message = `👑 *পচা বাজার - ভিআইপি মেম্বারশিপ রিকোয়েস্ট*\n\n`;
+            message += `👤 *কাস্টমারের নাম:* ${name}\n`;
+            message += `📞 *মোবাইল নম্বর:* ${phone}\n\n`;
+            message += `আমি পচা বাজারের VIP মেম্বারশিপ সাবস্ক্রিপশন নিতে আগ্রহী। অনুগ্রহ করে বিস্তারিত জানান।`;
+
+            let whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            closeModal('vipModal');
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function openCheckout() {
+            if (cart.length === 0) {
+                alert("আপনার কার্ট খালি!");
+                return;
+            }
+
+            let cartListHtml = "";
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalPrice += item.totalPrice;
+                cartListHtml += `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span>• ${item.name} (${item.labelText})</span>
+                        <span style="color:#059669; font-weight:bold;">৳ ${item.totalPrice}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('delivDate').valueAsDate = new Date();
+            document.getElementById('cartList').innerHTML = cartListHtml;
+            document.getElementById('finalTotal').innerText = `সর্বমোট বিল: ৳ ${totalPrice}`;
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function processOrderAndDownload() {
+            let name = document.getElementById('custName').value.trim();
+            let address = document.getElementById('custAddress').value.trim();
+            let delivDate = document.getElementById('delivDate').value;
+            let delivTime = document.getElementById('delivTime').value;
+            let custNotes = document.getElementById('custNotes').value.trim() || "নেই";
+            
+            let payMethod = document.getElementById('payMethod').value;
+            let advAmount = parseFloat(document.getElementById('advAmount').value) || 0;
+            let txnId = document.getElementById('txnId').value.trim();
+
+            if (!name || !address) {
+                alert("অনুগ্রহ করে আপনার নাম ও ঠিকানা দিন!");
+                return;
+            }
+
+            if (!txnId) {
+                alert("অনুগ্রহ করে এডভান্স পেমেন্টের Transaction ID দিন!");
+                return;
+            }
+
+            let totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            let dueAmount = totalPrice - advAmount;
+
+            document.getElementById('invDate').innerText = new Date().toLocaleDateString('bn-BD');
+            document.getElementById('invName').innerText = name;
+            document.getElementById('invAddress').innerText = address;
+            document.getElementById('invSchedule').innerText = `${delivDate} (${delivTime})`;
+            document.getElementById('invNotes').innerText = custNotes;
+            document.getElementById('invMethod').innerText = payMethod;
+            document.getElementById('invTxn').innerText = txnId;
+
+            let invTableBodyHtml = "";
+            let messageList = "";
+
+            cart.forEach(item => {
+                invTableBodyHtml += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.labelText}</td>
+                        <td style="text-align: right;">৳${item.totalPrice}</td>
+                    </tr>
+                `;
+                messageList += `- ${item.name}: ${item.labelText} = ৳${item.totalPrice}\n`;
+            });
+
+            document.getElementById('invTableBody').innerHTML = invTableBodyHtml;
+            document.getElementById('invTotal').innerText = totalPrice;
+            document.getElementById('invAdv').innerText = advAmount;
+            document.getElementById('invDue').innerText = dueAmount;
+
+            let invoiceElem = document.getElementById('invoiceTemplate');
+            
+            html2canvas(invoiceElem, { scale: 2 }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = `Pocha_Bazar_Receipt_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg');
+                link.click();
+
+                let message = `🛒 *পচা বাজার - নতুন অর্ডার*\n`;
+                message += `_"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"_\n\n`;
+                message += `👤 *কাস্টমার:* ${name}\n`;
+                message += `📍 *ঠিকানা:* ${address}\n`;
+                message += `⏰ *ডেলিভারি সিডিউল:* ${delivDate} (${delivTime})\n`;
+                message += `📝 *বিশেষ নির্দেশনা:* ${custNotes}\n\n`;
+                message += `🥬 *আইটেম লিস্ট:*\n${messageList}\n`;
+                message += `💰 *মোট বিল:* ৳${totalPrice}\n`;
+                message += `✅ *এডভান্স পেমেন্ট:* ৳${advAmount} (${payMethod} - Txn: ${txnId})\n`;
+                message += `💵 *বকেয়া (CoD):* ৳${dueAmount}\n\n(ক্যাশ মেমো পিকচারটি ডাউনলোড হয়েছে)`;
+
+                let whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+                
+                cart = [];
+                updateCartBar();
+                closeModal('checkoutModal');
+
+                window.open(whatsappUrl, '_blank');
+            });
+        }
+
+        render3DRing(products);
+    </script>
+</body>
+</html>
