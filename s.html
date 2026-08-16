@@ -3,117 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পচা বাজার - POCHA BAZAR 3D</title>
-    <!-- html2canvas 라이ব্রেরি -->
+    <title>পচা বাজার - POCHA BAZAR</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f8fafc; color: #0f172a; padding-bottom: 120px; overflow-x: hidden; }
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-card: #151c2c;
+            --bg-glass: rgba(21, 28, 44, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --accent-green-hover: #059669;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
-        /* রানিং ব্যানার */
-        .banner { background: #ef4444; color: white; padding: 8px 0; font-weight: bold; font-size: 13px; overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, -apple-system, sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; }
+
+        /* মার্কি ব্যানার */
+        .banner { background: linear-gradient(90deg, #ef4444, #dc2626); color: white; padding: 8px 0; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3); }
         .banner marquee { display: block; }
 
-        /* হেডার ডিজাইন */
-        header { background: #ffffff; padding: 20px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        header h1 { font-size: 28px; color: #0f172a; font-weight: 800; }
-        header h1 span { color: #059669; }
-        header .slogan { color: #d97706; font-size: 14px; font-style: italic; margin-top: 4px; font-weight: 600; }
-        header p { color: #475569; font-size: 13px; margin-top: 6px; }
+        /* হেডার স্টাইল */
+        header { 
+            background: rgba(2, 44, 34, 0.85); 
+            backdrop-filter: blur(12px);
+            padding: 20px 15px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--accent-gold); 
+            position: sticky; top: 0; z-index: 80;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        header h1 { font-size: 28px; color: #ffffff; font-weight: 800; letter-spacing: 0.5px; }
+        header h1 span { color: var(--accent-gold); text-shadow: 0 0 12px rgba(245, 158, 11, 0.4); }
+        header .slogan { color: #34d399; font-size: 13px; font-style: italic; margin-top: 4px; font-weight: 600; }
         
-        .hotline-btn { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .hotline-btn { 
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, #25d366, #128c7e); 
+            color: white; text-decoration: none; padding: 8px 18px; 
+            border-radius: 30px; font-size: 13px; font-weight: bold; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .hotline-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; text-align: center; }
-        .section-title { margin: 25px 0 10px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
-        .sub-title { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
 
-        .search-box { width: 100%; max-width: 500px; padding: 12px 18px; margin: 0 auto 20px auto; border-radius: 30px; border: 2px solid #cbd5e1; background: #ffffff; color: #0f172a; font-size: 14px; outline: none; transition: 0.3s; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .search-box:focus { border-color: #059669; box-shadow: 0 0 12px rgba(5, 150, 105, 0.2); }
-
-        /* 3D Carousel / Ring Gallery Container (নিচে নামানো হয়েছে) */
+        /* 3D Ring Carousel Section */
+        .ring-section {
+            margin: 30px 0 40px 0;
+            text-align: center;
+        }
         .ring-container {
             perspective: 1000px;
             width: 100%;
-            height: 420px;
+            height: 380px;
             position: relative;
-            margin: 100px auto 40px auto; /* মার্জিন বাড়িয়ে নিচে নামানো হয়েছে */
+            margin: 20px auto 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: grab;
         }
-
+        .ring-container:active { cursor: grabbing; }
         .ring-stage {
-            width: 200px;
-            height: 260px;
+            width: 170px;
+            height: 230px;
             position: absolute;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
         }
-
-        .product-card-3d {
+        .card-3d {
             position: absolute;
-            width: 200px;
-            height: 260px;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 12px;
+            width: 170px;
+            height: 230px;
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 10px;
             text-align: center;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-            border: 1px solid #e2e8f0;
-            backface-visibility: visible;
-            transition: border-color 0.3s, transform 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            backdrop-filter: blur(5px);
+            user-select: none;
         }
-
-        .product-card-3d:hover {
-            border-color: #059669;
-        }
-
-        .product-card-3d img {
+        .card-3d img {
             width: 100%;
-            height: 130px;
+            height: 105px;
             object-fit: cover;
             border-radius: 10px;
+            pointer-events: none;
+        }
+        .card-3d h4 { margin: 6px 0 2px 0; font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .card-3d p { margin: 0; font-size: 11px; color: var(--text-muted); }
+        .card-3d .price { font-weight: 800; color: var(--accent-gold); font-size: 13px; margin-top: 4px; }
+
+        /* সেকশন হেডার */
+        .section-title { 
+            margin-bottom: 20px; font-size: 20px; color: #34d399; 
+            border-left: 4px solid var(--accent-gold); padding-left: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .product-card-3d h3 { font-size: 15px; color: #0f172a; margin-top: 6px; }
-        .product-card-3d p { font-size: 11px; color: #64748b; margin: 2px 0; }
-        .product-card-3d .price { font-size: 14px; color: #059669; font-weight: bold; }
-        .select-btn { background: #059669; color: white; border: none; padding: 6px; border-radius: 6px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; }
+        /* সার্চ বক্স */
+        .search-box { 
+            width: 100%; padding: 14px 18px; margin-bottom: 25px; border-radius: 12px; 
+            border: 1px solid var(--border-color); background: var(--bg-card); color: white; 
+            font-size: 15px; outline: none; transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .search-box:focus { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
 
-        /* VIP সাবস্ক্রিপশন সেকশন */
-        .vip-box { background: linear-gradient(135deg, #065f46, #022c22); color: white; border-radius: 16px; padding: 20px; text-align: center; margin: 30px auto; max-width: 800px; box-shadow: 0 10px 20px rgba(6, 95, 70, 0.2); }
-        .vip-box h3 { color: #f59e0b; font-size: 18px; margin-bottom: 6px; }
-        .vip-box p { font-size: 13px; color: #e2e8f0; margin-bottom: 12px; }
-        .vip-btn { background: #f59e0b; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; }
+        /* প্রোডাক্ট গ্রিড স্টাইল */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+        .product-card { 
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; 
+            overflow: hidden; padding: 12px; text-align: center; cursor: pointer; 
+            transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .product-card:hover { border-color: var(--accent-gold); transform: translateY(-4px); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2); }
+        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; background: #0f172a; }
+        .product-card h3 { font-size: 15px; margin: 10px 0 2px 0; color: var(--text-main); font-weight: 700; }
+        .product-card p { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+        .product-card .price { font-size: 15px; color: var(--accent-gold); font-weight: 800; margin-bottom: 10px; }
+        
+        .select-btn { 
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-hover)); 
+            color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; 
+            font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+        }
+        .select-btn:hover { background: var(--accent-green-hover); }
 
-        .vip-features { background: #ffffff; color: #0f172a; border-radius: 10px; padding: 14px; margin: 12px 0; text-align: left; font-size: 13px; border: 1px solid #cbd5e1; }
+        /* VIP সেকশন */
+        .vip-box { 
+            background: linear-gradient(135deg, #1e293b, #064e3b); border: 1px dashed var(--accent-gold); 
+            border-radius: 16px; padding: 20px; text-align: center; margin: 30px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .vip-box h3 { color: var(--accent-gold); font-size: 18px; margin-bottom: 6px; font-weight: 800; }
+        .vip-box p { font-size: 13px; color: #cbd5e1; margin-bottom: 14px; }
+        .vip-btn { 
+            background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; 
+            padding: 10px 22px; border-radius: 30px; font-weight: 800; cursor: pointer; font-size: 13px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); transition: transform 0.2s;
+        }
+        .vip-btn:hover { transform: scale(1.03); }
+
+        /* VIP ফিচার তালিকা */
+        .vip-features { background: rgba(15, 23, 42, 0.8); border-radius: 10px; padding: 14px; margin: 14px 0; text-align: left; font-size: 13px; color: #cbd5e1; border: 1px solid var(--border-color); }
         .vip-features ul { list-style-type: none; padding-left: 0; }
         .vip-features li { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
-        /* Modal Styles */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-        .modal-card { background: #ffffff; color: #0f172a; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        /* মোডাল উইন্ডো */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 16px; width: 100%; max-width: 440px; padding: 22px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         .close-btn { position: absolute; top: 12px; right: 16px; font-size: 22px; color: #ef4444; cursor: pointer; font-weight: bold; }
-        .modal-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+        .modal-card img { width: 100%; height: 170px; object-fit: cover; border-radius: 12px; margin-bottom: 14px; }
         
-        .qty-box { margin: 15px 0; background: #f1f5f9; padding: 12px; border-radius: 8px; }
-        .qty-select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; background: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; font-weight: bold; font-size: 14px; outline: none; }
+        .qty-box { margin: 15px 0; background: var(--bg-primary); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); }
+        .qty-select { width: 100%; padding: 10px; margin-top: 6px; border-radius: 8px; background: var(--bg-card); color: var(--accent-gold); border: 1px solid var(--border-color); font-weight: bold; font-size: 14px; outline: none; }
 
-        .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 2px solid #10b981; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 -10px 20px rgba(0,0,0,0.08); }
-        .cart-info { font-size: 15px; color: #0f172a; }
-        .cart-info strong { color: #059669; font-size: 18px; }
-        .checkout-btn { background: #25d366; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        /* কার্ট বার */
+        .cart-bar { 
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(2, 44, 34, 0.95); 
+            backdrop-filter: blur(10px); border-top: 2px solid var(--accent-green); padding: 14px 20px; 
+            display: flex; justify-content: space-between; align-items: center; z-index: 90; 
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.6); 
+        }
+        .cart-info { font-size: 14px; color: #cbd5e1; }
+        .cart-info strong { color: var(--accent-gold); font-size: 18px; margin-left: 4px; }
+        .checkout-btn { 
+            background: linear-gradient(135deg, #25d366, #128c7e); color: white; border: none; 
+            padding: 10px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 13px; 
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
 
-        .input-field { width: 100%; padding: 10px; margin-top: 4px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 13px; outline: none; }
-        .cart-items-list { max-height: 120px; overflow-y: auto; margin: 10px 0; font-size: 13px; background: #f1f5f9; padding: 10px; border-radius: 8px; }
+        .input-field { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: white; font-size: 13px; outline: none; }
+        .input-field:focus { border-color: var(--accent-gold); }
+        .cart-items-list { max-height: 120px; overflow-y: auto; margin: 10px 0; font-size: 13px; background: var(--bg-primary); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
 
-        .payment-box { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 12px; margin: 12px 0; font-size: 12px; }
-        .payment-box p { color: #065f46; margin-bottom: 4px; }
-        .pay-num { color: #059669; font-weight: bold; }
+        .payment-box { background: var(--bg-primary); border: 1px solid var(--accent-gold); border-radius: 10px; padding: 12px; margin: 12px 0; font-size: 12px; }
+        .payment-box p { color: #cbd5e1; margin-bottom: 4px; }
+        .pay-num { color: var(--accent-gold); font-weight: bold; }
 
         /* ক্যাশ মেমো টেমপ্লেট */
         #invoiceTemplate {
@@ -138,7 +215,6 @@
 </head>
 <body>
 
-    <!-- রানিং ব্যানার -->
     <div class="banner">
         <marquee behavior="scroll" direction="left" scrollamount="6">
             🔥 ১০% ছাড় প্রথম অর্ডারে! কোড: FRESH10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛒 তাজা শাক-সবজি ও মাছ-মাংসের বিশ্বস্ত ঠিকানা - পচা বাজার!
@@ -148,104 +224,99 @@
     <header>
         <h1>🛒 <span>পচা বাজার</span> (POCHA BAZAR)</h1>
         <div class="slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
-        <p>কল করে সরাসরি অর্ডার করুন:</p>
-        <a href="tel:01886343188" class="hotline-btn">📞 কল করুন: 01886-343188</a>
+        <a href="tel:01886343188" class="hotline-btn">📞 কল করে সরাসরি অর্ডার করুন: 01886-343188</a>
     </header>
 
     <div class="container">
-        <!-- VIP কাস্টমার এরিয়া -->
+        
+        <div class="ring-section">
+            <h2 class="section-title">✨ ৩D বাজার ডিসপ্লে (ঘুরিয়ে দেখুন)</h2>
+            <div class="ring-container" id="ringContainer">
+                <div class="ring-stage" id="ringStage"></div>
+            </div>
+        </div>
+
         <div class="vip-box">
             <h3>👑 ভিআইপি মেম্বারশিপ এবং ডেলিভারি সাবস্ক্রিপশন</h3>
             <p>প্রতি সপ্তাহে বা মাসে নিয়মিত বাজার পেতে আমাদের VIP সাবস্ক্রিপশন চালু করুন এবং বিশেষ সুবিধা উপভোগ করুন!</p>
             <button class="vip-btn" onclick="openVIPModal()">⭐ ভিআইপি সুবিধা দেখুন ও যুক্ত হোন</button>
         </div>
 
-        <h2 class="section-title">🥬 নিত্যপ্রয়োজনীয় ৩D বাজার গ্যালারি</h2>
-        <p class="sub-title">মাউস বা আঙুল দিয়ে ডানে/বামে টেনে থ্রিডি-তে প্রোডাক্টগুলো ঘুরে দেখুন</p>
-
-        <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি খুঁজুন..." onkeyup="filterProducts()">
-
-        <!-- 3D Ring Gallery -->
-        <div class="ring-container" id="ringContainer">
-            <div class="ring-stage" id="ringStage"></div>
-        </div>
+        <h2 class="section-title">🥬 নিত্যপ্রয়োজনীয় শাক-সবজি, মাছ-মাংস ও কাঁচাবাজার:</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 আপনার প্রয়োজনীয় পণ্যটি এখানে খুঁজুন..." onkeyup="filterProducts()">
+        <div id="productGrid" class="product-grid"></div>
     </div>
 
-    <!-- VIP সাবস্ক্রিপশন মোডাল -->
     <div id="vipModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('vipModal')">✖</span>
-            <h3 style="color:#059669; text-align:center;">👑 ভিআইপি মেম্বারশিপের বিশেষ সুবিধাসমূহ:</h3>
+            <h3 style="color:var(--accent-gold); text-align:center;">👑 ভিআইপি মেম্বারশিপের বিশেষ সুবিধাসমূহ:</h3>
             
             <div class="vip-features">
                 <ul>
                     <li>✅ <b>প্রতি অর্ডারে ফ্ল্যাট ১০% ছাড়:</b> সব ধরনের বাজারে সবসময় ১০% ছাড়।</li>
                     <li>✅ <b>ফ্রি ডেলিভারি সুবিধা:</b> ভিআইপি সদস্যদের কোনো ডেলিভারি চার্জ নেই।</li>
-                    <li>✅ <b>ফার্স্ট Priority ডেলিভারি:</b> অর্ডারের মাত্র ১ ঘণ্টার মধ্যে হোম ডেলিভারি।</li>
-                    <li>✅ <b>বাছাই করা সেরা পণ্য:</b> সবচেয়ে তাজা ও ফ্রেশ মাছ-মাংস এবং সবজি।</li>
-                    <li>✅ <b>সাপ্তাহিক/মাসিক শিডিউল:</b> নির্দিষ্ট দিনে অটো-ডেলিভারি সুবিধা।</li>
+                    <li>✅ <b>ফার্স্ট প্রpriority ডেলিভারি:</b> অর্ডারের মাত্র ১ ঘণ্টার মধ্যে হোম ডেলিভারি।</li>
+                    <li>✅ <b>বাছাই করা সেরা পণ্য:</b> সবচেয়ে তাজা ও ফ্রেশ মাছ-মাংস এবং সবজি অগ্রাধিকারে প্যাক করা হয়।</li>
+                    <li>✅ <b>সাপ্তাহিক/মাসিক শিডিউল:</b> আপনার ফ্রিজ খালি হওয়ার আগেই নির্দিষ্ট দিনে অটো-ডেলিভারি।</li>
                 </ul>
             </div>
 
-            <p style="font-size:12px; color:#059669; margin-bottom:8px; text-align:center;">মেম্বারশিপের আবেদন করতে আপনার তথ্য দিন:</p>
+            <p style="font-size:12px; color:#34d399; margin-bottom:8px; text-align:center;">মেম্বারশিপের আবেদন করতে আপনার তথ্য দিন:</p>
             
-            <label style="font-size: 11px; font-weight: bold;">আপনার নাম:</label>
+            <label style="font-size: 11px;">আপনার নাম:</label>
             <input type="text" id="vipName" class="input-field" placeholder="আপনার পুরো নাম">
 
-            <label style="font-size: 11px; font-weight: bold; margin-top:8px; display:block;">মোবাইল/WhatsApp নম্বর:</label>
+            <label style="font-size: 11px; margin-top:6px; display:block;">মোবাইল/WhatsApp নম্বর:</label>
             <input type="text" id="vipPhone" class="input-field" placeholder="017XXXXXXXX">
 
-            <button class="checkout-btn" style="width:100%; margin-top:15px; justify-content:center; padding:12px;" onclick="sendVIPRequest()">
+            <button class="checkout-btn" style="width:100%; margin-top:15px; justify-content:center; padding:10px;" onclick="sendVIPRequest()">
                 📱 WhatsApp-এ ভিআইপি রিকোয়েস্ট পাঠান
             </button>
         </div>
     </div>
 
-    <!-- প্রোডাক্ট মোডাল -->
     <div id="productModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('productModal')">✖</span>
             <img id="mImg" src="" alt="">
-            <h3 id="mTitle" style="color:#059669;"></h3>
-            <p id="mDesc" style="font-size: 12px; color: #64748b;"></p>
-            <p id="mPrice" style="color:#d97706; font-weight:bold; margin-top:5px;"></p>
+            <h3 id="mTitle" style="color:var(--accent-gold);"></h3>
+            <p id="mDesc" style="font-size: 12px; color: var(--text-muted);"></p>
+            <p id="mPrice" style="color:var(--accent-green); font-weight:bold; margin-top:5px;"></p>
             
             <div class="qty-box">
-                <label style="font-size: 13px; color: #0f172a; font-weight: bold;">পরিমাণ নির্বাচন করুন:</label>
+                <label style="font-size: 13px; color: #fff;">পরিমাণ নির্বাচন করুন:</label>
                 <select id="qtySelect" class="qty-select" onchange="calculateModalPrice()"></select>
             </div>
 
-            <div style="text-align: right; margin-bottom: 15px; font-weight: bold; color: #059669; font-size: 16px;">
+            <div style="text-align: right; margin-bottom: 12px; font-weight: bold; color: var(--accent-gold); font-size: 15px;">
                 মোট দাম: ৳ <span id="modalCalculatedPrice">0</span>
             </div>
 
-            <button class="select-btn" style="padding:12px; font-size:14px;" onclick="addToCart()">🛒 কার্টে যোগ করুন</button>
+            <button class="select-btn" style="padding:10px; font-size:14px;" onclick="addToCart()">🛒 কার্টে যোগ করুন</button>
         </div>
     </div>
 
-    <!-- অর্ডার ও পেমেন্ট মোডাল -->
     <div id="checkoutModal" class="modal-overlay">
         <div class="modal-card">
             <span class="close-btn" onclick="closeModal('checkoutModal')">✖</span>
-            <h3 style="color:#059669; margin-bottom:8px;">🛍️ অর্ডারের বিস্তারিত বিবরণ:</h3>
+            <h3 style="color:var(--accent-green); margin-bottom:5px;">🛍️ অর্ডারের বিস্তারিত বিবরণ:</h3>
             <div id="cartList" class="cart-items-list"></div>
-            <h4 id="finalTotal" style="color:#d97706; text-align:right; margin-bottom:12px;"></h4>
+            <h4 id="finalTotal" style="color:var(--accent-gold); text-align:right; margin-bottom:10px;"></h4>
 
-            <!-- কাস্টমার তথ্য -->
-            <label style="font-size: 11px; font-weight: bold;">আপনার নাম:</label>
+            <label style="font-size: 11px;">আপনার নাম:</label>
             <input type="text" id="custName" class="input-field" placeholder="আপনার নাম">
 
-            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">সম্পূর্ণ ঠিকানা:</label>
+            <label style="font-size: 11px; margin-top:4px; display:block;">সম্পূর্ণ ঠিকানা:</label>
             <textarea id="custAddress" class="input-field" rows="2" placeholder="রোড, বাড়ি নং, এলাকা..."></textarea>
 
-            <!-- ডেলিভারি সিডিউল -->
-            <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
                 <div style="flex:1;">
-                    <label style="font-size: 11px; font-weight: bold;">ডেলিভারির তারিখ:</label>
+                    <label style="font-size: 11px;">ডেলিভারির তারিখ:</label>
                     <input type="date" id="delivDate" class="input-field">
                 </div>
                 <div style="flex:1;">
-                    <label style="font-size: 11px; font-weight: bold;">ডেলিভারির সময়:</label>
+                    <label style="font-size: 11px;">ডেলিভারির সময়:</label>
                     <select id="delivTime" class="input-field">
                         <option value="সকাল ৮টা - ১১টা">সকাল ৮টা - ১১টা</option>
                         <option value="দুপুর ১২টা - ৩টা">দুপুর ১২টা - ৩টা</option>
@@ -254,31 +325,29 @@
                 </div>
             </div>
 
-            <!-- বিশেষ নির্দেশনা -->
-            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">বিশেষ কোনো নির্দেশনা / কী লাগবে:</label>
+            <label style="font-size: 11px; margin-top:4px; display:block;">বিশেষ কোনো নির্দেশনা / কী লাগবে:</label>
             <input type="text" id="custNotes" class="input-field" placeholder="যেমন: মাছ কেটে দেবেন, বা কচি সবজি দিবেন...">
 
-            <!-- এডভান্স পেমেন্ট সেকশন -->
             <div class="payment-box">
-                <p style="color:#059669; font-weight:bold; font-size:12px; margin-bottom:3px;">💳 এডভান্স পেমেন্ট সেকশন:</p>
+                <p style="color:var(--accent-green); font-weight:bold; font-size:12px; margin-bottom:3px;">💳 এডভান্স পেমেন্ট সেকশন:</p>
                 <p>• বিকাশ: <span class="pay-num">01886-343188</span> | নগদ: <span class="pay-num">0177777289</span></p>
             </div>
 
             <div style="display: flex; gap: 8px;">
                 <div style="flex:1;">
-                    <label style="font-size: 11px; font-weight: bold;">পেমেন্ট মেথড:</label>
+                    <label style="font-size: 11px;">পেমেন্ট মেথড:</label>
                     <select id="payMethod" class="input-field">
                         <option value="bKash">বিকাশ</option>
                         <option value="Nagad">নগদ</option>
                     </select>
                 </div>
                 <div style="flex:1;">
-                    <label style="font-size: 11px; font-weight: bold;">এডভান্স (৳):</label>
+                    <label style="font-size: 11px;">এডভান্স (৳):</label>
                     <input type="number" id="advAmount" class="input-field" value="50">
                 </div>
             </div>
 
-            <label style="font-size: 11px; font-weight: bold; margin-top:6px; display:block;">ট্রানজেকশন ID (TxnID):</label>
+            <label style="font-size: 11px; margin-top:4px; display:block;">ট্রানজেকশন ID (TxnID):</label>
             <input type="text" id="txnId" class="input-field" placeholder="যেমন: 9J87KLX12">
 
             <button class="checkout-btn" style="width:100%; margin-top:12px; justify-content:center; padding:12px;" onclick="processOrderAndDownload()">
@@ -287,7 +356,6 @@
         </div>
     </div>
 
-    <!-- ক্যাশ মেমো টেমপ্লেট -->
     <div id="invoiceTemplate">
         <h2>🛒 পচা বাজার</h2>
         <div class="inv-slogan">"নামে পচা হলেও, স্বাদে ও মানে ১০০% তাজা!"</div>
@@ -332,10 +400,9 @@
         </div>
     </div>
 
-    <!-- বটম কার্ট বার -->
     <div class="cart-bar">
         <div class="cart-info">
-            আইটেম: <span id="cartCount" style="color:#059669; font-weight:bold;">০</span> টি | 
+            আইটেম: <span id="cartCount" style="color:var(--accent-green); font-weight:bold;">০</span> টি | 
             মোট: <strong>৳ <span id="cartTotal">০</span></strong>
         </div>
         <button class="checkout-btn" onclick="openCheckout()">অর্ডার কনফার্ম করুন ➔</button>
@@ -361,7 +428,7 @@
             { id: 14, name: "রুই মাছ", price: 350, unit: "কেজি", desc: "নদীর তাজা রুই মাছ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
             { id: 15, name: "কাতলা মাছ", price: 380, unit: "কেজি", desc: "বড় সাইজের কাতলা মাছ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
             { id: 16, name: "ইলিশ মাছ", price: 1200, unit: "কেজি", desc: "পদ্মার তাজা ইলিশ", img: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=400" },
-            { id: 17, name: "মুরগির মাংস", price: 170, unit: "কেজি", desc: "ড্রেসিং করা ব্রয়লার", img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400" },
+            { id: 17, name: "মুরগির মাংস (ব্রয়লার)", price: 170, unit: "কেজি", desc: "ড্রেসিং করা মুরগি", img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400" },
             { id: 18, name: "গরুর মাংস", price: 750, unit: "কেজি", desc: "হাড় ও চর্বি সহ খাঁটি মাংস", img: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400" },
             { id: 19, name: "খাসির মাংস", price: 1050, unit: "কেজি", desc: "তাজা খাসির মাংস", img: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400" },
             { id: 20, name: "মসুর ডাল", price: 140, unit: "কেজি", desc: "দেশি চিকন মসুর ডাল", img: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=400" }
@@ -369,106 +436,96 @@
 
         let cart = [];
         let selectedProduct = null;
-        let currentRotation = 0;
-        let activeProducts = [...products];
-        let isScrolling = false;
-        let scrollTimeout;
 
-        // Render 3D Ring Gallery
-        function render3DRing(listToRender) {
+        // 3D Ring Setup
+        function init3DRing() {
             const stage = document.getElementById('ringStage');
             stage.innerHTML = "";
-            const total = listToRender.length;
-            if(total === 0) return;
-
-            const radius = Math.max(280, total * 32); 
+            const total = Math.min(8, products.length); // রিং-এ সেরা ৮টি পণ্য দেখাবে
+            const radius = 220;
             const angleStep = 360 / total;
 
-            listToRender.forEach((p, index) => {
-                const angle = index * angleStep;
+            for(let i = 0; i < total; i++) {
+                const p = products[i];
+                const angle = i * angleStep;
                 const card = document.createElement('div');
-                card.className = 'product-card-3d';
+                card.className = 'card-3d';
                 card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                
+                card.onclick = () => openProductModal(p.id);
                 card.innerHTML = `
                     <img src="${p.img}" alt="${p.name}">
-                    <h3>${p.name}</h3>
+                    <h4>${p.name}</h4>
                     <p>${p.desc}</p>
                     <div class="price">৳ ${p.price} / ${p.unit}</div>
-                    <button class="select-btn" onclick="event.stopPropagation(); openProductModal(${p.id})">পরিমাণ সিলেক্ট করুন</button>
                 `;
-
-                card.onclick = () => {
-                    openProductModal(p.id);
-                };
-
                 stage.appendChild(card);
+            }
+
+            // Drag and Auto-rotate Logic
+            let currentRotation = 0;
+            let isDragging = false;
+            let startX = 0;
+            let isScrolling = false;
+            let scrollTimeout;
+
+            const container = document.getElementById('ringContainer');
+
+            container.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
+            container.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let deltaX = e.clientX - startX;
+                currentRotation += deltaX * 0.3;
+                stage.style.transform = `rotateY(${currentRotation}deg)`;
+                startX = e.clientX;
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                let deltaX = e.touches[0].clientX - startX;
+                currentRotation += deltaX * 0.3;
+                stage.style.transform = `rotateY(${currentRotation}deg)`;
+                startX = e.touches[0].clientX;
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            window.addEventListener('scroll', () => {
+                isScrolling = true;
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => { isScrolling = false; }, 800);
+            });
+
+            setInterval(() => {
+                if (!isDragging && !isScrolling) {
+                    currentRotation += 0.25;
+                    stage.style.transform = `rotateY(${currentRotation}deg)`;
+                }
+            }, 30);
+        }
+
+        function renderProducts(listToRender) {
+            let grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+            listToRender.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="openProductModal(${p.id})">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="price">৳ ${p.price} / ${p.unit}</div>
+                        <button class="select-btn">পরিমাণ সিলেক্ট করুন</button>
+                    </div>
+                `;
             });
         }
 
-        // Search Filter
         function filterProducts() {
             let query = document.getElementById('searchInput').value.toLowerCase();
-            activeProducts = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
-            render3DRing(activeProducts);
+            let filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+            renderProducts(filtered);
         }
-
-        // Drag to rotate 3D Ring
-        let isDragging = false;
-        let startX = 0;
-
-        const ringContainer = document.getElementById('ringContainer');
-        const ringStage = document.getElementById('ringStage');
-
-        ringContainer.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.clientX - startX;
-            currentRotation += deltaX * 0.25;
-            ringStage.style.transform = `rotateY(${currentRotation}deg)`;
-            startX = e.clientX;
-        });
-
-        window.addEventListener('mouseup', () => { isDragging = false; });
-
-        // Touch events for Mobile
-        ringContainer.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].clientX;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.touches[0].clientX - startX;
-            currentRotation += deltaX * 0.3;
-            ringStage.style.transform = `rotateY(${currentRotation}deg)`;
-            startX = e.touches[0].clientX;
-        });
-
-        window.addEventListener('touchend', () => { isDragging = false; });
-
-        // Scroll detect: পেজ স্ক্রোল করলে ঘূর্ণন বন্ধ (Silent) থাকবে
-        window.addEventListener('scroll', () => {
-            isScrolling = true;
-            clearTimeout(scrollTimeout);
-            
-            // স্ক্রোল বন্ধ করার ১ সেকেন্ড পর আবার ঘোরা শুরু হবে
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-            }, 1000);
-        });
-
-        // Auto rotate slowly (স্ক্রোল করলে ঘূর্ণন বন্ধ থাকবে)
-        setInterval(() => {
-            if (!isDragging && !isScrolling) {
-                currentRotation += 0.15;
-                ringStage.style.transform = `rotateY(${currentRotation}deg)`;
-            }
-        }, 30);
 
         function openProductModal(id) {
             selectedProduct = products.find(p => p.id === id);
@@ -548,7 +605,7 @@
             document.getElementById('cartTotal').innerText = cart.reduce((sum, item) => sum + item.totalPrice, 0);
         }
 
-        /* VIP Functions */
+        /* VIP ফাংশনসমূহ */
         function openVIPModal() {
             document.getElementById('vipModal').style.display = 'flex';
         }
@@ -584,9 +641,9 @@
             cart.forEach(item => {
                 totalPrice += item.totalPrice;
                 cartListHtml += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                         <span>• ${item.name} (${item.labelText})</span>
-                        <span style="color:#059669; font-weight:bold;">৳ ${item.totalPrice}</span>
+                        <span style="color:var(--accent-gold); font-weight:bold;">৳ ${item.totalPrice}</span>
                     </div>
                 `;
             });
@@ -621,6 +678,7 @@
             let totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
             let dueAmount = totalPrice - advAmount;
 
+            // মেমোতে তথ্য বসানো
             document.getElementById('invDate').innerText = new Date().toLocaleDateString('bn-BD');
             document.getElementById('invName').innerText = name;
             document.getElementById('invAddress').innerText = address;
@@ -677,7 +735,9 @@
             });
         }
 
-        render3DRing(products);
+        // ইনিশিয়ালাইজেশন
+        renderProducts(products);
+        init3DRing();
     </script>
 </body>
 </html>
