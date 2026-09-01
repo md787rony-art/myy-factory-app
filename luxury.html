@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base67 - ডিজিটাল কারখানা খাতা</title>
+    <title>প্রফেশনাল কস্টিং খাতা</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
@@ -14,7 +14,7 @@
         @media (max-width: 1150px) { .container { grid-template-columns: 1fr; } }
         
         .box { background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 5px solid #3498db; height: max-content; }
-        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 15px 20px; border-radius: 12px; }
+        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 15px 20px; border-radius: 12px; }
         
         .btn-settings { background: #e67e22; color: white; padding: 8px 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         .btn-settings:hover { background: #d35400; }
@@ -47,7 +47,7 @@
         .btn-prev { background: #94a3b8; color: white; }
         
         button.main-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .btn-save-db { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-save-db { background: linear-gradient(135deg, #1e293b, #334155); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-download-img { background: #9b59b6; color: white; padding: 8px 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         
         .result-box { margin-top: 25px; background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 20px; border-radius: 14px; text-align: center; }
@@ -66,14 +66,18 @@
         th:last-child, td:last-child { border-right: none; }
         th { background: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.78rem; }
         
-        .cat-title { font-weight: bold; color: #1e293b; margin-top: 8px; display: block; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; font-size: 0.85rem; }
-        .cat-details { font-size: 0.8rem; color: #64748b; padding-left: 8px; line-height: 1.5; margin: 4px 0; }
-        .plus-cost { color: #e67e22; font-weight: bold; font-size: 1.1rem; text-align: center; display: block; }
+        /* New Card Styling for Download View */
+        .cost-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+        .cat-title-new { font-weight: bold; color: #0f172a; font-size: 0.95rem; display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px; }
+        .items-flex { display: flex; flex-wrap: wrap; gap: 6px; }
+        .item-chip { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .plus-cost { color: #2ecc71; font-weight: bold; font-size: 1.2rem; text-align: center; display: block; }
+        
         .db-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
-        .record-divider { border: none; border-top: 2px dashed #3498db; margin: 15px 0; opacity: 0.5; }
+        .record-divider { border: none; border-top: 2px dashed #cbd5e1; margin: 15px 0; }
 
-        .btn-action-download { padding: 6px 10px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: block; width: 100%; text-align: center; }
-        .btn-action-delete { padding: 6px 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; display: block; width: 100%; text-align: center; }
+        .btn-action-download { padding: 8px 12px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; display: block; width: 100%; text-align: center; }
+        .btn-action-delete { padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; display: block; width: 100%; text-align: center; }
         
         .category-select-box { background: #e3f2fd; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #90caf9; }
     </style>
@@ -81,7 +85,7 @@
 <body>
 
 <div class="header-area">
-    <h2>📁 Base67 খাতা</h2>
+    <h2>📁 ডিজিটাল কারখানা হিসাব খাতা</h2>
     <button class="btn-settings" onclick="openSettings()">⚙️ রেট সেটিংস</button>
 </div>
 
@@ -97,19 +101,18 @@
 
         <form id="calcForm" onsubmit="event.preventDefault();">
             
-            <!-- STEP 1 -->
             <div class="form-step active" id="step-1">
                 <h3>📌 ১. ফার্নিচার বিবরণী</h3>
                 <div class="form-group">
                     <label>মডেল নাম্বার (Model No.)</label>
-                    <input type="text" id="model_no" placeholder="যেমন: B-102" required>
+                    <input type="text" id="model_no" placeholder="যেমন: 4DOOR" required>
                 </div>
                 
                 <div class="category-select-box">
-                    <label style="color: #0d47a1; font-weight: bold;">বোর্ডের ধরন বেছে নিন (বোর্ডের ধরনের ওপর হিসাব নির্ভর করবে)</label>
+                    <label style="color: #0d47a1; font-weight: bold;">বোর্ডের ধরন বেছে নিন</label>
                     <select id="board_category" onchange="toggleBoardCategory()">
                         <option value="mdf">MDF বোর্ড (রঙ/লেকার মেটেরিয়াল সহ)</option>
-                        <option value="melamine_acrylic">মেলামাইন ও অ্যাক্রিলিক বোর্ড (এজিং ও স্পেশাল ফিটিংস সহ)</option>
+                        <option value="melamine_acrylic" selected>মেলামাইন ও অ্যাক্রিলিক বোর্ড (এজিং ও স্পেশাল ফিটিংস সহ)</option>
                     </select>
                 </div>
 
@@ -130,11 +133,9 @@
                 </div>
             </div>
 
-            <!-- STEP 2 -->
             <div class="form-step" id="step-2">
                 <h3>🪵 ২. Boards (পিস)</h3>
                 
-                <!-- MDF Section -->
                 <div id="section_mdf_boards">
                     <h4 style="font-size:0.9rem; color:#34495e; margin: 10px 0 5px 0;">MDF বোর্ড অপশন:</h4>
                     <div class="grid-2">
@@ -165,15 +166,14 @@
                     </div>
                 </div>
 
-                <!-- Melamine & Acrylic Section -->
-                <div id="section_melamine_boards" style="display: none;">
+                <div id="section_melamine_boards">
                     <h4 style="font-size:0.9rem; color:#34495e; margin: 10px 0 5px 0;">মেলামাইন বোর্ড অপশন:</h4>
                     <div class="form-group">
                         <label>মেলামাইন বোর্ডের কালার নির্বাচন করুন</label>
                         <select id="melamine_color">
+                            <option value="বাদামি">বাদামি (Wood/Brown)</option>
                             <option value="সাদা">সাদা (White)</option>
                             <option value="অ্যাস">অ্যাস কালার (Ash)</option>
-                            <option value="বাদামি">বাদামি (Brown/Wood)</option>
                             <option value="পিঙ্ক">পিঙ্ক (Pink)</option>
                             <option value="অন্যান্য কালার">অন্যান্য কালার (Other)</option>
                         </select>
@@ -184,7 +184,7 @@
                             <label>১৮ মিমি মেলামাইন</label>
                             <div class="input-control">
                                 <button type="button" class="count-btn" onclick="stepInput('qty_melamine_18mm', -1)">-</button>
-                                <input type="number" id="qty_melamine_18mm" value="0" step="any">
+                                <input type="number" id="qty_melamine_18mm" value="6" step="any">
                                 <button type="button" class="count-btn" onclick="stepInput('qty_melamine_18mm', 1)">+</button>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                             <label>৯ মিমি মেলামাইন</label>
                             <div class="input-control">
                                 <button type="button" class="count-btn" onclick="stepInput('qty_melamine_9mm', -1)">-</button>
-                                <input type="number" id="qty_melamine_9mm" value="0" step="any">
+                                <input type="number" id="qty_melamine_9mm" value="3" step="any">
                                 <button type="button" class="count-btn" onclick="stepInput('qty_melamine_9mm', 1)">+</button>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                         <label>৩ মিমি মেলামাইন</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_melamine_3mm', -1)">-</button>
-                            <input type="number" id="qty_melamine_3mm" value="0" step="any">
+                            <input type="number" id="qty_melamine_3mm" value="1" step="any">
                             <button type="button" class="count-btn" onclick="stepInput('qty_melamine_3mm', 1)">+</button>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                         <label>১৮ মিমি অ্যাক্রিলিক বোর্ড</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_acrylic_18mm', -1)">-</button>
-                            <input type="number" id="qty_acrylic_18mm" value="0" step="any">
+                            <input type="number" id="qty_acrylic_18mm" value="1" step="any">
                             <button type="button" class="count-btn" onclick="stepInput('qty_acrylic_18mm', 1)">+</button>
                         </div>
                     </div>
@@ -223,17 +223,15 @@
                 </div>
             </div>
 
-            <!-- STEP 3 -->
             <div class="form-step" id="step-3">
                 <h3>🔩 ৩. Hardware & Materials</h3>
                 
-                <!-- Common Hardware -->
                 <div class="grid-2">
                     <div class="form-group">
                         <label>তালা (পিস)</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_lock', -1)">-</button>
-                            <input type="number" id="qty_lock" value="0">
+                            <input type="number" id="qty_lock" value="4">
                             <button type="button" class="count-btn" onclick="stepInput('qty_lock', 1)">+</button>
                         </div>
                     </div>
@@ -241,7 +239,7 @@
                         <label>হ্যান্ডেল (পিস)</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_handle', -1)">-</button>
-                            <input type="number" id="qty_handle" value="0">
+                            <input type="number" id="qty_handle" value="4">
                             <button type="button" class="count-btn" onclick="stepInput('qty_handle', 1)">+</button>
                         </div>
                     </div>
@@ -251,7 +249,7 @@
                         <label>কব্জা / Hinge (পিস)</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_hinge', -1)">-</button>
-                            <input type="number" id="qty_hinge" value="0">
+                            <input type="number" id="qty_hinge" value="20">
                             <button type="button" class="count-btn" onclick="stepInput('qty_hinge', 1)">+</button>
                         </div>
                     </div>
@@ -259,7 +257,7 @@
                         <label>ড্রয়ার চ্যানেল (সেট)</label>
                         <div class="input-control">
                             <button type="button" class="count-btn" onclick="stepInput('qty_channel', -1)">-</button>
-                            <input type="number" id="qty_channel" value="0">
+                            <input type="number" id="qty_channel" value="3">
                             <button type="button" class="count-btn" onclick="stepInput('qty_channel', 1)">+</button>
                         </div>
                     </div>
@@ -268,32 +266,31 @@
                 <div class="grid-2">
                     <div class="form-group">
                         <label>লুকিং গ্লাস (Sq Ft)</label>
-                        <input type="number" id="sqft_glass" value="0" step="any" placeholder="যেমন: 12">
+                        <input type="number" id="sqft_glass" value="28" step="any">
                     </div>
                     <div class="form-group">
                         <label>স্ক্রু (পিস)</label>
-                        <input type="number" id="qty_screw" value="0">
+                        <input type="number" id="qty_screw" value="200">
                     </div>
                 </div>
 
-                <!-- Melamine & Acrylic Specific Hardware -->
-                <div id="section_melamine_hardware" style="display: none; background: #fff8e1; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; margin-top: 10px;">
-                    <h4 style="font-size:0.85rem; color:#b78103; margin-bottom: 10px;">মেলামাইন/অ্যাক্রিলিক বোর্ডের প্রয়োজনীয় অতিরিক্ত আইটেম:</h4>
+                <div id="section_melamine_hardware" style="background: #fff8e1; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; margin-top: 10px;">
+                    <h4 style="font-size:0.85rem; color:#b78103; margin-bottom: 10px;">মেলামাইন/অ্যাক্রিলিক মেটেরিয়াল:</h4>
                     <div class="grid-2">
-                        <div class="form-group"><label>এজিং রোল (ফিট)</label><input type="number" id="qty_aging_roll" value="0"></div>
-                        <div class="form-group"><label>স্টিল এজিং (পিস)</label><input type="number" id="qty_steel_aging" value="0"></div>
+                        <div class="form-group"><label>এজিং রোল (ফিট)</label><input type="number" id="qty_aging_roll" value="350"></div>
+                        <div class="form-group"><label>স্টিল এজিং (পিস)</label><input type="number" id="qty_steel_aging" value="8"></div>
                     </div>
                     <div class="grid-2">
-                        <div class="form-group"><label>ঘাম/গ্লু (লিটার)</label><input type="number" id="qty_glue_litre" value="0" step="any"></div>
-                        <div class="form-group"><label>সল্যুশন গাম (লিটার)</label><input type="number" id="qty_solution_glue" value="0" step="any"></div>
+                        <div class="form-group"><label>ঘাম/গ্লু (লিটার)</label><input type="number" id="qty_glue_litre" value="1" step="any"></div>
+                        <div class="form-group"><label>সল্যুশন গাম (লিটার)</label><input type="number" id="qty_solution_glue" value="2" step="any"></div>
                     </div>
                     <div class="grid-2">
-                        <div class="form-group"><label>সুপারগ্লু (পিস)</label><input type="number" id="qty_super_glue" value="0"></div>
-                        <div class="form-group"><label>চাইনিজ বিস্কুট (পিস)</label><input type="number" id="qty_biscuit" value="0"></div>
+                        <div class="form-group"><label>সুপারগ্লু (পিস)</label><input type="number" id="qty_super_glue" value="5"></div>
+                        <div class="form-group"><label>চাইনিজ বিস্কুট (পিস)</label><input type="number" id="qty_biscuit" value="3"></div>
                     </div>
                     <div class="grid-2">
-                        <div class="form-group"><label>পিন ফায়ার (পিস)</label><input type="number" id="qty_pin_fire" value="0"></div>
-                        <div class="form-group"><label>শুটার পিন (পিস)</label><input type="number" id="qty_shooter_pin" value="0"></div>
+                        <div class="form-group"><label>পিন ফায়ার (পিস)</label><input type="number" id="qty_pin_fire" value="24"></div>
+                        <div class="form-group"><label>শুটার পিন (পিস)</label><input type="number" id="qty_shooter_pin" value="2"></div>
                     </div>
                 </div>
 
@@ -303,22 +300,20 @@
                 </div>
             </div>
 
-            <!-- STEP 4 -->
             <div class="form-step" id="step-4">
-                <h3>🎨 ৪. রঙ, মিস্ত্রি ও পরিবহন</h3>
+                <h3>🎨 ৪. মজুরি ও পরিবহন</h3>
                 <div class="grid-2">
                     <div class="form-group"><label>সিএনসি (CNC) বিল</label><input type="number" id="cost_cnc" value="0"></div>
-                    <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="0"></div>
+                    <div class="form-group"><label>ফিটিং মিস্ত্রি বিল</label><input type="number" id="cost_fitting_labor" value="5500"></div>
                 </div>
                 
-                <!-- Lacquer & Color option for MDF -->
                 <div id="section_mdf_color" class="grid-2">
                     <div class="form-group"><label>লেকার কেমিক্যাল</label><input type="number" id="cost_lacquer" value="0"></div>
                     <div class="form-group"><label>কালার মিস্ত্রি বিল</label><input type="number" id="cost_color_labor" value="0"></div>
                 </div>
 
                 <div class="grid-2">
-                    <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value="0"></div>
+                    <div class="form-group"><label>গাড়ি ভাড়া / পরিবহন</label><input type="number" id="cost_carrying" value="800"></div>
                     <div class="form-group"><label>অন্যান্য খুচরা খরচ</label><input type="number" id="cost_others" value="0"></div>
                 </div>
                 
@@ -335,7 +330,6 @@
         </div>
     </div>
 
-    <!-- DATABASE AREA -->
     <div class="db-box">
         <div class="db-header">
             <h2>📋 সেভ খাতা রেকর্ড</h2>
@@ -343,7 +337,7 @@
         </div>
         
         <div id="capture_area">
-            <h3 style="margin-top: 0; background: #2c3e50; color: white; border-left: 5px solid #9b59b6; padding: 12px 15px;">Base67 কারখানা রেকর্ড খাতা</h3>
+            <h3 style="margin-top: 0; background: #1e293b; color: white; border-left: 5px solid #9b59b6; padding: 12px 15px;">রেকর্ড খাতা</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -361,7 +355,6 @@
     </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeSettings()">&times;</span>
@@ -386,7 +379,7 @@
             <div class="form-group"><label>সল্যুশন গাম রেট (প্রতি লিটার)</label><input type="number" id="cfg_solution_glue" value="320"></div>
             <div class="form-group"><label>সুপারগ্লু রেট (পিস)</label><input type="number" id="cfg_super_glue" value="30"></div>
             <div class="form-group"><label>চাইনিজ বিস্কুট রেট (পিস)</label><input type="number" id="cfg_biscuit" value="5"></div>
-            <div class="form-group"><label>পিন ফায়ার রেট (পিস/বক্স)</label><input type="number" id="cfg_pin_fire" value="2"></div>
+            <div class="form-group"><label>পিন ফায়ার রেট (পিস)</label><input type="number" id="cfg_pin_fire" value="2"></div>
             <div class="form-group"><label>শুটার পিন রেট (পিস)</label><input type="number" id="cfg_shooter_pin" value="3"></div>
 
             <h4 style="color:#e67e22; margin:15px 0 8px 0;">Hardware Rate:</h4>
@@ -446,7 +439,7 @@
         let channel = document.getElementById('qty_channel');
         let sqftGlass = document.getElementById('sqft_glass');
 
-        if (type === 'almirah_4') { lock.value = 5; handle.value = 4; hinge.value = 16; channel.value = 1; sqftGlass.value = 0; }
+        if (type === 'almirah_4') { lock.value = 4; handle.value = 4; hinge.value = 20; channel.value = 3; sqftGlass.value = 28; }
         else if (type === 'almirah_3') { lock.value = 4; handle.value = 3; hinge.value = 12; channel.value = 1; sqftGlass.value = 0; }
         else if (type === 'almirah_2') { lock.value = 3; handle.value = 2; hinge.value = 8; channel.value = 1; sqftGlass.value = 0; }
         else if (type === 'dressing_table') { lock.value = 3; handle.value = 3; hinge.value = 12; channel.value = 2; sqftGlass.value = 12; }
@@ -466,7 +459,8 @@
         }
 
         document.getElementById(`step-${currentStep}`).classList.remove('active');
-        document.getElementById(`ind-${currentStep}`).classList.remove('active');currentStep += direction;
+        document.getElementById(`ind-${currentStep}`).classList.remove('active');
+        currentStep += direction;
         document.getElementById(`step-${currentStep}`).classList.add('active');
         document.getElementById(`ind-${currentStep}`).classList.add('active');
     }
@@ -546,7 +540,6 @@
                                   (getVal('qty_acrylic_18mm') * getCfg('acrylic_18mm'));
         }
 
-        // Hardware Cost
         calculatedHardwareCost = (getVal('qty_handle') * getCfg('handle')) +
                                  (getVal('qty_channel') * getCfg('channel')) +
                                  (getVal('qty_hinge') * getCfg('hinge')) +
@@ -565,7 +558,6 @@
                                       (getVal('qty_shooter_pin') * getCfg('shooter_pin'));
         }
 
-        // Labor and others
         calculatedLaborAndOtherCost = getVal('cost_cnc') + getVal('cost_fitting_labor') + getVal('cost_carrying') + getVal('cost_others');
         
         if (category === 'mdf') {
@@ -573,7 +565,7 @@
         }
 
         currentCalculatedTotal = calculatedBoardCost + calculatedHardwareCost + calculatedLaborAndOtherCost;
-        document.getElementById('grandTotal').innerText = currentCalculatedTotal.toLocaleString('bn-BD', { minimumFractionDigits: 2 }) + " টাকা";
+        document.getElementById('grandTotal').innerText = currentCalculatedTotal.toLocaleString('bn-BD', { minimumFractionDigits: 0 }) + " ৳";
     }
 
     function saveToDatabase() {
@@ -590,9 +582,9 @@
 
         let boardDetails = [];
         if (category === 'mdf') {
-            if(getVal('qty_18mm') > 0) boardDetails.push(`১৮মিমি MDF: ${getVal('qty_18mm')}পিস`);
-            if(getVal('qty_15mm') > 0) boardDetails.push(`১৫মিমি MDF: ${getVal('qty_15mm')}পিস`);
-            if(getVal('qty_6mm') > 0) boardDetails.push(`৬মিমি প্লাই: ${getVal('qty_6mm')}পিস`);
+            if(getVal('qty_18mm') > 0) boardDetails.push(`১৮মিমি MDF: ${getVal('qty_18mm')} পিস`);
+            if(getVal('qty_15mm') > 0) boardDetails.push(`১৫মিমি MDF: ${getVal('qty_15mm')} পিস`);
+            if(getVal('qty_6mm') > 0) boardDetails.push(`৬মিমি প্লাই: ${getVal('qty_6mm')} পিস`);
         } else {
             let melColor = document.getElementById('melamine_color').value;
             let qMel18 = getVal('qty_melamine_18mm');
@@ -605,18 +597,18 @@
                 if(qMel18 > 0) melItems.push(`১৮মিমি: ${qMel18}পিস`);
                 if(qMel9 > 0) melItems.push(`৯মিমি: ${qMel9}পিস`);
                 if(qMel3 > 0) melItems.push(`৩মিমি: ${qMel3}পিস`);
-                boardDetails.push(`মেলামাইন (${melColor}): ${melItems.join(', ')}`);
+                boardDetails.push(`মেলামাইন (${melColor}): ${melItems.join(' | ')}`);
             }
             if(qAcr > 0) boardDetails.push(`১৮মিমি অ্যাক্রিলিক: ${qAcr}পিস`);
         }
 
         let hardDetails = [];
         if(getVal('qty_lock') > 0) hardDetails.push(`তালা: ${getVal('qty_lock')}টি`);
-        if(getVal('qty_handle') > 0) hardDetails.push(`হ্যান্ডেল: ${getVal('qty_handle')}টি`);
         if(getVal('qty_hinge') > 0) hardDetails.push(`কব্জা: ${getVal('qty_hinge')}টি`);
         if(getVal('qty_channel') > 0) hardDetails.push(`চ্যানেল: ${getVal('qty_channel')}সেট`);
         if(getVal('sqft_glass') > 0) hardDetails.push(`গ্লাস: ${getVal('sqft_glass')} SqFt`);
         if(getVal('qty_screw') > 0) hardDetails.push(`স্ক্রু: ${getVal('qty_screw')}টি`);
+        if(getVal('qty_handle') > 0) hardDetails.push(`হ্যান্ডেল: ${getVal('qty_handle')}টি`);
 
         if (category === 'melamine_acrylic') {
             if(getVal('qty_aging_roll') > 0) hardDetails.push(`এজিং রোল: ${getVal('qty_aging_roll')}ফিট`);
@@ -630,32 +622,56 @@
         }
 
         let laborDetails = [];
-        if(getVal('cost_cnc') > 0) laborDetails.push(`CNC: ${getVal('cost_cnc')}৳`);
+        if(getVal('cost_cnc') > 0) laborDetails.push(`CNC বিল: ${getVal('cost_cnc')}৳`);
         if(category === 'mdf') {
             if(getVal('cost_lacquer') > 0) laborDetails.push(`লেকার: ${getVal('cost_lacquer')}৳`);
             if(getVal('cost_color_labor') > 0) laborDetails.push(`কালার মিস্ত্রি: ${getVal('cost_color_labor')}৳`);
         }
         if(getVal('cost_fitting_labor') > 0) laborDetails.push(`ফিটিং মিস্ত্রি: ${getVal('cost_fitting_labor')}৳`);
         if(getVal('cost_carrying') > 0) laborDetails.push(`গাড়ি ভাড়া: ${getVal('cost_carrying')}৳`);
-        if(getVal('cost_others') > 0) laborDetails.push(`খুচরা: ${getVal('cost_others')}৳`);
+        if(getVal('cost_others') > 0) laborDetails.push(`খুচরা খরচ: ${getVal('cost_others')}৳`);
 
+        // Generate Card Layout for Details
         let detailedHTML = '';
         if(boardDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🪵 ১. বোর্ড হিসাব (মোট: ${calculatedBoardCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${boardDetails.join(' | ')}</div>`;
+            detailedHTML += `
+            <div class="cost-card">
+                <div class="cat-title-new">
+                    <span>🪵 ১. বোর্ড হিসাব</span>
+                    <span>(মোট: ${calculatedBoardCost.toFixed(0)}৳)</span>
+                </div>
+                <div class="items-flex">
+                    ${boardDetails.map(item => `<div class="item-chip">${item}</div>`).join('')}
+                </div>
+            </div>`;
         }
         if(hardDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🔩 ২. হার্ডওয়্যার ও মেটেরিয়াল (মোট: ${calculatedHardwareCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${hardDetails.join(' | ')}</div>`;
+            detailedHTML += `
+            <div class="cost-card">
+                <div class="cat-title-new">
+                    <span>🔩 ২. হার্ডওয়্যার ও মেটেরিয়াল</span>
+                    <span>(মোট: ${calculatedHardwareCost.toFixed(0)}৳)</span>
+                </div>
+                <div class="items-flex">
+                    ${hardDetails.map(item => `<div class="item-chip">${item}</div>`).join('')}
+                </div>
+            </div>`;
         }
         if(laborDetails.length > 0) {
-            detailedHTML += `<span class="cat-title">🎨 ৩. মজুরি ও পরিবহন (মোট: ${calculatedLaborAndOtherCost.toFixed(0)}৳)</span>
-                             <div class="cat-details">${laborDetails.join(' | ')}</div>`;
+            detailedHTML += `
+            <div class="cost-card">
+                <div class="cat-title-new">
+                    <span>🎨 ৩. মজুরি ও পরিবহন</span>
+                    <span>(মোট: ${calculatedLaborAndOtherCost.toFixed(0)}৳)</span>
+                </div>
+                <div class="items-flex">
+                    ${laborDetails.map(item => `<div class="item-chip">${item}</div>`).join('')}
+                </div>
+            </div>`;
         }
 
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
+        let db = JSON.parse(localStorage.getItem('Khata_Data_Store')) || [];
         let existingItem = db.find(item => item.model === modelNo);
-
         let categoryTag = category === 'mdf' ? '[MDF]' : '[মেলামাইন/অ্যাক্রিলিক]';
 
         if(existingItem) {
@@ -665,7 +681,7 @@
             db.push({ model: modelNo, name: `${productText} ${categoryTag}`, cost: currentCalculatedTotal.toFixed(0), details: detailedHTML });
         }
 
-        localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
+        localStorage.setItem('Khata_Data_Store', JSON.stringify(db));
         renderDatabase();
         
         document.getElementById('model_no').value = '';
@@ -680,11 +696,11 @@
     }
 
     function renderDatabase() {
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
+        let db = JSON.parse(localStorage.getItem('Khata_Data_Store')) || [];
         let rows = '';
         db.forEach((item, index) => {
             rows += `<tr id="row-${index}">
-                <td><strong>${item.model}</strong><br><small style="color:#64748b; font-weight:500;">${item.name}</small></td>
+                <td><strong>${item.model}</strong><br><small style="color:#64748b; font-weight:600;">${item.name}</small></td>
                 <td><div class="details-text">${item.details || 'কোনো বিবরণী নেই'}</div></td>
                 <td><span class="plus-cost">${item.cost} ৳</span></td>
                 <td class="no-capture" style="text-align:center; vertical-align:middle;">
@@ -696,34 +712,44 @@
         document.getElementById('dbRows').innerHTML = rows;
     }
 
+    // ডাউনলোড ফটোর প্রফেশনাল লেআউট
     function exportSingleRow(index, modelName) {
         let targetRow = document.getElementById(`row-${index}`);
+        let currentDate = new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+        
         let tempDiv = document.createElement('div');
         tempDiv.style.position = 'absolute';
         tempDiv.style.top = '-9999px';
-        tempDiv.style.width = '480px';
+        tempDiv.style.width = '550px';
         tempDiv.style.background = '#ffffff';
-        tempDiv.style.padding = '25px';
-        tempDiv.style.borderRadius = '12px';
+        tempDiv.style.padding = '30px';
+        tempDiv.style.borderRadius = '20px';
+        tempDiv.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        tempDiv.style.border = '1px solid #e2e8f0';
         
         tempDiv.innerHTML = `
-            <div style="text-align:center; margin-bottom: 20px; border-bottom: 3px double #2c3e50; padding-bottom: 10px;">
-                <h2 style="color: #2c3e50; margin: 0; font-size:1.4rem;">Base67 কারখানা রেকর্ড কপি</h2>
-                <p style="color: #64748b; font-size: 0.8rem; margin: 5px 0 0 0;">একক প্রোডাক্ট উৎপাদন খরচ বিবরণী</p>
+            <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px solid #334155; padding-bottom: 12px;">
+                <h1 style="color: #1e293b; margin: 0; font-size:1.8rem; font-weight:800; letter-spacing: 0.5px;">PRODUCT COSTING</h1>
+                <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px; font-weight: 600;">একক প্রোডাক্ট উৎপাদন খরচ বিবরণী</p>
+                <p style="color: #94a3b8; font-size: 0.75rem; margin-top: 2px;">তারিখ: ${currentDate}</p>
             </div>
-            <div style="margin-bottom: 20px; background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 5px solid #3498db;">
-                <span style="font-size:0.85rem; color:#64748b;">মডেল ও আইটেম:</span>
-                <h3 style="margin: 3px 0 0 0; color:#1e293b; font-size:1.15rem;">${targetRow.cells[0].innerHTML.replace('<br>', ' - ')}</h3>
+            
+            <div style="margin-bottom: 20px; background: #e0f2fe; padding: 14px 18px; border-radius: 12px; border-left: 6px solid #0284c7;">
+                <span style="font-size:0.8rem; color:#0369a1; font-weight: 700;">মডেল ও আইটেম:</span>
+                <h2 style="margin: 4px 0 0 0; color:#0f172a; font-size:1.2rem; font-weight:700;">${targetRow.cells[0].innerHTML.replace('<br>', ' - ')}</h2>
             </div>
-            <div style="margin-bottom: 25px;">
+            
+            <div style="margin-bottom: 20px;">
                 ${targetRow.cells[1].innerHTML}
             </div>
-            <div style="background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-                <span style="font-size: 0.85rem; color: #cbd5e1; display:block;">সর্বমোট উৎপাদন খরচ</span>
-                <span style="font-size: 1.6rem; font-weight: bold; color: #2ecc71;">${targetRow.cells[2].innerText}</span>
+            
+            <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 20px; border-radius: 14px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <span style="font-size: 0.95rem; color: #cbd5e1; display:block; font-weight: 600; margin-bottom: 4px;">সর্বমোট উৎপাদন খরচ</span>
+                <span style="font-size: 2.2rem; font-weight: 800; color: #2ecc71;">${targetRow.cells[2].innerText}</span>
             </div>
-            <div style="text-align:center; margin-top:20px; font-size:0.7rem; color:#94a3b8; border-top:1px solid #e2e8f0; padding-top:10px;">
-                ডিজিটাল খাতা জেনারেটেড কপি • Base67
+            
+            <div style="text-align:center; margin-top:20px; font-size:0.75rem; color:#94a3b8; border-top:1px dashed #cbd5e1; padding-top:10px;">
+                ডিজিটাল খাতা জেনারেটেড কপি
             </div>
         `;
         
@@ -733,7 +759,7 @@
             let imgData = canvas.toDataURL('image/png');
             let a = document.createElement('a');
             a.href = imgData;
-            a.download = `Cost_Report_${modelName}.png`;
+            a.download = `Product_Costing_${modelName}.png`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -745,16 +771,16 @@
     }
 
     function deleteRow(index) {
-        if(confirm('আপনি কি নিশ্চিত যে এই হিসাবটি খাতা থেকে চিরতরে মুছে ফেলতে চান?')) {
-            let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
+        if(confirm('আপনি কি নিশ্চিত যে এই হিসাবটি খাতা থেকে মুছে ফেলতে চান?')) {
+            let db = JSON.parse(localStorage.getItem('Khata_Data_Store')) || [];
             db.splice(index, 1);
-            localStorage.setItem('Base67_Data_Store', JSON.stringify(db));
+            localStorage.setItem('Khata_Data_Store', JSON.stringify(db));
             renderDatabase();
         }
     }
 
     function exportToImage() {
-        let db = JSON.parse(localStorage.getItem('Base67_Data_Store')) || [];
+        let db = JSON.parse(localStorage.getItem('Khata_Data_Store')) || [];
         if(db.length === 0) { alert('খাতায় কোনো ডাটা নেই! আগে কিছু হিসাব সেভ করুন।'); return; }
 
         let deleteButtons = document.querySelectorAll('.no-capture');
@@ -768,7 +794,7 @@
             let imgData = canvas.toDataURL('image/png');
             let a = document.createElement('a');
             a.href = imgData;
-            a.download = 'Base67_All_Khata.png';
+            a.download = 'All_Product_Costing.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
