@@ -4,44 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>প্লেয়ার রেজিস্ট্রেশন কার্ড - বেপারী পাড়া বন্ধু মহল</title>
-  <!-- html2canvas Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+    * {
+      box-sizing: border-box;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
 
     body {
-      font-family: 'Hind Siliguri', sans-serif;
-      background-color: #0e1e17;
+      background-color: #121212;
       color: #fff;
       margin: 0;
       padding: 20px;
-    }
-
-    .main-container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* বামপাশের ইনপুট ফর্ম */
-    .form-box {
-      background: #162b22;
-      padding: 25px;
-      border-radius: 12px;
+    /* ইনপুট ফর্ম কন্ট্রোল */
+    .form-wrapper {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
       width: 100%;
-      max-width: 450px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      border: 1px solid #284c3c;
+      max-width: 550px;
+      margin-bottom: 30px;
+      border: 1px solid #333;
     }
 
-    .form-box h2 {
+    .form-wrapper h2 {
       text-align: center;
-      color: #8ed82c;
+      color: #76c043;
       margin-top: 0;
-      border-bottom: 2px solid #284c3c;
-      padding-bottom: 10px;
     }
 
     .form-group {
@@ -50,272 +45,537 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 5px;
       font-size: 14px;
-      color: #d1d1d1;
+      margin-bottom: 4px;
+      color: #ccc;
     }
 
-    .form-group input, .form-group select {
+    .form-group input[type="text"], 
+    .form-group input[type="file"],
+    .form-group select {
       width: 100%;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #3d6852;
-      background: #0a1410;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #2b2b2b;
       color: #fff;
-      box-sizing: border-box;
-      font-family: 'Hind Siliguri', sans-serif;
     }
 
-    .checkbox-group {
+    .radio-group {
       display: flex;
       gap: 15px;
-      flex-wrap: wrap;
-      margin-top: 5px;
+      font-size: 14px;
     }
 
-    .checkbox-group label {
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .submit-btn {
+    .btn-submit {
       width: 100%;
-      background: linear-gradient(45deg, #1b8a43, #8ed82c);
+      background: #76c043;
       color: #000;
       font-weight: bold;
       padding: 12px;
-      border: none;
-      border-radius: 6px;
       font-size: 16px;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
       margin-top: 15px;
-      transition: 0.3s;
     }
 
-    .submit-btn:hover {
-      opacity: 0.9;
+    .btn-submit:hover {
+      background: #5fa133;
     }
 
-    /* ডানপাশের সেম টু সেম কার্ড প্রিভিউ (Image Canvas) */
-    .card-preview-container {
+    /* ----------------------------------------------------------------- */
+    /* অরিজিনাল পোস্টারের হুবহু ডিজাইন (Card Design Container) */
+    /* ----------------------------------------------------------------- */
+    #poster-card {
+      width: 500px;
+      background: #021e14; /* মূল গাঢ় সবুজ ব্যাকগ্রাউন্ড */
+      border: 4px solid #143e2b;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
       position: relative;
-      width: 600px;
-      height: 840px; /* কার্ডের অরিজিনাল অনুপাত */
-      background-image: url('card-bg.jpg'); /* আপনার মূল ছবির নাম এখানে দিন */
-      background-size: cover;
-      background-position: center;
+    }
+
+    /* পোস্টার হেডার */
+    .poster-header {
+      text-align: center;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .header-top-title {
+      font-size: 18px;
+      color: #ffffff;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .header-sub-title {
+      font-size: 16px;
+      color: #ffcc00; /* হলুদ রিং */
+      font-weight: 700;
+      margin: 2px 0;
+    }
+
+    .header-main-title {
+      font-size: 32px;
+      color: #ffffff;
+      font-weight: 700;
+      margin: 5px 0;
+      letter-spacing: 1px;
+    }
+
+    .banner-badge {
+      background: #76c043;
+      color: #021e14;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 4px 15px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 5px;
+      border: 2px solid #fff;
+    }
+
+    /* কার্ডের সাদা মূল বডি */
+    .poster-body {
+      background: #ffffff;
       border-radius: 12px;
-      overflow: hidden;
+      padding: 15px;
       color: #000;
+      margin-top: 10px;
+    }
+
+    .top-info-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    /* ছবি আপলোড বক্স */
+    .photo-upload-box {
+      width: 120px;
+      height: 150px;
+      border: 2px dashed #888;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #f9f9f9;
+    }
+
+    .photo-upload-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ফিল্ড রো (Row Style) */
+    .info-fields {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
       font-weight: 600;
     }
 
-    /* কার্ডের ওপর ডাইনামিক বসানো ডেটা (Absolute Positioning) */
-    
-    /* প্লেয়ারের ছবি */
-    #card-photo-display {
-      position: absolute;
-      top: 300px;
-      left: 48px;
-      width: 128px;
-      height: 152px;
-      object-fit: cover;
-      border-radius: 6px;
+    .field-icon {
+      width: 22px;
+      height: 22px;
+      background: #021e14;
+      color: #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      margin-right: 8px;
     }
 
-    /* টেক্সট ফিল্ডগুলো */
-    .card-text {
-      position: absolute;
-      font-size: 16px;
-      color: #111;
-      font-weight: 700;
+    .field-label {
+      width: 110px;
+      color: #222;
     }
 
-    #out-reg { top: 305px; left: 390px; }
-    #out-name-bn { top: 358px; left: 390px; }
-    #out-name-en { top: 412px; left: 390px; font-family: Arial, sans-serif; }
-    #out-whatsapp { top: 466px; left: 390px; font-family: Arial, sans-serif; }
-    #out-address { top: 520px; left: 390px; }
+    .field-dots {
+      margin-right: 8px;
+    }
 
-    /* পজিশন ও পায়ের টিকচিহ্ন */
-    .tick-mark {
-      position: absolute;
-      font-size: 18px;
+    .field-value {
+      flex: 1;
+      border-bottom: 1px solid #777;
+      min-height: 20px;
       color: #000;
+      font-weight: 700;
+      padding-left: 5px;
+    }
+
+    /* খেলোয়াড়ের তথ্য বিভাগ */
+    .section-header {
+      background: #021e14;
+      color: #fff;
+      text-align: center;
+      padding: 4px;
+      border-radius: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 600;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .checkbox-custom {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #000;
+      display: inline-block;
+      text-align: center;
+      line-height: 12px;
+      font-size: 12px;
+    }
+
+    .dotted-line {
+      border-bottom: 1px dashed #aaa;
+      margin: 8px 0;
+    }
+
+    /* প্লেয়ার ক্যাটাগরি & নম্বর সেকশন */
+    .bottom-boxes {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .box-item {
+      flex: 1;
+      display: flex;
+      border: 1px solid #000;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 30px;
+    }
+
+    .box-label {
+      background: #021e14;
+      color: #fff;
+      padding: 0 8px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box-val {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    /* দাম ও সোল্ড সেকশন */
+    .price-section {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .price-box {
+      flex: 1;
+      background: #021e14;
+      color: #fff;
+      border-radius: 6px;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .price-box.green {
+      background: #1b8a43;
+    }
+
+    .price-title {
+      font-size: 10px;
+      text-transform: uppercase;
       font-weight: bold;
     }
 
-    #tick-gk { top: 641px; left: 222px; display: none; }
-    #tick-df { top: 641px; left: 392px; display: none; }
-    #tick-mf { top: 673px; left: 222px; display: none; }
-    #tick-fw { top: 673px; left: 392px; display: none; }
-
-    #tick-left { top: 730px; left: 222px; display: none; }
-    #tick-right { top: 730px; left: 392px; display: none; }
-
-    /* ক্যাটাগরি ও প্লেয়ার নাম্বার */
-    #out-category { top: 785px; left: 205px; font-size: 15px; }
-    #out-player-no { top: 785px; left: 455px; font-size: 15px; }
-
+    .price-input-val {
+      background: #fff;
+      color: #000;
+      border-radius: 4px;
+      height: 22px;
+      margin-top: 3px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="main-container">
+  <!-- ফন্ট-এন্ড ফর্ম (ইউজার ডাটা ইনপুট দেবে) -->
+  <div class="form-wrapper">
+    <h2>প্লেয়ার রেজিস্ট্রেশন ফর্ম</h2>
     
-    <!-- ইনপুট ফর্ম -->
-    <div class="form-box">
-      <h2>প্লেয়ার রেজিস্ট্রেশন ফর্ম</h2>
+    <div class="form-group">
+      <label>ছবি নির্বাচন করুন:</label>
+      <input type="file" accept="image/*" onchange="previewPhoto(event)">
+    </div>
+
+    <div class="form-group">
+      <label>রেজিস্ট্রেশন নং:</label>
+      <input type="text" id="in_reg" oninput="bindText('in_reg', 'val_reg')">
+    </div>
+
+    <div class="form-group">
+      <label>নাম (বাংলা):</label>
+      <input type="text" id="in_name_bn" oninput="bindText('in_name_bn', 'val_name_bn')">
+    </div>
+
+    <div class="form-group">
+      <label>নাম (ইংরেজি):</label>
+      <input type="text" id="in_name_en" oninput="bindText('in_name_en', 'val_name_en')">
+    </div>
+
+    <div class="form-group">
+      <label>হোয়াটসঅ্যাপ নম্বর:</label>
+      <input type="text" id="in_wa" oninput="bindText('in_wa', 'val_wa')">
+    </div>
+
+    <div class="form-group">
+      <label>এলাকা / ঠিকানা:</label>
+      <input type="text" id="in_address" oninput="bindText('in_address', 'val_address')">
+    </div>
+
+    <div class="form-group">
+      <label>পজিশন (Position):</label>
+      <div class="radio-group">
+        <label><input type="radio" name="pos" onclick="setCheckbox('pos_gk')"> গোলরক্ষক</label>
+        <label><input type="radio" name="pos" onclick="setCheckbox('pos_df')"> ডিফেন্ডার</label>
+        <label><input type="radio" name="pos" onclick="setCheckbox('pos_mf')"> মিডফিল্ডার</label>
+        <label><input type="radio" name="pos" onclick="setCheckbox('pos_fw')"> ফরোয়ার্ড</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>পছন্দের পা:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="foot" onclick="setFoot('foot_left')"> বাম (Left)</label>
+        <label><input type="radio" name="foot" onclick="setFoot('foot_right')"> ডান (Right)</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>প্লেয়ার ক্যাটাগরি:</label>
+      <input type="text" id="in_cat" oninput="bindText('in_cat', 'val_cat')">
+    </div>
+
+    <div class="form-group">
+      <label>প্লেয়ার নাম্বার:</label>
+      <input type="text" id="in_num" oninput="bindText('in_num', 'val_num')">
+    </div>
+
+    <button class="btn-submit" onclick="completeRegistration()">Complete & Download</button>
+  </div>
+
+
+  <!-- অরিজিনাল ডিজাইনের লাইভ পোস্টার টেমপ্লেট -->
+  <div id="poster-card">
+    
+    <!-- হেডার -->
+    <div class="poster-header">
+      <div class="header-top-title">বেপারী পাড়া বন্ধু মহল আয়োজিত</div>
+      <div class="header-sub-title">দ্বিতীয়বারের মতো</div>
+      <div class="header-main-title">ফুটবল টুর্নামেন্ট-২০২৬</div>
+      <div class="banner-badge">প্লেয়ার রেজিস্ট্রেশন কার্ড</div>
+    </div>
+
+    <!-- বডি -->
+    <div class="poster-body">
       
-      <div class="form-group">
-        <label>রেজিস্ট্রেশন নং:</label>
-        <input type="text" id="in-reg" oninput="updateText('in-reg', 'out-reg')">
-      </div>
+      <!-- উপরের ছবি ও ইনফরমেশন -->
+      <div class="top-info-section">
+        <div class="photo-upload-box">
+          <img id="user_photo_display" src="https://via.placeholder.com/120x150?text=Photo" alt="Player Photo">
+        </div>
 
-      <div class="form-group">
-        <label>নাম (বাংলা):</label>
-        <input type="text" id="in-name-bn" oninput="updateText('in-name-bn', 'out-name-bn')">
-      </div>
+        <div class="info-fields">
+          <div class="field-row">
+            <div class="field-icon">🪪</div>
+            <div class="field-label">রেজিস্ট্রেশন নং</div>
+            <div class="field-dots">:</div>
+            <div class="field-value" id="val_reg"></div>
+          </div>
 
-      <div class="form-group">
-        <label>নাম (ইংরেজি):</label>
-        <input type="text" id="in-name-en" oninput="updateText('in-name-en', 'out-name-en')">
-      </div>
+          <div class="field-row">
+            <div class="field-icon">👤</div>
+            <div class="field-label">নাম (বাংলা)</div>
+            <div class="field-dots">:</div>
+            <div class="field-value" id="val_name_bn"></div>
+          </div>
 
-      <div class="form-group">
-        <label>হোয়াটসঅ্যাপ নম্বর:</label>
-        <input type="text" id="in-whatsapp" oninput="updateText('in-whatsapp', 'out-whatsapp')">
-      </div>
+          <div class="field-row">
+            <div class="field-icon">ENG</div>
+            <div class="field-label">নাম (ইংরেজি)</div>
+            <div class="field-dots">:</div>
+            <div class="field-value" id="val_name_en"></div>
+          </div>
 
-      <div class="form-group">
-        <label>এলাকা / ঠিকানা:</label>
-        <input type="text" id="in-address" oninput="updateText('in-address', 'out-address')">
-      </div>
+          <div class="field-row">
+            <div class="field-icon">💬</div>
+            <div class="field-label">হোয়াটসঅ্যাপ নম্বর</div>
+            <div class="field-dots">:</div>
+            <div class="field-value" id="val_wa"></div>
+          </div>
 
-      <div class="form-group">
-        <label>পজিশন (Position):</label>
-        <div class="checkbox-group">
-          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-gk')"> গোলরক্ষক (GK)</label>
-          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-df')"> ডিফেন্ডার (DF)</label>
-          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-mf')"> মিডফিল্ডার (MF)</label>
-          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-fw')"> ফরোয়ার্ড (FW)</label>
+          <div class="field-row">
+            <div class="field-icon">📍</div>
+            <div class="field-label">এলাকা / ঠিকানা</div>
+            <div class="field-dots">:</div>
+            <div class="field-value" id="val_address"></div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>পছন্দের পা:</label>
-        <div class="checkbox-group">
-          <label><input type="radio" name="foot" onclick="toggleTick('foot', 'tick-left')"> বাম (Left)</label>
-          <label><input type="radio" name="foot" onclick="toggleTick('foot', 'tick-right')"> ডান (Right)</label>
+      <!-- খেলোয়াড়ের তথ্য সেকশন -->
+      <div class="section-header">⚽ খেলোয়াড়ের তথ্য ⚽</div>
+
+      <!-- পজিশন -->
+      <div class="options-grid">
+        <div>পজিশন (Position)</div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_gk"></span> গোলরক্ষক (GK)</div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_df"></span> ডিফেন্ডার (DF)</div>
+      </div>
+      <div class="options-grid">
+        <div></div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_mf"></span> মিডফিল্ডার (MF)</div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_fw"></span> ফরোয়ার্ড (FW)</div>
+      </div>
+
+      <div class="dotted-line"></div>
+
+      <!-- পছন্দের পা -->
+      <div class="options-grid">
+        <div>পছন্দের পা</div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_left"></span> বাম (Left)</div>
+        <div class="checkbox-item"><span class="checkbox-custom" id="chk_right"></span> ডান (Right)</div>
+      </div>
+
+      <!-- ক্যাটাগরি ও নাম্বার -->
+      <div class="bottom-boxes">
+        <div class="box-item">
+          <div class="box-label">প্লেয়ার ক্যাটাগরি</div>
+          <div class="box-val" id="val_cat"></div>
+        </div>
+        <div class="box-item">
+          <div class="box-label">প্লেয়ার নাম্বার</div>
+          <div class="box-val" id="val_num"></div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>প্লেয়ার ক্যাটাগরি:</label>
-        <input type="text" id="in-category" oninput="updateText('in-category', 'out-category')">
+      <!-- প্রাইস ফুটার -->
+      <div class="price-section">
+        <div class="price-box">
+          <div class="price-title">Base Price</div>
+          <div class="price-input-val"></div>
+        </div>
+        <div class="price-box green">
+          <div class="price-title">Sold Price</div>
+          <div class="price-input-val"></div>
+        </div>
+        <div class="price-box">
+          <div class="price-title">Sold To</div>
+          <div class="price-input-val"></div>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label>প্লেয়ার নাম্বার:</label>
-        <input type="text" id="in-player-no" oninput="updateText('in-player-no', 'out-player-no')">
-      </div>
-
-      <div class="form-group">
-        <label>ছবি সিলেক্ট করুন:</label>
-        <input type="file" accept="image/*" onchange="loadPhoto(event)">
-      </div>
-
-      <button class="submit-btn" onclick="submitAndDownload()">Complete & Download</button>
-    </div>
-
-    <!-- সেম টু সেম অটোমেটিক কার্ড আউটপুট -->
-    <div class="card-preview-container" id="capture-card">
-      
-      <!-- ইউজার ফটো -->
-      <img id="card-photo-display" src="" alt="">
-
-      <!-- তথ্যসমূহ -->
-      <div id="out-reg" class="card-text"></div>
-      <div id="out-name-bn" class="card-text"></div>
-      <div id="out-name-en" class="card-text"></div>
-      <div id="out-whatsapp" class="card-text"></div>
-      <div id="out-address" class="card-text"></div>
-
-      <!-- টিক চিহ্নসমূহ -->
-      <div id="tick-gk" class="tick-mark">✔</div>
-      <div id="tick-df" class="tick-mark">✔</div>
-      <div id="tick-mf" class="tick-mark">✔</div>
-      <div id="tick-fw" class="tick-mark">✔</div>
-
-      <div id="tick-left" class="tick-mark">✔</div>
-      <div id="tick-right" class="tick-mark">✔</div>
-
-      <!-- নিচের ঘরগুলো -->
-      <div id="out-category" class="card-text"></div>
-      <div id="out-player-no" class="card-text"></div>
 
     </div>
-
   </div>
 
   <script>
-    // ফর্মে টাইপ করলে সাথে সাথে কার্ডের সঠিক স্থানে লেখা বসবে
-    function updateText(inputId, outputId) {
+    // লাইভ ডাইনামিক ডেটা বাইন্ডিং
+    function bindText(inputId, outputId) {
       document.getElementById(outputId).innerText = document.getElementById(inputId).value;
     }
 
-    // ছবি সিলেক্ট করলে ছবির ঘরে বসবে
-    function loadPhoto(event) {
-      const output = document.getElementById('card-photo-display');
-      output.src = URL.createObjectURL(event.target.files[0]);
-    }
-
-    // রেডিও বাটনে টিক দিলে কার্ডে '✔' চিহ্ন বসবে
-    function toggleTick(groupName, activeTickId) {
-      if(groupName === 'pos') {
-        ['tick-gk', 'tick-df', 'tick-mf', 'tick-fw'].forEach(id => {
-          document.getElementById(id).style.display = 'none';
-        });
-      } else if(groupName === 'foot') {
-        ['tick-left', 'tick-right'].forEach(id => {
-          document.getElementById(id).style.display = 'none';
-        });
+    // ছবি প্রিভিউ
+    function previewPhoto(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById('user_photo_display').src = reader.result;
       }
-      document.getElementById(activeTickId).style.display = 'block';
+      reader.readAsDataURL(event.target.files[0]);
     }
 
-    // Complete বাটনে ক্লিক করলে ডাউনলোডের প্রসেস ও হোয়াটসঅ্যাপ রিডাইরেক্ট
-    function submitAndDownload() {
-      const cardContainer = document.getElementById('capture-card');
+    // পজিশন টিক মার্ক সেট করা
+    function setCheckbox(pos) {
+      ['gk', 'df', 'mf', 'fw'].forEach(k => document.getElementById('chk_' + k).innerText = '');
+      if (pos === 'pos_gk') document.getElementById('chk_gk').innerText = '✔';
+      if (pos === 'pos_df') document.getElementById('chk_df').innerText = '✔';
+      if (pos === 'pos_mf') document.getElementById('chk_mf').innerText = '✔';
+      if (pos === 'pos_fw') document.getElementById('chk_fw').innerText = '✔';
+    }
 
-      // ১. কার্ড ছবি ডাউনলোড
-      html2canvas(cardContainer, { scale: 2 }).then(canvas => {
-        let link = document.createElement('a');
-        link.download = 'Player_Registration_Card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+    // পায়ের টিক মার্ক সেট করা
+    function setFoot(foot) {
+      document.getElementById('chk_left').innerText = '';
+      document.getElementById('chk_right').innerText = '';
+      if (foot === 'foot_left') document.getElementById('chk_left').innerText = '✔';
+      if (foot === 'foot_right') document.getElementById('chk_right').innerText = '✔';
+    }
+
+    // অটোমেটিক ডাউনলোড ও হোয়াটসঅ্যাপে ডাটা পাঠানো
+    function completeRegistration() {
+      const card = document.getElementById('poster-card');
+
+      // ১. কার্ড ছবি হিসেবে ডাউনলোড
+      html2canvas(card, { scale: 2 }).then(canvas => {
+        let a = document.createElement('a');
+        a.download = 'Player_Registration_Card.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
       });
 
-      // ২. হোয়াটসঅ্যাপে ডাটা পাঠানো (+8801843416438)
-      let nameBn = document.getElementById('in-name-bn').value;
-      let nameEn = document.getElementById('in-name-en').value;
-      let userWa = document.getElementById('in-whatsapp').value;
-      let regNo = document.getElementById('in-reg').value;
+      // ২. হোয়াটসঅ্যাপে মেসেজ পাঠানো (+8801843416438)
+      let nameBn = document.getElementById('in_name_bn').value;
+      let nameEn = document.getElementById('in_name_en').value;
+      let waNum = document.getElementById('in_wa').value;
+      let regNo = document.getElementById('in_reg').value;
 
-      let adminWhatsAppNumber = "8801843416438"; 
-
-      let message = `*নতুন প্লেয়ার রেজিস্ট্রেশন details*%0A` +
+      let adminNumber = "8801843416438"; 
+      let textMsg = `*নতুন প্লেয়ার রেজিস্ট্রেশন details*%0A` +
                     `- রেজিস্ট্রেশন নং: ${regNo}%0A` +
                     `- নাম (বাংলা): ${nameBn}%0A` +
                     `- নাম (ইংরেজি): ${nameEn}%0A` +
-                    `- হোয়াটসঅ্যাপ: ${userWa}`;
+                    `- হোয়াটসঅ্যাপ: ${waNum}`;
 
-      let waUrl = `https://wa.me/${adminWhatsAppNumber}?text=${message}`;
+      let waLink = `https://wa.me/${adminNumber}?text=${textMsg}`;
 
       setTimeout(() => {
-        window.open(waUrl, '_blank');
-      }, 1200);
+        window.open(waLink, '_blank');
+      }, 1000);
     }
   </script>
 </body>
 </html>
+
