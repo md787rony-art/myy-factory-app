@@ -29,8 +29,9 @@
     .admin-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .btn-logout { background: #ff4d4d; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .player-list { width: 100%; border-collapse: collapse; background: #1e1e1e; }
-    .player-list th, .player-list td { border: 1px solid #333; padding: 10px; text-align: left; }
+    .player-list th, .player-list td { border: 1px solid #333; padding: 10px; text-align: left; vertical-align: middle; }
     .player-list th { background: #021e14; color: #76c043; }
+    .admin-thumb { width: 50px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #76c043; }
     .action-btn { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; margin-right: 5px; }
     .btn-edit { background: #ffcc00; color: #000; }
     .btn-download { background: #76c043; color: #000; }
@@ -84,7 +85,7 @@
 
     <div class="form-group">
       <label>ছবি নির্বাচন করুন:</label>
-      <input type="file" id="in_file" accept="image/*" onchange="previewPhoto(event)">
+      <input type="file" id="in_file" accept="image/*" onchange="previewAndCompressPhoto(event)">
     </div>
     <div class="form-group">
       <label>রেজিস্ট্রেশন/সিরিয়াল নং (অটোমেটিক):</label>
@@ -143,6 +144,7 @@
     <table class="player-list">
       <thead>
         <tr>
+          <th>ছবি</th>
           <th>সিরিয়াল নং</th>
           <th>নাম (বাংলা)</th>
           <th>হোয়াটসঅ্যাপ</th>
@@ -168,7 +170,7 @@
       <div class="poster-body">
         <div class="top-info-section">
           <div class="photo-upload-box">
-            <img id="val_photo" src="https://via.placeholder.com/120x150?text=Photo" alt="Player Photo">
+            <img id="val_photo" src="" alt="Player Photo">
           </div>
           <div class="info-fields">
             <div class="field-row"><div class="field-icon">🪪</div><div class="field-label">রেজিস্ট্রেশন নং</div><div class="field-dots">:</div><div class="field-value" id="val_reg"></div></div>
@@ -209,7 +211,7 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = "admin123"; // এখানে আপনার পছন্দের পাসওয়ার্ডটি সেট করুন
+    const ADMIN_PASSWORD = "admin123"; 
     let isAdminLoggedIn = false;
     let uploadedPhotoBase64 = "";
     let editingIndex = null;
@@ -224,7 +226,32 @@
       document.getElementById('in_reg').value = nextRegNo;
     }
 
-    // মোড স্যুইচ ও সিকিউরিটি চেক
+    // ছবি সাইজ ছোট ও কমপ্রেস করার ফাংশন (যাতে মেমোরিতে মেটা সেভ হতে পারে)
+    function previewAndCompressPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const maxWidth = 300; // ছবি ৩০০ পিক্সেলের মধ্যে রিসাইজ হবে
+            const scaleSize = maxWidth / img.width;
+            canvas.width = maxWidth;
+            canvas.height = img.height * scaleSize;
+
+            const ctx = canvas.getContext('canvas-2d') || canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // কোয়ালিটি ০.৭ করে কমপ্রেস করা হলো
+            uploadedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          }
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
     function switchMode(mode) {
       if(mode === 'user') {
         document.getElementById('user-section').style.display = 'block';
@@ -237,9 +264,8 @@
           let passwordInput = prompt("এডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
           if (passwordInput === ADMIN_PASSWORD) {
             isAdminLoggedIn = true;
-            alert("লগইন সফল হয়েছে!");
           } else {
-            alert("ভুল পাসওয়ার্ড! প্রবেশাধিকার অস্বীকৃত।");
+            alert("ভুল পাসওয়ার্ড!");
             return;
           }
         }
@@ -255,17 +281,6 @@
       isAdminLoggedIn = false;
       alert("এডমিন লগআউট করা হয়েছে।");
       switchMode('user');
-    }
-
-    function previewPhoto(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedPhotoBase64 = e.target.result;
-        }
-        reader.readAsDataURL(file);
-      }
     }
 
     function submitPlayerData() {
@@ -292,21 +307,25 @@
         photo: uploadedPhotoBase64
       };
 
-      let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
+      try {
+        let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
 
-      if (editingIndex !== null) {
-        players[editingIndex] = playerData;
-        editingIndex = null;
-        alert("তথ্য সফলভাবে এডিট ও সেভ হয়েছে!");
-        switchMode('admin');
-      } else {
-        players.push(playerData);
-        localStorage.setItem('last_reg_no', regNo);
-        alert(`রেজিস্ট্রেশন সফল হয়েছে! আপনার রেজিস্ট্রেশন নং: ${regNo}`);
-        resetForm();
+        if (editingIndex !== null) {
+          players[editingIndex] = playerData;
+          editingIndex = null;
+          alert("তথ্য সফলভাবে এডিট ও সেভ হয়েছে!");
+          switchMode('admin');
+        } else {
+          players.push(playerData);
+          localStorage.setItem('last_reg_no', regNo);
+          alert(`রেজিস্ট্রেশন সফল হয়েছে! আপনার নম্বর: ${regNo}`);
+          resetForm();
+        }
+
+        localStorage.setItem('registered_players', JSON.stringify(players));
+      } catch (e) {
+        alert("ডাটাবেজ মেমোরি ফুল হয়ে গেছে! অনুগ্রহ করে ছবির সাইজ ছোট করে আপলোড দিন।");
       }
-
-      localStorage.setItem('registered_players', JSON.stringify(players));
     }
 
     function loadAdminTable() {
@@ -315,14 +334,16 @@
       tbody.innerHTML = "";
 
       if(players.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>কোনো ডাটা পাওয়া যায়নি</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>কোনো ডাটা পাওয়া যায়নি</td></tr>";
         return;
       }
 
       players.forEach((p, index) => {
         let tr = document.createElement('tr');
+        let photoHtml = p.photo ? `<img src="${p.photo}" class="admin-thumb">` : 'ছবি নেই';
         tr.innerHTML = `
-          <td>${p.regNo}</td>
+          <td>${photoHtml}</td>
+          <td><b>${p.regNo}</b></td>
           <td>${p.nameBn}</td>
           <td>${p.wa}</td>
           <td>${p.pos || 'N/A'}</td>
@@ -342,7 +363,6 @@
 
       editingIndex = index;
       
-      // ইউজার ভিউ অন করে ফর্ম ফিল্ডগুলো ফিল করা
       document.getElementById('user-section').style.display = 'block';
       document.getElementById('admin-panel').style.display = 'none';
 
@@ -378,7 +398,12 @@
       document.getElementById('val_address').innerText = p.address;
       document.getElementById('val_cat').innerText = p.cat;
       document.getElementById('val_num').innerText = p.num;
-      if(p.photo) document.getElementById('val_photo').src = p.photo;
+      
+      if(p.photo) {
+        document.getElementById('val_photo').src = p.photo;
+      } else {
+        document.getElementById('val_photo').src = 'https://via.placeholder.com/120x150?text=No+Photo';
+      }
 
       ['gk', 'df', 'mf', 'fw'].forEach(k => document.getElementById('chk_' + k).innerText = '');
       if (p.pos === 'GK') document.getElementById('chk_gk').innerText = '✔';
