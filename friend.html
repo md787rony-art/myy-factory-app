@@ -2,101 +2,319 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <title>প্লেয়ার রেজিস্ট্রেশন কার্ড</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>প্লেয়ার রেজিস্ট্রেশন কার্ড - বেপারী পাড়া বন্ধু মহল</title>
   <!-- html2canvas Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    .form-container { background: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; }
-    
-    /* কার্ডের ডিজাইন */
-    #card-template {
-      width: 450px;
-      padding: 20px;
-      background: #022b1c; /* সবুজ ব্যাকগ্রাউন্ড */
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background-color: #0e1e17;
       color: #fff;
-      border-radius: 12px;
-      margin: 0 auto;
+      margin: 0;
+      padding: 20px;
     }
-    .card-body { background: #fff; color: #000; padding: 15px; border-radius: 8px; margin-top: 15px; }
-    .profile-img { width: 100px; height: 120px; border: 2px dashed #999; object-fit: cover; }
-    .flex-box { display: flex; gap: 15px; }
-    .btn { background: #1b8a43; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px; }
+
+    .main-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    /* বামপাশের ইনপুট ফর্ম */
+    .form-box {
+      background: #162b22;
+      padding: 25px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      border: 1px solid #284c3c;
+    }
+
+    .form-box h2 {
+      text-align: center;
+      color: #8ed82c;
+      margin-top: 0;
+      border-bottom: 2px solid #284c3c;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #d1d1d1;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #3d6852;
+      background: #0a1410;
+      color: #fff;
+      box-sizing: border-box;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+
+    .checkbox-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 5px;
+    }
+
+    .checkbox-group label {
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(45deg, #1b8a43, #8ed82c);
+      color: #000;
+      font-weight: bold;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* ডানপাশের সেম টু সেম কার্ড প্রিভিউ (Image Canvas) */
+    .card-preview-container {
+      position: relative;
+      width: 600px;
+      height: 840px; /* কার্ডের অরিজিনাল অনুপাত */
+      background-image: url('card-bg.jpg'); /* আপনার মূল ছবির নাম এখানে দিন */
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      overflow: hidden;
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* কার্ডের ওপর ডাইনামিক বসানো ডেটা (Absolute Positioning) */
+    
+    /* প্লেয়ারের ছবি */
+    #card-photo-display {
+      position: absolute;
+      top: 300px;
+      left: 48px;
+      width: 128px;
+      height: 152px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    /* টেক্সট ফিল্ডগুলো */
+    .card-text {
+      position: absolute;
+      font-size: 16px;
+      color: #111;
+      font-weight: 700;
+    }
+
+    #out-reg { top: 305px; left: 390px; }
+    #out-name-bn { top: 358px; left: 390px; }
+    #out-name-en { top: 412px; left: 390px; font-family: Arial, sans-serif; }
+    #out-whatsapp { top: 466px; left: 390px; font-family: Arial, sans-serif; }
+    #out-address { top: 520px; left: 390px; }
+
+    /* পজিশন ও পায়ের টিকচিহ্ন */
+    .tick-mark {
+      position: absolute;
+      font-size: 18px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    #tick-gk { top: 641px; left: 222px; display: none; }
+    #tick-df { top: 641px; left: 392px; display: none; }
+    #tick-mf { top: 673px; left: 222px; display: none; }
+    #tick-fw { top: 673px; left: 392px; display: none; }
+
+    #tick-left { top: 730px; left: 222px; display: none; }
+    #tick-right { top: 730px; left: 392px; display: none; }
+
+    /* ক্যাটাগরি ও প্লেয়ার নাম্বার */
+    #out-category { top: 785px; left: 205px; font-size: 15px; }
+    #out-player-no { top: 785px; left: 455px; font-size: 15px; }
+
   </style>
 </head>
 <body>
 
-  <!-- ইনপুট ফর্ম -->
-  <div class="form-container">
-    <h2>রেজিস্ট্রেশন ফর্ম</h2>
-    <label>নাম (বাংলা):</label><br>
-    <input type="text" id="nameBn" style="width:100%; margin-bottom:100px; padding: 8px;" oninput="updateCard()"><br><br>
+  <div class="main-container">
     
-    <label>হোয়াটসঅ্যাপ নম্বর:</label><br>
-    <input type="text" id="waNo" style="width:100%; padding: 8px;" oninput="updateCard()"><br><br>
-    
-    <label>ছবি আপলোড করুন:</label><br>
-    <input type="file" id="userImg" accept="image/*" onchange="previewImage(event)"><br><br>
+    <!-- ইনপুট ফর্ম -->
+    <div class="form-box">
+      <h2>প্লেয়ার রেজিস্ট্রেশন ফর্ম</h2>
+      
+      <div class="form-group">
+        <label>রেজিস্ট্রেশন নং:</label>
+        <input type="text" id="in-reg" oninput="updateText('in-reg', 'out-reg')">
+      </div>
 
-    <button class="btn" onclick="processRegistration()">Complete & Download Card</button>
-  </div>
+      <div class="form-group">
+        <label>নাম (বাংলা):</label>
+        <input type="text" id="in-name-bn" oninput="updateText('in-name-bn', 'out-name-bn')">
+      </div>
 
-  <!-- প্লেয়ার কার্ড যা ছবিতে রূপান্তর হবে -->
-  <div id="card-template">
-    <h3 style="text-align:center; margin:0;">বেপারী পাড়া বন্ধু মহল আয়োজিত</h3>
-    <h2 style="text-align:center; color:#ffd700; margin:5px 0;">ফুটবল টুর্নামেন্ট-২০২৬</h2>
-    
-    <div class="card-body">
-      <div class="flex-box">
-        <img id="cardPhoto" src="https://via.placeholder.com/100x120" class="profile-img" alt="User Photo">
-        <div>
-          <p><strong>নাম (বাংলা):</strong> <span id="displayName"></span></p>
-          <p><strong>হোয়াটসঅ্যাপ:</strong> <span id="displayWA"></span></p>
+      <div class="form-group">
+        <label>নাম (ইংরেজি):</label>
+        <input type="text" id="in-name-en" oninput="updateText('in-name-en', 'out-name-en')">
+      </div>
+
+      <div class="form-group">
+        <label>হোয়াটসঅ্যাপ নম্বর:</label>
+        <input type="text" id="in-whatsapp" oninput="updateText('in-whatsapp', 'out-whatsapp')">
+      </div>
+
+      <div class="form-group">
+        <label>এলাকা / ঠিকানা:</label>
+        <input type="text" id="in-address" oninput="updateText('in-address', 'out-address')">
+      </div>
+
+      <div class="form-group">
+        <label>পজিশন (Position):</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-gk')"> গোলরক্ষক (GK)</label>
+          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-df')"> ডিফেন্ডার (DF)</label>
+          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-mf')"> মিডফিল্ডার (MF)</label>
+          <label><input type="radio" name="pos" onclick="toggleTick('pos', 'tick-fw')"> ফরোয়ার্ড (FW)</label>
         </div>
       </div>
+
+      <div class="form-group">
+        <label>পছন্দের পা:</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="foot" onclick="toggleTick('foot', 'tick-left')"> বাম (Left)</label>
+          <label><input type="radio" name="foot" onclick="toggleTick('foot', 'tick-right')"> ডান (Right)</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>প্লেয়ার ক্যাটাগরি:</label>
+        <input type="text" id="in-category" oninput="updateText('in-category', 'out-category')">
+      </div>
+
+      <div class="form-group">
+        <label>প্লেয়ার নাম্বার:</label>
+        <input type="text" id="in-player-no" oninput="updateText('in-player-no', 'out-player-no')">
+      </div>
+
+      <div class="form-group">
+        <label>ছবি সিলেক্ট করুন:</label>
+        <input type="file" accept="image/*" onchange="loadPhoto(event)">
+      </div>
+
+      <button class="submit-btn" onclick="submitAndDownload()">Complete & Download</button>
     </div>
+
+    <!-- সেম টু সেম অটোমেটিক কার্ড আউটপুট -->
+    <div class="card-preview-container" id="capture-card">
+      
+      <!-- ইউজার ফটো -->
+      <img id="card-photo-display" src="" alt="">
+
+      <!-- তথ্যসমূহ -->
+      <div id="out-reg" class="card-text"></div>
+      <div id="out-name-bn" class="card-text"></div>
+      <div id="out-name-en" class="card-text"></div>
+      <div id="out-whatsapp" class="card-text"></div>
+      <div id="out-address" class="card-text"></div>
+
+      <!-- টিক চিহ্নসমূহ -->
+      <div id="tick-gk" class="tick-mark">✔</div>
+      <div id="tick-df" class="tick-mark">✔</div>
+      <div id="tick-mf" class="tick-mark">✔</div>
+      <div id="tick-fw" class="tick-mark">✔</div>
+
+      <div id="tick-left" class="tick-mark">✔</div>
+      <div id="tick-right" class="tick-mark">✔</div>
+
+      <!-- নিচের ঘরগুলো -->
+      <div id="out-category" class="card-text"></div>
+      <div id="out-player-no" class="card-text"></div>
+
+    </div>
+
   </div>
 
   <script>
-    // ফর্মে কিছু লিখলে তা কার্ডে লাইভ দেখানো
-    function updateCard() {
-      document.getElementById('displayName').innerText = document.getElementById('nameBn').value;
-      document.getElementById('displayWA').innerText = document.getElementById('waNo').value;
+    // ফর্মে টাইপ করলে সাথে সাথে কার্ডের সঠিক স্থানে লেখা বসবে
+    function updateText(inputId, outputId) {
+      document.getElementById(outputId).innerText = document.getElementById(inputId).value;
     }
 
-    // আপলোড করা ছবি কার্ডে প্লেস করা
-    function previewImage(event) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        document.getElementById('cardPhoto').src = reader.result;
+    // ছবি সিলেক্ট করলে ছবির ঘরে বসবে
+    function loadPhoto(event) {
+      const output = document.getElementById('card-photo-display');
+      output.src = URL.createObjectURL(event.target.files[0]);
+    }
+
+    // রেডিও বাটনে টিক দিলে কার্ডে '✔' চিহ্ন বসবে
+    function toggleTick(groupName, activeTickId) {
+      if(groupName === 'pos') {
+        ['tick-gk', 'tick-df', 'tick-mf', 'tick-fw'].forEach(id => {
+          document.getElementById(id).style.display = 'none';
+        });
+      } else if(groupName === 'foot') {
+        ['tick-left', 'tick-right'].forEach(id => {
+          document.getElementById(id).style.display = 'none';
+        });
       }
-      reader.readAsDataURL(event.target.files[0]);
+      document.getElementById(activeTickId).style.display = 'block';
     }
 
-    // Complete বাটনে চাপ দিলে ছবি হিসেবে ডাউনলোড এবং হোয়াটসঅ্যাপে ডাটা পাঠানো
-    function processRegistration() {
-      const cardContainer = document.getElementById('card-template');
+    // Complete বাটনে ক্লিক করলে ডাউনলোডের প্রসেস ও হোয়াটসঅ্যাপ রিডাইরেক্ট
+    function submitAndDownload() {
+      const cardContainer = document.getElementById('capture-card');
 
-      // ১. কার্ডটিকে HTML থেকে Image PNG বানিয়ে ডাউনলোড করা
-      html2canvas(cardContainer).then(canvas => {
+      // ১. কার্ড ছবি ডাউনলোড
+      html2canvas(cardContainer, { scale: 2 }).then(canvas => {
         let link = document.createElement('a');
         link.download = 'Player_Registration_Card.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
 
-      // ২. হোয়াটসঅ্যাপে তথ্য পাঠানো
-      let name = document.getElementById('nameBn').value;
-      let waNumber = document.getElementById('waNo').value;
-      
-      // আপনার নিজস্ব হোয়াটসঅ্যাপ নম্বর (যাতে মেসেজ যাবে)
-      let adminWhatsAppNumber = "8801XXXXXXXXX"; 
+      // ২. হোয়াটসঅ্যাপে ডাটা পাঠানো (+8801843416438)
+      let nameBn = document.getElementById('in-name-bn').value;
+      let nameEn = document.getElementById('in-name-en').value;
+      let userWa = document.getElementById('in-whatsapp').value;
+      let regNo = document.getElementById('in-reg').value;
 
-      let message = `নতুন প্লেয়ার রেজিস্ট্রেশন details:%0A- নাম: ${name}%0A- হোয়াটসঅ্যাপ: ${waNumber}`;
+      let adminWhatsAppNumber = "8801843416438"; 
+
+      let message = `*নতুন প্লেয়ার রেজিস্ট্রেশন details*%0A` +
+                    `- রেজিস্ট্রেশন নং: ${regNo}%0A` +
+                    `- নাম (বাংলা): ${nameBn}%0A` +
+                    `- নাম (ইংরেজি): ${nameEn}%0A` +
+                    `- হোয়াটসঅ্যাপ: ${userWa}`;
+
       let waUrl = `https://wa.me/${adminWhatsAppNumber}?text=${message}`;
 
-      // হোয়াটসঅ্যাপ রিডাইরেক্ট (নতুন ট্যাবে খুলবে)
-      window.open(waUrl, '_blank');
+      setTimeout(() => {
+        window.open(waUrl, '_blank');
+      }, 1200);
     }
   </script>
 </body>
