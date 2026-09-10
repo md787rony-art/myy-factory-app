@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>প্লেয়ার রেজিস্ট্রেশন ও এডমিন প্যানেল</title>
+  <title>প্লেয়ার রেজিস্ট্রেশন ও সিকিউর এডমিন প্যানেল</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -26,7 +26,9 @@
 
     /* এডমিন প্যানেল স্টাইল */
     #admin-panel { width: 100%; max-width: 900px; display: none; }
-    .player-list { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
+    .admin-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .btn-logout { background: #ff4d4d; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .player-list { width: 100%; border-collapse: collapse; background: #1e1e1e; }
     .player-list th, .player-list td { border: 1px solid #333; padding: 10px; text-align: left; }
     .player-list th { background: #021e14; color: #76c043; }
     .action-btn { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; margin-right: 5px; }
@@ -84,13 +86,10 @@
       <label>ছবি নির্বাচন করুন:</label>
       <input type="file" id="in_file" accept="image/*" onchange="previewPhoto(event)">
     </div>
-    
-    <!-- রেজিস্ট্রেশন নম্বরটি অটোমেটিক জেনারেট হবে -->
     <div class="form-group">
       <label>রেজিস্ট্রেশন/সিরিয়াল নং (অটোমেটিক):</label>
       <input type="text" id="in_reg" readonly style="background: #1a1a1a; color: #76c043; font-weight: bold;">
     </div>
-
     <div class="form-group">
       <label>নাম (বাংলা):</label>
       <input type="text" id="in_name_bn">
@@ -137,7 +136,10 @@
 
   <!-- ২. এডমিন প্যানেল সেকশন -->
   <div id="admin-panel">
-    <h2>এডমিন ড্যাশবোর্ড (নিবন্ধিত প্লেয়ার তালিকা)</h2>
+    <div class="admin-header-flex">
+      <h2>এডমিন ড্যাশবোর্ড (নিবন্ধিত প্লেয়ার তালিকা)</h2>
+      <button class="btn-logout" onclick="logoutAdmin()">লগআউট</button>
+    </div>
     <table class="player-list">
       <thead>
         <tr>
@@ -149,7 +151,7 @@
         </tr>
       </thead>
       <tbody id="player-table-body">
-        <!-- এখানে ডাটা লোড হবে -->
+        <!-- ডাটা লোড হবে -->
       </tbody>
     </table>
   </div>
@@ -207,22 +209,22 @@
   </div>
 
   <script>
+    const ADMIN_PASSWORD = "admin123"; // এখানে আপনার পছন্দের পাসওয়ার্ডটি সেট করুন
+    let isAdminLoggedIn = false;
     let uploadedPhotoBase64 = "";
     let editingIndex = null;
 
-    // পেজ লোড হলে প্রথম রেজিস্ট্রেশন নম্বর সেট করা
     window.onload = function() {
       generateAutoRegNo();
     };
 
-    // ৩১ থেকে শুরু করে পরবর্তী অটোমেটিক রেজিস্ট্রেশন নম্বর জেনারেট করার ফাংশন
     function generateAutoRegNo() {
-      if (editingIndex !== null) return; // এডিট মোডে থাকলে চেঞ্জ হবে না
+      if (editingIndex !== null) return;
       let nextRegNo = parseInt(localStorage.getItem('last_reg_no') || "30") + 1;
       document.getElementById('in_reg').value = nextRegNo;
     }
 
-    // মোড স্যুইচ করা
+    // মোড স্যুইচ ও সিকিউরিটি চেক
     function switchMode(mode) {
       if(mode === 'user') {
         document.getElementById('user-section').style.display = 'block';
@@ -231,6 +233,16 @@
         document.getElementById('btn-admin-mode').classList.remove('active');
         resetForm();
       } else {
+        if (!isAdminLoggedIn) {
+          let passwordInput = prompt("এডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
+          if (passwordInput === ADMIN_PASSWORD) {
+            isAdminLoggedIn = true;
+            alert("লগইন সফল হয়েছে!");
+          } else {
+            alert("ভুল পাসওয়ার্ড! প্রবেশাধিকার অস্বীকৃত।");
+            return;
+          }
+        }
         document.getElementById('user-section').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'block';
         document.getElementById('btn-admin-mode').classList.add('active');
@@ -239,7 +251,12 @@
       }
     }
 
-    // ছবি প্রিভিউ ও বেস৬৪ কনভার্ট
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      alert("এডমিন লগআউট করা হয়েছে।");
+      switchMode('user');
+    }
+
     function previewPhoto(event) {
       const file = event.target.files[0];
       if (file) {
@@ -251,7 +268,6 @@
       }
     }
 
-    // ডাটা সেভ / আপডেট করা
     function submitPlayerData() {
       let regNo = document.getElementById('in_reg').value;
       let nameBn = document.getElementById('in_name_bn').value;
@@ -279,13 +295,11 @@
       let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
 
       if (editingIndex !== null) {
-        // এডিট মোড
         players[editingIndex] = playerData;
         editingIndex = null;
         alert("তথ্য সফলভাবে এডিট ও সেভ হয়েছে!");
         switchMode('admin');
       } else {
-        // নতুন এন্ট্রি (সিরিয়াল সেভ ও আপডেট)
         players.push(playerData);
         localStorage.setItem('last_reg_no', regNo);
         alert(`রেজিস্ট্রেশন সফল হয়েছে! আপনার রেজিস্ট্রেশন নং: ${regNo}`);
@@ -295,7 +309,6 @@
       localStorage.setItem('registered_players', JSON.stringify(players));
     }
 
-    // এডমিন টেবিল লোড করা
     function loadAdminTable() {
       let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
       let tbody = document.getElementById('player-table-body');
@@ -323,15 +336,17 @@
       });
     }
 
-    // এডমিন কর্তৃক ডাটা এডিট করা
     function editPlayer(index) {
       let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
       let p = players[index];
 
       editingIndex = index;
-      switchMode('user');
+      
+      // ইউজার ভিউ অন করে ফর্ম ফিল্ডগুলো ফিল করা
+      document.getElementById('user-section').style.display = 'block';
+      document.getElementById('admin-panel').style.display = 'none';
 
-      document.getElementById('in_reg').value = p.regNo; // অরিজিনাল রেজিস্ট্রেশন নম্বর অপরিবর্তিত থাকবে
+      document.getElementById('in_reg').value = p.regNo;
       document.getElementById('in_name_bn').value = p.nameBn;
       document.getElementById('in_name_en').value = p.nameEn;
       document.getElementById('in_wa').value = p.wa;
@@ -352,7 +367,6 @@
       document.querySelector('.btn-submit').innerText = "Update & Save Changes";
     }
 
-    // এডমিন কর্তৃক কার্ড ডাউনলোড করা
     function downloadCard(index) {
       let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
       let p = players[index];
@@ -387,7 +401,6 @@
       });
     }
 
-    // ডাটা ডিলিট করা
     function deletePlayer(index) {
       if(confirm("আপনি কি এই প্লেয়ারের তথ্য ডিলিট করতে চান?")) {
         let players = JSON.parse(localStorage.getItem('registered_players') || "[]");
@@ -397,7 +410,6 @@
       }
     }
 
-    // ফর্ম রিসেট
     function resetForm() {
       document.querySelectorAll('#user-section input[type="text"]').forEach(input => input.value = '');
       document.querySelectorAll('#user-section input[type="radio"]').forEach(radio => radio.checked = false);
@@ -405,7 +417,7 @@
       uploadedPhotoBase64 = "";
       editingIndex = null;
       document.querySelector('.btn-submit').innerText = "Submit Registration";
-      generateAutoRegNo(); // অটোমেটিক রেজিস্ট্রেশন নম্বর আপডেট
+      generateAutoRegNo();
     }
   </script>
 </body>
