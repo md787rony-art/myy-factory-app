@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>প্লেয়ার রেজিস্ট্রেশন কার্ড</title>
+  <!-- html2canvas Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    .form-container { background: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; }
+    
+    /* কার্ডের ডিজাইন */
+    #card-template {
+      width: 450px;
+      padding: 20px;
+      background: #022b1c; /* সবুজ ব্যাকগ্রাউন্ড */
+      color: #fff;
+      border-radius: 12px;
+      margin: 0 auto;
+    }
+    .card-body { background: #fff; color: #000; padding: 15px; border-radius: 8px; margin-top: 15px; }
+    .profile-img { width: 100px; height: 120px; border: 2px dashed #999; object-fit: cover; }
+    .flex-box { display: flex; gap: 15px; }
+    .btn { background: #1b8a43; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- ইনপুট ফর্ম -->
+  <div class="form-container">
+    <h2>রেজিস্ট্রেশন ফর্ম</h2>
+    <label>নাম (বাংলা):</label><br>
+    <input type="text" id="nameBn" style="width:100%; margin-bottom:100px; padding: 8px;" oninput="updateCard()"><br><br>
+    
+    <label>হোয়াটসঅ্যাপ নম্বর:</label><br>
+    <input type="text" id="waNo" style="width:100%; padding: 8px;" oninput="updateCard()"><br><br>
+    
+    <label>ছবি আপলোড করুন:</label><br>
+    <input type="file" id="userImg" accept="image/*" onchange="previewImage(event)"><br><br>
+
+    <button class="btn" onclick="processRegistration()">Complete & Download Card</button>
+  </div>
+
+  <!-- প্লেয়ার কার্ড যা ছবিতে রূপান্তর হবে -->
+  <div id="card-template">
+    <h3 style="text-align:center; margin:0;">বেপারী পাড়া বন্ধু মহল আয়োজিত</h3>
+    <h2 style="text-align:center; color:#ffd700; margin:5px 0;">ফুটবল টুর্নামেন্ট-২০২৬</h2>
+    
+    <div class="card-body">
+      <div class="flex-box">
+        <img id="cardPhoto" src="https://via.placeholder.com/100x120" class="profile-img" alt="User Photo">
+        <div>
+          <p><strong>নাম (বাংলা):</strong> <span id="displayName"></span></p>
+          <p><strong>হোয়াটসঅ্যাপ:</strong> <span id="displayWA"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ফর্মে কিছু লিখলে তা কার্ডে লাইভ দেখানো
+    function updateCard() {
+      document.getElementById('displayName').innerText = document.getElementById('nameBn').value;
+      document.getElementById('displayWA').innerText = document.getElementById('waNo').value;
+    }
+
+    // আপলোড করা ছবি কার্ডে প্লেস করা
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById('cardPhoto').src = reader.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Complete বাটনে চাপ দিলে ছবি হিসেবে ডাউনলোড এবং হোয়াটসঅ্যাপে ডাটা পাঠানো
+    function processRegistration() {
+      const cardContainer = document.getElementById('card-template');
+
+      // ১. কার্ডটিকে HTML থেকে Image PNG বানিয়ে ডাউনলোড করা
+      html2canvas(cardContainer).then(canvas => {
+        let link = document.createElement('a');
+        link.download = 'Player_Registration_Card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+
+      // ২. হোয়াটসঅ্যাপে তথ্য পাঠানো
+      let name = document.getElementById('nameBn').value;
+      let waNumber = document.getElementById('waNo').value;
+      
+      // আপনার নিজস্ব হোয়াটসঅ্যাপ নম্বর (যাতে মেসেজ যাবে)
+      let adminWhatsAppNumber = "8801XXXXXXXXX"; 
+
+      let message = `নতুন প্লেয়ার রেজিস্ট্রেশন details:%0A- নাম: ${name}%0A- হোয়াটসঅ্যাপ: ${waNumber}`;
+      let waUrl = `https://wa.me/${adminWhatsAppNumber}?text=${message}`;
+
+      // হোয়াটসঅ্যাপ রিডাইরেক্ট (নতুন ট্যাবে খুলবে)
+      window.open(waUrl, '_blank');
+    }
+  </script>
+</body>
+</html>
