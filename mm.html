@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALIF | Control System</title>
+
+<style>
+*{
+box-sizing:border-box;
+margin:0;
+padding:0
+}
+
+:root{
+--bg:#070d1b;
+--panel:#0d172b;
+--panel2:#101e34;
+--line:#1b3859;
+--blue:#159dff;
+--cyan:#21e8ff;
+--purple:#a855f7;
+--text:#d8eaff;
+--muted:#7892b0;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+overflow-x:hidden;
+}
+
+button,a,input,textarea{
+font-family:inherit
+}
+
+button{
+cursor:pointer
+}
+
+a{
+text-decoration:none
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+outline:2px solid var(--cyan);
+outline-offset:3px;
+}
+
+/* LOGIN */
+
+#login{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+position:relative;
+overflow:hidden;
+}
+
+#login:before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+border:16px dotted #12365c;
+border-radius:50%;
+animation:spin 35s linear infinite;
+opacity:.8;
+}
+
+@keyframes spin{
+to{
+transform:rotate(360deg)
+}
+}
+
+.loginbox{
+position:relative;
+z-index:1;
+width:100%;
+max-width:390px;
+background:rgba(13,23,43,.97);
+border:1px solid #24517b;
+border-radius:22px;
+padding:30px;
+box-shadow:0 0 40px #008cff15;
+}
+
+.logo{
+width:70px;
+height:70px;
+margin:auto auto 18px;
+border:2px solid var(--cyan);
+border-radius:20px;
+display:grid;
+place-items:center;
+font-size:35px;
+box-shadow:0 0 25px #00d9ff30;
+}
+
+h1{
+font-size:25px;
+text-align:center;
+color:var(--cyan)
+}
+
+.sub{
+text-align:center;
+color:var(--muted);
+font-size:12px;
+letter-spacing:2px;
+margin:8px 0 25px
+}
+
+label{
+display:block;
+color:#91b0d0;
+font-size:12px;
+margin:15px 0 7px
+}
+
+input,textarea{
+width:100%;
+background:#071222;
+border:1px solid #244765;
+color:white;
+border-radius:10px;
+padding:13px;
+outline:none;
+font-size:14px;
+}
+
+input:focus,
+textarea:focus{
+border-color:var(--cyan)
+}
+
+.btn{
+border:1px solid #217bb4;
+background:linear-gradient(90deg,#087fd2,#13dce4);
+color:#041321;
+padding:13px;
+border-radius:9px;
+font-weight:bold;
+width:100%;
+margin-top:20px;
+}
+
+.err{
+color:#ff7890;
+text-align:center;
+font-size:12px;
+margin-top:12px
+}
+
+/* APP */
+
+#app{
+display:none
+}
+
+.top{
+height:65px;
+border-bottom:1px solid var(--line);
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 22px;
+background:#091324;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px
+}
+
+.brand b{
+color:var(--cyan);
+font-size:17px
+}
+
+.brand small{
+display:block;
+color:var(--muted);
+font-size:9px
+}
+
+.status{
+color:#43e6b1;
+font-size:11px
+}
+
+.layout{
+display:flex;
+min-height:calc(100vh - 65px)
+}
+
+.sidebar{
+width:65px;
+flex-shrink:0;
+border-right:1px solid var(--line);
+padding:18px 10px;
+background:#091323;
+display:flex;
+flex-direction:column;
+gap:13px;
+}
+
+.sidebtn{
+width:43px;
+height:43px;
+background:#0c1a2e;
+color:#6d91b6;
+border:1px solid #173653;
+border-radius:10px;
+font-size:19px;
+}
+
+.sidebtn.active,
+.sidebtn:hover{
+color:var(--cyan);
+border-color:var(--cyan);
+background:#102d47;
+}
+
+.main{
+flex:1;
+min-width:0;
+padding:20px;
+max-width:1500px;
+margin:auto
+}
+
+.nav{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px
+}
+
+.nav button{
+background:transparent;
+color:#6f91b5;
+border:1px solid #1b3859;
+padding:9px 15px;
+border-radius:6px;
+font-size:11px;
+}
+
+.nav button.active,
+.nav button:hover{
+color:var(--cyan);
+border-color:var(--cyan);
+background:#10243b;
+}
+
+.page{
+display:none
+}
+
+.page.active{
+display:block
+}
+
+.page-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+margin-bottom:18px;
+flex-wrap:wrap;
+}
+
+.page-title h2{
+font-size:21px;
+color:white
+}
+
+.page-title p{
+font-size:11px;
+color:var(--muted);
+margin-top:5px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1.4fr 1fr;
+gap:15px
+}
+
+.panel{
+background:linear-gradient(145deg,#0e1b30,#0b1425);
+border:1px solid var(--line);
+border-radius:12px;
+padding:17px;
+min-width:0;
+overflow:hidden;
+}
+
+.panel h3{
+font-size:12px;
+color:#91b8dc;
+margin-bottom:15px
+}
+
+.tag{
+float:right;
+color:var(--cyan);
+font-size:9px
+}
+
+.ring{
+width:135px;
+height:135px;
+border-radius:50%;
+border:12px solid #153b61;
+border-top-color:var(--cyan);
+border-right-color:var(--blue);
+margin:15px auto;
+display:grid;
+place-items:center;
+position:relative;
+box-shadow:0 0 25px #00aaff20;
+animation:spin 10s linear infinite;
+}
+
+.ring div{
+animation:spin 10s linear infinite reverse;
+text-align:center
+}
+
+.ring strong{
+font-size:27px;
+color:white;
+display:block
+}
+
+.ring small{
+font-size:9px;
+color:var(--cyan)
+}
+
+.metrics{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px
+}
+
+.metric{
+background:#09182b;
+padding:10px;
+border-radius:7px;
+text-align:center
+}
+
+.metric b{
+display:block;
+color:var(--cyan);
+font-size:17px
+}
+
+.metric small{
+font-size:9px;
+color:var(--muted)
+}
+
+.map{
+min-height:225px;
+display:grid;
+place-items:center;
+background:#081426;
+border:1px solid #163452;
+border-radius:8px;
+position:relative;
+overflow:hidden;
+}
+
+.map svg{
+width:100%;
+max-height:230px
+}
+
+.map text{
+font-size:10px;
+fill:#547b9e
+}
+
+.map circle{
+fill:var(--purple);
+filter:drop-shadow(0 0 5px #a855f7)
+}
+
+.map line{
+stroke:#31527e;
+stroke-width:1;
+stroke-dasharray:4 5
+}
+
+.shield{
+width:120px;
+height:120px;
+margin:12px auto;
+border:2px solid var(--purple);
+border-radius:50%;
+display:grid;
+place-items:center;
+font-size:47px;
+box-shadow:0 0 30px #a855f750;
+}
+
+.level{
+text-align:center;
+color:#c084fc;
+font-weight:bold;
+font-size:17px
+}
+
+.safe{
+text-align:center;
+color:#54e6b0;
+font-size:10px;
+margin-top:7px
+}
+
+.rows{
+margin-top:16px
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:8px;
+padding:10px 0;
+border-bottom:1px solid #142a43;
+font-size:11px;
+color:#91aac4
+}
+
+.row b{
+color:#48d9ad;
+font-weight:normal
+}
+
+.bars{
+margin-top:12px
+}
+
+.bar{
+height:5px;
+background:#152c45;
+border-radius:5px;
+margin:7px 0 12px
+}
+
+.bar span{
+display:block;
+height:100%;
+background:linear-gradient(90deg,#087fd2,#22e8ff);
+border-radius:5px
+}
+
+.chart{
+height:125px;
+display:flex;
+align-items:end;
+gap:5px;
+border-bottom:1px solid #29445e;
+border-left:1px solid #29445e;
+padding:10px 8px 0;
+margin-top:12px;
+background:repeating-linear-gradient(
+0deg,
+transparent,
+transparent 29px,
+#142b44 30px
+);
+}
+
+.chart i{
+flex:1;
+background:linear-gradient(#a855f7,#087fd2);
+border-radius:3px 3px 0 0;
+min-width:3px
+}
+
+.bottom{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-top:15px
+}
+
+.bottom .panel{
+text-align:center
+}
+
+.bottom b{
+color:var(--cyan);
+font-size:20px;
+display:block;
+margin-top:8px
+}
+
+.bottom small{
+color:var(--muted);
+font-size:9px
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+gap:15px
+}
+
+.linkcard{
+background:#0e1b30;
+border:1px solid var(--line);
+border-radius:12px;
+padding:20px;
+}
+
+.linkcard .icon{
+font-size:32px;
+margin-bottom:12px
+}
+
+.linkcard h3{
+font-size:16px;
+color:white;
+margin-bottom:8px
+}
+
+.linkcard p{
+font-size:12px;
+color:var(--muted);
+line-height:1.6;
+margin-bottom:17px
+}
+
+.open{
+display:inline-block;
+background:#12314c;
+color:var(--cyan);
+border:1px solid #21577d;
+padding:10px 15px;
+border-radius:7px;
+font-size:12px;
+cursor:pointer;
+}
+
+.open:hover{
+background:#17496b
+}
+
+.notearea{
+max-width:750px
+}
+
+.notearea textarea{
+min-height:300px;
+line-height:1.7;
+resize:vertical
+}
+
+.save{
+color:#48d9ad;
+font-size:11px;
+margin-top:10px
+}
+
+.clear{
+float:right;
+background:#451b2b;
+color:#ff9aaa;
+border:1px solid #71334a;
+padding:7px 12px;
+border-radius:6px;
+font-size:11px;
+}
+
+.logout{
+background:#291c36!important;
+color:#d7a6ff!important;
+border-color:#633c89!important
+}
+
+footer{
+text-align:center;
+color:#344d69;
+font-size:10px;
+padding:30px
+}
+
+.ai-box{
+background:#081426;
+border:1px solid #1b3859;
+border-radius:10px;
+padding:25px;
+text-align:center
+}
+
+.ai-box .robot{
+font-size:60px;
+margin-bottom:15px
+}
+
+.ai-box h2{
+color:var(--cyan);
+font-size:23px;
+margin-bottom:12px
+}
+
+.ai-box p{
+color:var(--muted);
+font-size:13px;
+line-height:1.8;
+margin-bottom:20px
+}
+
+@media(max-width:900px){
+.grid{
+grid-template-columns:1fr 1fr
+}
+
+.grid .panel:nth-child(2){
+grid-column:span 2
+}
+
+.bottom{
+grid-template-columns:repeat(2,1fr)
+}
+}
+
+@media(max-width:600px){
+.top{
+padding:0 12px;
+height:60px
+}
+
+.brand b{
+font-size:14px
+}
+
+.main{
+padding:12px
+}
+
+.grid{
+grid-template-columns:1fr
+}
+
+.grid .panel:nth-child(2){
+grid-column:span 1
+}
+
+.sidebar{
+width:55px;
+padding:15px 6px
+}
+
+.sidebtn{
+width:41px;
+height:41px
+}
+
+.nav{
+gap:6px
+}
+
+.nav button{
+padding:8px 10px;
+font-size:10px
+}
+
+.panel{
+padding:13px
+}
+
+.loginbox{
+padding:25px 20px
+}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<section id="login">
+
+<div class="loginbox">
+
+<div class="logo">⬡</div>
+
+<h1>ALIF</h1>
+
+<p class="sub">CONTROL SYSTEM</p>
+
+<label>USERNAME</label>
+
+<input
+id="user"
+type="text"
+placeholder="Enter username"
+autocomplete="username">
+
+<label>PASSWORD</label>
+
+<input
+id="pass"
+type="password"
+placeholder="Enter password"
+autocomplete="current-password">
+
+<button class="btn" onclick="login()">
+ACCESS SYSTEM →
+</button>
+
+<p class="err" id="err"></p>
+
+<p style="
+text-align:center;
+color:#405b77;
+font-size:10px;
+margin-top:18px">
+Personal Dashboard • Local Access
+</p>
+
+</div>
+
+</section>
+
+<!-- APP -->
+
+<div id="app">
+
+<header class="top">
+
+<div class="brand">
+
+<div style="color:#21e8ff;font-size:26px">
+⬡
+</div>
+
+<div>
+<b id="brandName">ALIF</b>
+<small>CONTROL SYSTEM</small>
+</div>
+
+</div>
+
+<div class="status">
+● SYSTEM ONLINE
+</div>
+
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<button
+class="sidebtn active"
+onclick="showPage('dashboard',this)"
+title="Dashboard">
+▦
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('analytics',this)"
+title="Analytics">
+▥
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('network',this)"
+title="Systems">
+⌘
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('recovery',this)"
+title="Link Center">
+♢
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('ai',this)"
+title="ALIF AI">
+🤖
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('notes',this)"
+title="Notepad">
+▤
+</button>
+
+<button
+class="sidebtn"
+onclick="showPage('settings',this)"
+title="Settings">
+⚙
+</button>
+
+<button
+class="sidebtn logout"
+onclick="logout()"
+title="Logout">
+↪
+</button>
+
+</aside>
+
+<main class="main">
+
+<nav class="nav">
+
+<button
+class="active"
+onclick="showPage('dashboard',this)">
+DASHBOARD
+</button>
+
+<button onclick="showPage('analytics',this)">
+ANALYTICS
+</button>
+
+<button onclick="showPage('network',this)">
+SYSTEMS
+</button>
+
+<button onclick="showPage('recovery',this)">
+LINK CENTER
+</button>
+
+<button onclick="showPage('ai',this)">
+ALIF AI
+</button>
+
+<button onclick="showPage('settings',this)">
+CONFIG
+</button>
+
+</nav>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+<div class="page-title">
+
+<div>
+<h2>System Overview</h2>
+<p>REAL-TIME PERSONAL CONTROL CENTER</p>
+</div>
+
+<span class="status">
+● ALL SYSTEMS OPERATIONAL
+</span>
+
+</div>
+
+<div class="grid">
+
+<div class="panel">
+
+<h3>
+SYSTEM OVERVIEW
+<span class="tag">OPTIMAL</span>
+</h3>
+
+<div class="ring">
+<div>
+<strong>98%</strong>
+<small>OPTIMAL</small>
+</div>
+</div>
+
+<div class="metrics">
+
+<div class="metric">
+<b>23%</b>
+<small>CPU</small>
+</div>
+
+<div class="metric">
+<b>41%</b>
+<small>MEMORY</small>
+</div>
+
+<div class="metric">
+<b>12%</b>
+<small>DISK</small>
+</div>
+
+</div>
+
+<div class="rows">
+
+<div class="row">
+<span>Core System</span>
+<b>98%</b>
+</div>
+
+<div class="row">
+<span>Personal Network</span>
+<b>86%</b>
+</div>
+
+<div class="row">
+<span>Storage Engine</span>
+<b>75%</b>
+</div>
+
+<div class="row">
+<span>Security Protocol</span>
+<b>100%</b>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>
+GLOBAL NETWORK
+<span class="tag">WORLD VIEW</span>
+</h3>
+
+<div class="map">
+
+<svg viewBox="0 0 360 220">
+
+<g fill="#122d49" stroke="#1c466b" stroke-width="1">
+
+<path d="M22 50L43 30 74 33 91 53 80 70 55 70 40 91 20 80Z"/>
+
+<path d="M100 35L124 22 153 35 174 57 163 75 142 67 126 87 108 69Z"/>
+
+<path d="M170 80L190 67 213 76 225 95 216 110 193 106 183 92Z"/>
+
+<path d="M229 44L260 28 296 38 324 64 311 83 280 80 262 63 239 67Z"/>
+
+<path d="M132 110L151 119 158 143 146 169 132 150 124 126Z"/>
+
+<path d="M205 130L236 115 267 127 281 148 266 170 239 166 220 148Z"/>
+
+</g>
+
+<g>
+
+<line x1="60" y1="55" x2="145" y2="52"/>
+<line x1="145" y1="52" x2="205" y2="90"/>
+<line x1="205" y1="90" x2="280" y2="55"/>
+<line x1="145" y1="52" x2="140" y2="130"/>
+<line x1="140" y1="130" x2="245" y2="145"/>
+<line x1="205" y1="90" x2="245" y2="145"/>
+
+</g>
+
+<g>
+
+<circle cx="60" cy="55" r="5"/>
+<circle cx="145" cy="52" r="5"/>
+<circle cx="205" cy="90" r="6"/>
+<circle cx="280" cy="55" r="5"/>
+<circle cx="140" cy="130" r="5"/>
+<circle cx="245" cy="145" r="5"/>
+
+</g>
+
+<text x="12" y="205">
+NETWORK VISUALIZATION
+</text>
+
+</svg>
+
+</div>
+
+<div class="metrics" style="margin-top:12px">
+
+<div class="metric">
+<b>12.9K</b>
+<small>NODES</small>
+</div>
+
+<div class="metric">
+<b>98K</b>
+<small>CONNECTIONS</small>
+</div>
+
+<div class="metric">
+<b>2.4 TB</b>
+<small>DATA FLOW</small>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>
+SECURITY STATUS
+<span class="tag">PROTECTED</span>
+</h3>
+
+<div class="shield">
+♢
+</div>
+
+<div class="level">
+MAXIMUM
+</div>
+
+<div class="safe">
+● SYSTEM FULLY PROTECTED
+</div>
+
+<div class="rows">
+
+<div class="row">
+<span>Malware Attempt</span>
+<b>Blocked</b>
+</div>
+
+<div class="row">
+<span>Unauthorized Access</span>
+<b>Blocked</b>
+</div>
+
+<div class="row">
+<span>Network Intrusion</span>
+<b>Blocked</b>
+</div>
+
+<div class="row">
+<span>Data Anomaly</span>
+<b>Guarded</b>
+</div>
+
+<div class="row">
+<span>Suspicious Activity</span>
+<b>Monitoring</b>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom">
+
+<div class="panel">
+<small>UPTIME</small>
+<b id="uptime">00:00:00</b>
+</div>
+
+<div class="panel">
+<small>SESSION</small>
+<b>ACTIVE</b>
+</div>
+
+<div class="panel">
+<small>NETWORK</small>
+<b>1.2 TB/s</b>
+</div>
+
+<div class="panel">
+<small>LATENCY</small>
+<b>16ms</b>
+</div>
+
+</div>
+
+<div class="panel" style="margin-top:15px">
+
+<h3>
+NETWORK ACTIVITY
+<span class="tag">LIVE DEMO</span>
+</h3>
+
+<div class="chart" id="chart"></div>
+
+<p style="
+font-size:10px;
+color:#526f8d;
+margin-top:10px">
+Illustrative activity visualization — not real network monitoring.
+</p>
+
+</div>
+
+</section>
+
+<!-- ANALYTICS -->
+
+<section id="analytics" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>Analytics</h2>
+<p>PERSONAL DASHBOARD STATISTICS</p>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="panel">
+
+<h3>SESSION STATUS</h3>
+
+<div class="ring">
+<div>
+<strong>100%</strong>
+<small>ACTIVE</small>
+</div>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>PERFORMANCE</h3>
+
+<div class="bars">
+
+<p style="font-size:11px;color:#91b8dc">
+System Usage
+</p>
+
+<div class="bar">
+<span style="width:68%"></span>
+</div>
+
+<p style="font-size:11px;color:#91b8dc">
+Storage
+</p>
+
+<div class="bar">
+<span style="width:45%"></span>
+</div>
+
+<p style="font-size:11px;color:#91b8dc">
+Efficiency
+</p>
+
+<div class="bar">
+<span style="width:90%"></span>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>SECURITY SCORE</h3>
+
+<div class="shield">
+✓
+</div>
+
+<div class="level">
+SECURE
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- SYSTEMS -->
+
+<section id="network" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>Systems & Network</h2>
+<p>PERSONAL SYSTEM OVERVIEW</p>
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="linkcard">
+
+<div class="icon">◈</div>
+
+<h3>System Monitor</h3>
+
+<p>
+নিজের ওয়েবসাইটের ডেমো সিস্টেম স্ট্যাটাস দেখুন।
+</p>
+
+<button
+class="open"
+onclick="alert('System is running normally.')">
+Check Status →
+</button>
+
+</div>
+
+<div class="linkcard">
+
+<div class="icon">⌘</div>
+
+<h3>Network View</h3>
+
+<p>
+ডেমো নেটওয়ার্ক ভিজ্যুয়ালাইজেশন দেখুন।
+</p>
+
+<button
+class="open"
+onclick="showPage('dashboard')">
+View Network →
+</button>
+
+</div>
+
+<div class="linkcard">
+
+<div class="icon">♢</div>
+
+<h3>Security Checklist</h3>
+
+<p>
+নিজের সাইটের নিরাপত্তা বিষয়গুলো মনে রাখুন।
+</p>
+
+<button
+class="open"
+onclick="showPage('notes')">
+Open Checklist →
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- LINK CENTER -->
+
+<section id="recovery" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>Link Center</h2>
+<p>OFFICIAL WEBSITE LINKS</p>
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="linkcard">
+<div class="icon">🔐</div>
+<h3>Google Recovery</h3>
+<p>নিজের Google / Gmail Account Recovery পেজে যান।</p>
+<a class="open"
+href="https://accounts.google.com/signin/recovery"
+target="_blank"
+rel="noopener">
+Open Google →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">📧</div>
+<h3>Gmail</h3>
+<p>Gmail-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://mail.google.com/"
+target="_blank"
+rel="noopener">
+Open Gmail →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">📘</div>
+<h3>Facebook</h3>
+<p>Facebook-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.facebook.com/"
+target="_blank"
+rel="noopener">
+Open Facebook →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">🔑</div>
+<h3>Facebook Recovery</h3>
+<p>নিজের Facebook Account Recovery পেজ।</p>
+<a class="open"
+href="https://www.facebook.com/login/identify"
+target="_blank"
+rel="noopener">
+Recover Account →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">📸</div>
+<h3>Instagram</h3>
+<p>Instagram-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.instagram.com/"
+target="_blank"
+rel="noopener">
+Open Instagram →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">▶️</div>
+<h3>YouTube</h3>
+<p>YouTube-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.youtube.com/"
+target="_blank"
+rel="noopener">
+Open YouTube →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">🎵</div>
+<h3>TikTok</h3>
+<p>TikTok-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.tiktok.com/"
+target="_blank"
+rel="noopener">
+Open TikTok →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">💬</div>
+<h3>WhatsApp</h3>
+<p>WhatsApp-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.whatsapp.com/"
+target="_blank"
+rel="noopener">
+Open WhatsApp →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">𝕏</div>
+<h3>X / Twitter</h3>
+<p>X-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://x.com/"
+target="_blank"
+rel="noopener">
+Open X →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">💼</div>
+<h3>LinkedIn</h3>
+<p>LinkedIn-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.linkedin.com/"
+target="_blank"
+rel="noopener">
+Open LinkedIn →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">☁️</div>
+<h3>Google Drive</h3>
+<p>Google Drive-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://drive.google.com/"
+target="_blank"
+rel="noopener">
+Open Drive →
+</a>
+</div>
+
+<div class="linkcard">
+<div class="icon">🛒</div>
+<h3>Daraz</h3>
+<p>Daraz Bangladesh-এর অফিসিয়াল ওয়েবসাইট।</p>
+<a class="open"
+href="https://www.daraz.com.bd/"
+target="_blank"
+rel="noopener">
+Open Daraz →
+</a>
+</div>
+
+</div>
+
+</section>
+
+<!-- ALIF AI -->
+
+<section id="ai" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>ALIF AI Assistant</h2>
+<p>YOUR PERSONAL AI ASSISTANT</p>
+</div>
+
+<span class="status">
+● AI READY
+</span>
+
+</div>
+
+<div class="panel" style="max-width:850px">
+
+<h3>CHATGPT ASSISTANT</h3>
+
+<div class="ai-box">
+
+<div class="robot">
+🤖
+</div>
+
+<h2>
+Welcome to ALIF AI
+</h2>
+
+<p>
+কোড লেখা, PHP শেখা, Facebook পোস্ট, ভিডিও স্ক্রিপ্ট,
+ওয়েবসাইট তৈরি এবং বিভিন্ন প্রশ্নের উত্তর পেতে ChatGPT ব্যবহার করুন।
+</p>
+
+<a
+class="open"
+href="https://chatgpt.com/"
+target="_blank"
+rel="noopener"
+style="font-size:14px;padding:13px 25px">
+Open ChatGPT →
+</a>
+
+</div>
+
+<div class="rows">
+
+<div class="row">
+<span>Assistant Name</span>
+<b>ALIF AI</b>
+</div>
+
+<div class="row">
+<span>Service</span>
+<b>ChatGPT</b>
+</div>
+
+<div class="row">
+<span>Connection</span>
+<b>External Secure Link</b>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- NOTES -->
+
+<section id="notes" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>Personal Notepad</h2>
+<p>YOUR PRIVATE NOTES</p>
+</div>
+
+</div>
+
+<div class="panel notearea">
+
+<h3>
+MY NOTES
+
+<button class="clear" onclick="clearNotes()">
+CLEAR
+</button>
+
+</h3>
+
+<textarea
+id="notes"
+placeholder="এখানে আপনার কাজের নোট লিখুন...">
+</textarea>
+
+<div class="save" id="save">
+✓ Ready
+</div>
+
+<p style="
+color:#526f8d;
+font-size:11px;
+margin-top:15px;
+line-height:1.6">
+আপনার নোট এই ব্রাউজারের LocalStorage-এ অটোমেটিক সেভ হবে।
+একই ব্রাউজারে আবার খুললে আগের নোট থাকবে।
+</p>
+
+</div>
+
+</section>
+
+<!-- SETTINGS -->
+
+<section id="settings" class="page">
+
+<div class="page-title">
+
+<div>
+<h2>Configuration</h2>
+<p>PERSONAL SETTINGS</p>
+</div>
+
+</div>
+
+<div class="panel" style="max-width:600px">
+
+<h3>PROFILE INFORMATION</h3>
+
+<label>DISPLAY NAME</label>
+
+<input
+id="displayName"
+placeholder="Your Name">
+
+<label>SITE NAME</label>
+
+<input
+id="siteName"
+placeholder="ALIF">
+
+<button
+class="btn"
+onclick="saveProfile()">
+SAVE PROFILE
+</button>
+
+<p id="profileMsg" class="save"></p>
+
+<button
+class="open"
+style="margin-top:20px"
+onclick="resetSettings()">
+Reset Settings
+</button>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 ALIF CONTROL SYSTEM • PERSONAL USE
+</footer>
+
+</main>
+
+</div>
+
+</div>
+
+<script>
+
+/* LOGIN — LOCAL DEMO */
+
+function login(){
+
+const u=document.getElementById("user").value.trim();
+
+const p=document.getElementById("pass").value;
+
+const err=document.getElementById("err");
+
+if(!u || !p){
+
+err.textContent="Username এবং Password লিখুন।";
+
+return;
+
+}
+
+localStorage.setItem("alif_user",u);
+
+document.getElementById("login").style.display="none";
+
+document.getElementById("app").style.display="block";
+
+}
+
+/* PAGE NAVIGATION */
+
+function showPage(id,btn){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active");
+});
+
+const page=document.getElementById(id);
+
+if(page){
+page.classList.add("active");
+}
+
+document.querySelectorAll(".nav button,.sidebtn").forEach(b=>{
+b.classList.remove("active");
+});
+
+if(btn){
+btn.classList.add("active");
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+document.getElementById("app").style.display="none";
+
+document.getElementById("login").style.display="flex";
+
+document.getElementById("pass").value="";
+
+}
+
+/* DEMO CHART */
+
+const chart=document.getElementById("chart");
+
+const heights=[
+45,65,35,80,55,95,50,72,
+40,88,60,75,45,90,65,80,
+52,96,70,45,83,60,92,50
+];
+
+heights.forEach(h=>{
+
+const bar=document.createElement("i");
+
+bar.style.height=h+"%";
+
+chart.appendChild(bar);
+
+});
+
+/* AUTO SAVE NOTEPAD */
+
+const notes=document.getElementById("notes");
+
+const save=document.getElementById("save");
+
+notes.value=localStorage.getItem("alif_notes") || "";
+
+notes.addEventListener("input",()=>{
+
+localStorage.setItem("alif_notes",notes.value);
+
+save.textContent="✓ Automatically saved";
+
+});
+
+function clearNotes(){
+
+if(confirm("সব নোট মুছে ফেলবেন?")){
+
+notes.value="";
+
+localStorage.removeItem("alif_notes");
+
+save.textContent="✓ Notes cleared";
+
+}
+
+}
+
+/* PROFILE SETTINGS */
+
+const displayName=document.getElementById("displayName");
+
+const siteName=document.getElementById("siteName");
+
+displayName.value=
+localStorage.getItem("alif_name") || "";
+
+siteName.value=
+localStorage.getItem("alif_site") || "ALIF";
+
+function saveProfile(){
+
+localStorage.setItem(
+"alif_name",
+displayName.value
+);
+
+localStorage.setItem(
+"alif_site",
+siteName.value
+);
+
+document.getElementById("brandName").textContent=
+siteName.value || "ALIF";
+
+document.getElementById("profileMsg").textContent=
+"✓ Profile saved";
+
+}
+
+function resetSettings(){
+
+localStorage.removeItem("alif_name");
+
+localStorage.removeItem("alif_site");
+
+displayName.value="";
+
+siteName.value="ALIF";
+
+document.getElementById("brandName").textContent=
+"ALIF";
+
+document.getElementById("profileMsg").textContent=
+"✓ Settings reset";
+
+}
+
+/* ENTER KEY LOGIN */
+
+document.getElementById("pass").addEventListener(
+"keydown",
+e=>{
+
+if(e.key==="Enter"){
+login();
+}
+
+});
+
+/* UPTIME DEMO */
+
+let seconds=0;
+
+setInterval(()=>{
+
+seconds++;
+
+const h=String(Math.floor(seconds/3600)).padStart(2,"0");
+
+const m=String(Math.floor((seconds%3600)/60)).padStart(2,"0");
+
+const s=String(seconds%60).padStart(2,"0");
+
+document.getElementById("uptime").textContent=
+`${h}:${m}:${s}`;
+
+},1000);
+
+</script>
+
+</body>
+</html>
